@@ -6,6 +6,8 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        return view('login');
+       return view('mis_publicaciones');
+       // return view('formulario_publicacion');
+        
     }
 }

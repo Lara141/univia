@@ -168,3 +168,115 @@ in SYSTEMPATH\Session\Handlers\FileHandler.php on line 102.
 23 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 DEBUG - 2026-04-19 16:22:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-04-19 16:23:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-19 23:34:57 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\mis_publicaciones.php on line 348.
+ 1 APPPATH\Views\mis_publicaciones.php(348): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php', 348)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('mis_publicaciones', [], true)
+ 5 APPPATH\Controllers\Home.php(9): view('mis_publicaciones')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:36:08 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\mis_publicaciones.php on line 379.
+ 1 APPPATH\Views\mis_publicaciones.php(379): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php', 379)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('mis_publicaciones', [], true)
+ 5 APPPATH\Controllers\Home.php(9): view('mis_publicaciones')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:38:05 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\mis_publicaciones.php on line 348.
+ 1 APPPATH\Views\mis_publicaciones.php(348): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php', 348)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('mis_publicaciones', [], true)
+ 5 APPPATH\Controllers\Home.php(9): view('mis_publicaciones')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:40:03 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\mis_publicaciones.php on line 383.
+ 1 APPPATH\Views\mis_publicaciones.php(383): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php', 383)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\mis_publicaciones.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('mis_publicaciones', [], true)
+ 5 APPPATH\Controllers\Home.php(9): view('mis_publicaciones')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:44:30 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\formulario_publicacion.php on line 572.
+ 1 APPPATH\Views\formulario_publicacion.php(572): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php', 572)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('formulario_publicacion', [], true)
+ 5 APPPATH\Controllers\Home.php(10): view('formulario_publicacion')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:44:32 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\formulario_publicacion.php on line 572.
+ 1 APPPATH\Views\formulario_publicacion.php(572): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php', 572)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('formulario_publicacion', [], true)
+ 5 APPPATH\Controllers\Home.php(10): view('formulario_publicacion')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:45:10 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\formulario_publicacion.php on line 578.
+ 1 APPPATH\Views\formulario_publicacion.php(578): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php', 578)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('formulario_publicacion', [], true)
+ 5 APPPATH\Controllers\Home.php(10): view('formulario_publicacion')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-04-19 23:45:12 --> ErrorException: Undefined variable $usuario
+[Method: GET, Route: /]
+in APPPATH\Views\formulario_publicacion.php on line 578.
+ 1 APPPATH\Views\formulario_publicacion.php(578): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $usuario', 'C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php', 578)
+ 2 SYSTEMPATH\View\View.php(240): include('C:\\xampp\\htdocs\\univia\\app\\Views\\formulario_publicacion.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1250): CodeIgniter\View\View->render('formulario_publicacion', [], true)
+ 5 APPPATH\Controllers\Home.php(10): view('formulario_publicacion')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
