@@ -1,21 +1,38 @@
 <!DOCTYPE html>
-<?php helper(['form', 'url', 'session']);
+
+<?php 
+/* ════════════════════════════════════════════
+   HELPERS DE CODEIGNITER
+   - form: facilita la creación de formularios
+   - url: manejo de rutas (base_url, site_url)
+   - session: acceso a datos de sesión (errores, mensajes)
+════════════════════════════════════════════ */ 
+helper(['form', 'url', 'session']);
+/* Obtiene errores de validación guardados en flashdata */
 $errors = session()->getFlashdata('errors') ?? [];
 ?>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Configuración responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título de la página 
+    Framework CSS para estilos y componentes-->
     <title>Iniciar Sesión — Univia</title>
 
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts
+    - Playfair: títulos
+    - Source Sans: texto general-->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        /* ─── Variables ─────────────────────────────────────── */
+        /* ─── Variables  CSS (paleta de colores y estilos) ─────────────────────────────────────── */
         :root {
             --navy:      #0f2244;
             --blue:      #2563eb;
@@ -29,7 +46,9 @@ $errors = session()->getFlashdata('errors') ?? [];
             --radius-input: 10px;
         }
 
-        /* ─── Layout general ─────────────────────────────────── */
+        /* ─── Layout general 
+         - Fondo oscuro con textura
+         - Centrado vertical y horizontal─────────────────────────────────── */
         body {
             font-family: 'Source Sans 3', sans-serif;
             min-height: 100vh;
@@ -46,11 +65,15 @@ $errors = session()->getFlashdata('errors') ?? [];
         }
 
         /* ─── Wrapper centrado ───────────────────────────────── */
+         /* Contenedor principal centrado */
         .login-wrapper {
             width: 100%;
             max-width: 420px;
         }
 
+         /* ════════════════════════════════════════════
+           BRANDING (logo + nombre)
+        ════════════════════════════════════════════ */
         /* ─── Cabecera con logo ──────────────────────────────── */
         .brand-icon {
             width: 52px;
@@ -87,6 +110,8 @@ $errors = session()->getFlashdata('errors') ?? [];
             padding: 36px 32px 28px;
             box-shadow: 0 24px 60px rgba(0,0,0,.35);
         }
+
+        /* Inputs, labels y botones ya estilizados */
         .login-card .card-title {
             font-family: 'Playfair Display', serif;
             font-size: 20px;
@@ -237,6 +262,7 @@ $errors = session()->getFlashdata('errors') ?? [];
                 <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
             </svg>
         </div>
+        <!-- Nombre del sistema -->
         <div class="brand-name">Univia</div>
         <div class="brand-sub mt-1">PLATAFORMA UNIVERSITARIA</div>
     </div>
@@ -273,6 +299,7 @@ $errors = session()->getFlashdata('errors') ?? [];
                     autocomplete="username"
                     required
                 >
+                <!-- Error específico -->
                 <?php if (isset($errors['dni'])): ?>
                     <div class="invalid-feedback" style="font-size:13px;">
                         <?= esc($errors['dni']) ?>
@@ -360,6 +387,7 @@ $errors = session()->getFlashdata('errors') ?? [];
         var iconClosed = toggle.querySelector('.icon-eye-closed');
 
         toggle.addEventListener('click', function () {
+            // Cambia entre password y texto
             var isPassword = pwInput.type === 'password';
 
             // Alternar tipo de input
