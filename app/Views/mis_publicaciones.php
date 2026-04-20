@@ -28,31 +28,54 @@
  */
 ?>
 <!DOCTYPE html>
+<!--
+    VISTA: "Mis publicaciones" / Panel de usuario
+
+    Descripción:
+    Esta vista representa el panel principal del usuario dentro de Univia,
+    donde puede visualizar, filtrar y gestionar sus publicaciones.
+
+    Características principales:
+    - Sistema de temas (dark / light)
+    - Navbar con búsqueda y menú de usuario
+    - Estadísticas rápidas (chips)
+    - Listado de publicaciones en formato cards
+    - Filtros dinámicos
+-->
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <!-- Configuración responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la página -->
     <title>Univia — Mi Panel</title>
 
+     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Tipografías -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
     <style>
     /* ══════════════════════════════════════════════
        SISTEMA DE TEMAS  dark / light
-       Activar: data-theme="dark" | "light" en <html>
+       Permite cambiar dinámicamente entre modo oscuro
+       y modo claro mediante el atributo:
+       <html data-theme="dark | light">
+
+       Se definen variables CSS reutilizables en todo el diseño.
     ══════════════════════════════════════════════ */
     :root,
     [data-theme="dark"] {
-        --bg-base:       #0c0e1a;
-        --bg-surface:    #111422;
-        --bg-card:       #181c30;
-        --bg-card-alt:   #1c2035;
+        --bg-base:       #0c0e1a; /*Fondo principal*/
+        --bg-surface:    #111422; /*Navbar / secciones*/
+        --bg-card:       #181c30; /*tarjetas*/
+        --bg-card-alt:   #1c2035; /*Alternativa*/
         --bg-input:      rgba(255,255,255,.04);
         --border:        rgba(255,255,255,.07);
         --border-hover:  rgba(91,127,255,.38);
-        --accent:        #5b7fff;
+        --accent:        #5b7fff; /*Color principal*/
         --accent-2:      #8b5cf6;
         --accent-3:      #38bdf8;
         --success:       #34d399;
@@ -65,6 +88,7 @@
         --glow:          0 0 40px rgba(91,127,255,.18);
         --shadow-card:   0 4px 24px rgba(0,0,0,.35);
         --close-filter:  invert(1) grayscale(1);
+        /* Badges de acuerdos */
         --badge-gratis-bg:        rgba(52,211,153,.12);
         --badge-gratis-color:     #34d399;
         --badge-gratis-border:    rgba(52,211,153,.22);
@@ -78,6 +102,7 @@
         --preview-ph-bg: rgba(255,255,255,.03);
     }
 
+     /* Tema claro */
     [data-theme="light"] {
         --bg-base:       #f0f2f8;
         --bg-surface:    #ffffff;
@@ -99,6 +124,7 @@
         --glow:          0 0 32px rgba(74,108,247,.14);
         --shadow-card:   0 2px 16px rgba(0,0,0,.08);
         --close-filter:  none;
+        /* Badges */
         --badge-gratis-bg:        rgba(5,150,105,.1);
         --badge-gratis-color:     #059669;
         --badge-gratis-border:    rgba(5,150,105,.2);
@@ -112,14 +138,14 @@
         --preview-ph-bg: rgba(0,0,0,.02);
     }
 
-    /* ── Transición global al cambiar tema ── */
+    /* ── Transición suaves al cambiar tema ── */
     html { transition: background-color .28s ease; }
     body, .univia-navbar, .page-hero, .stat-chip, .pub-card,
     .card-preview, .modal-content, .dropdown-menu, .detail-desc-box,
     .file-name-chip { transition: background-color .28s ease, border-color .28s ease, color .2s ease; }
 
     /* ══════════════════════════════════════════════
-       BASE
+       ESTILOS BASE
     ══════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -131,11 +157,17 @@
         font-size: .95rem;
         min-height: 100vh;
     }
+    /* Tipografía para títulos */
     h1,h2,h3,h4,h5,.brand-name { font-family: 'Syne', sans-serif; }
     a { text-decoration: none; }
 
     /* ══════════════════════════════════════════════
        NAVBAR
+       Contiene:
+       - Nombre de la app
+       - Buscador
+       - Avatar del usuario
+       - Menú desplegable
     ══════════════════════════════════════════════ */
     .univia-navbar {
         background: var(--bg-surface);
@@ -144,6 +176,7 @@
         position: sticky; top: 0; z-index: 1030;
         backdrop-filter: blur(14px);
     }
+    /* Logo / nombre */
     .brand-name {
         font-size: 1.45rem; font-weight: 800; letter-spacing: -.5px;
         background: var(--gradient);
@@ -151,7 +184,7 @@
         background-clip: text;
     }
 
-    /* Búsqueda */
+    /* BUSCADOR */
     .search-wrap { position: relative; max-width: 380px; width: 100%; }
     .search-wrap .bi-search {
         position: absolute; left: 12px; top: 50%;
@@ -166,6 +199,14 @@
         padding-left: 2rem !important;
         font-family: 'DM Sans', sans-serif; font-size: .88rem;
     }
+
+    /* ══════════════════════════════════════════════
+       BUSCADOR (INPUT)
+       
+       Personalización del input de búsqueda:
+       - Placeholder con color tenue
+       - Efecto focus con borde y glow
+    ══════════════════════════════════════════════ */
     .search-input::placeholder { color: var(--text-muted); }
     .search-input:focus {
         border-color: var(--accent) !important;
@@ -173,7 +214,12 @@
         outline: none;
     }
 
-    /* Avatar */
+    /* ══════════════════════════════════════════════
+       AVATAR DE USUARIO
+       
+       Muestra las iniciales del usuario.
+       También funciona como botón para abrir el dropdown.
+    ══════════════════════════════════════════════ */
     .user-avatar {
         width: 36px; height: 36px; border-radius: 50%;
         background: var(--gradient);
@@ -183,7 +229,15 @@
         user-select: none;
     }
 
-    /* Dropdown */
+     /* ══════════════════════════════════════════════
+       DROPDOWN (MENÚ DE USUARIO)
+       
+       Contiene opciones como:
+       - Perfil
+       - Panel
+       - Cerrar sesión
+       - Cambio de tema
+    ══════════════════════════════════════════════ */
     .dropdown-menu {
         background: var(--bg-card-alt);
         border: 1px solid var(--border);
@@ -196,12 +250,19 @@
         display: flex; align-items: center; gap: 9px;
         background: transparent;
     }
+     /* Hover general */
     .dropdown-item:hover { background: rgba(91,127,255,.1); color: var(--accent); }
+     /* Hover para opción peligrosa (logout) */
     .dropdown-item.danger:hover { background: rgba(220,38,38,.1); color: var(--danger); }
     .dropdown-divider { border-color: var(--border); margin: 4px 0; }
     .dropdown-header { color: var(--text-muted); font-size: .75rem; padding: 6px 14px; font-family: 'Syne', sans-serif; }
 
-    /* ── Toggle de tema ── */
+    /* ══════════════════════════════════════════════
+       TOGGLE DE TEMA (dark / light)
+       
+       Switch que permite cambiar entre modo oscuro
+       y modo claro dinámicamente.
+    ══════════════════════════════════════════════ */
     .theme-row {
         display: flex; align-items: center; justify-content: space-between;
         padding: 9px 14px; border-radius: 9px; cursor: pointer; color: var(--text);
@@ -214,6 +275,7 @@
         position: relative; width: 40px; height: 22px; flex-shrink: 0;
     }
     .t-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+     /* Track del switch */
     .t-track {
         position: absolute; inset: 0;
         background: var(--switch-track);
@@ -221,6 +283,7 @@
         border-radius: 22px; cursor: pointer;
         transition: background .25s;
     }
+    /* Botón interno del switch */
     .t-track::before {
         content: '';
         position: absolute; left: 3px; top: 50%; transform: translateY(-50%);
@@ -229,15 +292,21 @@
         transition: transform .25s;
         box-shadow: 0 1px 4px rgba(0,0,0,.25);
     }
+      /* Estado activo */
     .t-switch input:checked + .t-track { background: var(--accent); border-color: var(--accent); }
     .t-switch input:checked + .t-track::before { transform: translate(18px,-50%); }
 
     .t-icon { font-size: 1rem; }
 
     /* ══════════════════════════════════════════════
-       HERO
+       HERO (CABECERA DEL PANEL)
+       
+       Contiene:
+       - Título de la sección
+       - Subtítulo
+       - Botón "Nueva publicación"
+       - Estadísticas
     ══════════════════════════════════════════════ */
-    .page-hero {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
         padding: 2rem 0 1.8rem;
@@ -245,6 +314,7 @@
     .page-hero h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: .2rem; letter-spacing: -.4px; }
     .page-hero .subtitle { color: var(--text-muted); font-size: .92rem; }
 
+     /* Botón nueva publicación */
     .btn-nueva {
         background: var(--gradient);
         border: none; color: #fff;
@@ -256,6 +326,13 @@
     }
     .btn-nueva:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(91,127,255,.5); filter: brightness(1.08); color: #fff; }
 
+     /* ══════════════════════════════════════════════
+       TARJETAS DE ESTADÍSTICAS
+       
+       Muestran información resumida:
+       - Cantidad de publicaciones
+       - Activas / inactivas, etc.
+    ══════════════════════════════════════════════ */
     .stat-chip {
         background: var(--bg-card);
         border: 1px solid var(--border); border-radius: 12px;
@@ -266,8 +343,12 @@
     .stat-chip .stat-value { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; line-height: 1; }
     .stat-chip .stat-label { font-size: .77rem; color: var(--text-muted); margin-top: 2px; }
 
-    /* ══════════════════════════════════════════════
-       SECCIÓN HEADER + FILTROS
+     /* ══════════════════════════════════════════════
+       FILTROS (PILLS)
+       
+       Permiten filtrar publicaciones:
+       - Por tipo
+       - Por estado
     ══════════════════════════════════════════════ */
     .section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1.4rem; }
     .section-header h2 { font-size: 1.15rem; font-weight: 700; margin: 0; }
@@ -356,6 +437,13 @@
 
     /* ══════════════════════════════════════════════
        MODAL DE DETALLE
+       
+       Se abre al hacer click en una publicación.
+       Permite:
+       - Ver detalles completos
+       - Descargar archivo
+       - Editar
+       - Eliminar
     ══════════════════════════════════════════════ */
     .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.45); }
     .modal-header  { border-bottom: 1px solid var(--border); padding: 1.3rem 1.6rem .9rem; }
@@ -364,7 +452,7 @@
     .modal-title   { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
     .btn-close     { filter: var(--close-filter); }
 
-    /* Preview en modal */
+    /* Contenedor de preview (imagen o PDF) */
     .modal-preview-wrap {
         width: 100%; border-radius: 12px; overflow: hidden;
         border: 1px solid var(--border); background: var(--bg-card-alt);
@@ -397,12 +485,15 @@
     .file-name-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 7px; padding: 4px 11px; font-size: .8rem; color: var(--text-soft); font-family: 'DM Mono', monospace; word-break: break-all; }
 
     /* Botones modal */
+     /* Editar */
     .btn-editar { background: var(--gradient); border: none; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 16px rgba(91,127,255,.3); display: inline-flex; align-items: center; gap: 7px; transition: filter .15s, box-shadow .15s; }
     .btn-editar:hover { filter: brightness(1.08); box-shadow: 0 6px 22px rgba(91,127,255,.45); color: #fff; }
+    /* Eliminar */
     .btn-eliminar { background: transparent; border: 1px solid rgba(239,68,68,.28); color: var(--danger); font-size: .88rem; padding: 9px 18px; border-radius: 10px; display: inline-flex; align-items: center; gap: 7px; transition: background .15s, border-color .15s; }
     .btn-eliminar:hover { background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.5); color: var(--danger); }
     .btn-cerrar-modal { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 9px 16px; border-radius: 10px; font-size: .88rem; transition: background .15s, color .15s; }
     .btn-cerrar-modal:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    /* Descargar */
     .btn-descargar { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.22); color: var(--success); font-size: .86rem; padding: 8px 16px; border-radius: 9px; display: inline-flex; align-items: center; gap: 7px; transition: background .15s; }
     .btn-descargar:hover { background: rgba(52,211,153,.16); color: var(--success); }
 
@@ -427,11 +518,13 @@
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 
-            <!-- Logo -->
+           <!-- Logo de la aplicación.
+                 Redirige al dashboard principal del usuario -->
             <a href="<?= base_url('dashboard') ?>" class="brand-name">Univia</a>
 
-            <!-- Búsqueda desktop -->
-            <!-- RUTA: base_url('materiales/buscar') -->
+            <!-- Buscador (solo visible en desktop).
+                 Permite buscar materiales por texto (materia, título, etc).
+                 ENVÍA por GET a: materiales/buscar -->
             <form class="flex-grow-1 search-wrap d-none d-md-block"
                   action="<?= base_url('materiales/buscar') ?>" method="GET">
                 <i class="bi bi-search"></i>
@@ -439,6 +532,7 @@
                        placeholder="Buscar materiales, materias, carreras…" autocomplete="off">
             </form>
 
+            <!-- Sección derecha (usuario) -->
             <div class="ms-auto d-flex align-items-center gap-2">
 
                 <!-- ── DROPDOWN DE PERFIL (avatar arriba a la derecha) ── -->
@@ -455,9 +549,10 @@
                         VA
                     </div>
 
+                    <!-- Menú desplegable -->
                     <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width:240px;">
 
-                        <!-- Nombre del usuario -->
+                        <!-- Nombre Completo del usuario -->
                         <li>
                             <span class="dropdown-header">
                                 <!--
@@ -471,7 +566,8 @@
 
                         <li><hr class="dropdown-divider"></li>
 
-                        <!-- ── TOGGLE MODO DIURNO / NOCTURNO ── -->
+                        <!-- Toggle de tema (modo claro / oscuro).
+                             Se controla con JS cambiando data-theme en <html> -->
                         <li>
                             <div class="theme-row" id="theme-row">
                                 <div class="theme-row-left">
@@ -487,25 +583,28 @@
 
                         <li><hr class="dropdown-divider"></li>
 
-                        <!-- Navegación -->
+                        <!-- Navegación del usuario-->
                         <li>
+                            <!-- Redirige al perfil -->
                             <a class="dropdown-item" href="<?= base_url('perfil') ?>">
                                 <i class="bi bi-person-circle"></i> Mi Perfil
                             </a>
                         </li>
                         <li>
+                         <!-- Vista actual: publicaciones del usuario -->
                             <a class="dropdown-item" href="<?= base_url('publicaciones') ?>">
                                 <i class="bi bi-folder2-open"></i> Mis Publicaciones
                             </a>
                         </li>
                         <li>
+                            <!-- Configuración del usuario -->
                             <a class="dropdown-item" href="<?= base_url('configuracion') ?>">
                                 <i class="bi bi-gear"></i> Configuración
                             </a>
                         </li>
 
                         <li><hr class="dropdown-divider"></li>
-
+                         <!-- Cerrar sesión -->
                         <li>
                             <!-- RUTA: base_url('auth/cerrar_sesion') -->
                             <a class="dropdown-item danger" href="<?= base_url('auth/cerrar_sesion') ?>" style="color:var(--danger);">
@@ -522,13 +621,15 @@
 
 
 <!-- ═══════════════════════════════════════
-     HERO — saludo + CTA + stats
+     HERO — saludo + acciones + estadísticas
 ═══════════════════════════════════════ -->
 <section class="page-hero">
     <div class="container-lg">
 
+        <!-- Encabezado principal -->
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
+             <!-- Saludo personalizado (dato dinámico) -->
                 <h1>
                     <!--
                         DATO DINÁMICO:
@@ -536,6 +637,7 @@
                     -->
                     Hola, Valentina 👋
                 </h1>
+                <!-- Descripción del panel -->
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
@@ -549,8 +651,9 @@
             </a>
         </div>
 
-        <!-- Stats -->
+        <!-- Estadísticas del usuario -->
         <div class="row g-3 mt-3">
+        <!-- Cantidad de publicaciones -->
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="stat-chip">
                     <div class="icon-wrap" style="background:rgba(91,127,255,.12);">
@@ -563,6 +666,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Total de descargas -->
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="stat-chip">
                     <div class="icon-wrap" style="background:rgba(52,211,153,.12);">
@@ -575,6 +679,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Valoración promedio -->
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="stat-chip">
                     <div class="icon-wrap" style="background:rgba(251,191,36,.12);">
@@ -598,7 +703,8 @@
 ═══════════════════════════════════════ -->
 <main class="container-lg py-4">
 
-    <!-- Buscador móvil -->
+    <!-- Buscador para mobile -->
+    <!-- Igual funcionalidad que el de desktop -->
     <form class="d-md-none mb-3" action="<?= base_url('materiales/buscar') ?>" method="GET">
         <div class="search-wrap" style="max-width:100%;">
             <i class="bi bi-search"></i>
@@ -607,9 +713,10 @@
         </div>
     </form>
 
-    <!-- Header + filtros -->
+    <!-- Encabezado de sección + filtros -->
     <div class="section-header">
         <h2>Mis Publicaciones</h2>
+        <!-- Filtros por tipo de recurso (JS) -->
         <div class="filter-pills">
             <button class="filter-pill active" data-filter="todos">Todos</button>
             <button class="filter-pill" data-filter="resumen">Resúmenes</button>
@@ -621,10 +728,19 @@
     </div>
 
     <!--
-    ═══════════════════════════════════════════════════════
-    GRILLA DE PUBLICACIONES — PHP DINÁMICO
-    ───────────────────────────────────────────────────────
-    Reemplazar las cards estáticas con:
+    GRILLA DE PUBLICACIONES (DINÁMICA)
+
+    - Se recorre el array $publicaciones desde PHP
+    - Cada publicación genera una card
+    - Se usan data-* attributes para pasar datos al modal
+
+    IMPORTANTE:
+    - data-id → identificar publicación
+    - data-titulo, descripcion → mostrar en modal
+    - data-url-archivo → descarga
+    - data-url-imagen → preview
+    -->
+
 
     <?php if (!empty($publicaciones)): ?>
     <?php foreach ($publicaciones as $pub): ?>
@@ -667,7 +783,8 @@
 
     <div class="row g-3" id="pub-grid">
 
-        <!-- ── CARD 1: Apunte PDF ── -->
+       <!-- CARD DE EJEMPLO: Apunte PDF -->
+        <!-- Representa un material digital descargable -->
         <div class="col-12 col-sm-6 col-lg-4" data-tipo="apunte">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
@@ -686,30 +803,35 @@
                  data-url-imagen=""
                  data-url-archivo="<?= base_url('uploads/archivos/apuntes_is1_2024.pdf') ?>">
 
+                 <!-- Vista previa del archivo -->
                 <div class="card-preview">
                     <i class="bi bi-file-earmark-pdf card-preview-icon" style="color:#ef4444;"></i>
                     <span class="preview-pill"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</span>
                 </div>
+                <!-- Contenido de la card -->
                 <div class="card-body-inner">
+                 <!-- Badges -->
                     <div class="d-flex flex-wrap gap-1 mb-2">
                         <span class="badge-tipo badge-apunte">Apunte</span>
                         <span class="badge-acuerdo badge-gratis"><i class="bi bi-gift"></i>Gratis</span>
                     </div>
-                    <!-- PHP: echo htmlspecialchars($pub['titulo']); -->
+                    <!-- Título -->
                     <h3 class="pub-card-title">Apuntes Ingeniería de Software I</h3>
                     <div class="pub-card-materia">
                         <i class="bi bi-mortarboard"></i>
-                        <!-- PHP: echo htmlspecialchars($pub['materia']); -->
+                        <!-- materia -->
                         <span>Ingeniería de Software I</span>
                     </div>
-                    <!-- PHP: echo htmlspecialchars($pub['descripcion']); -->
+                    <!-- Descripcion -->
                     <p class="pub-card-desc">Resumen completo de todos los temas vistos: ciclos de vida, metodologías ágiles, casos de uso, diagramas UML y arquitecturas.</p>
+                     <!-- Footer -->
                     <div class="pub-card-footer">
                         <div class="d-flex align-items-center gap-1">
                             <span class="status-dot status-active"></span>
-                            <!-- PHP: echo ucfirst($pub['estado']); -->
+                            <!-- Estado-->
                             <span>Activo</span>
                         </div>
+                        <!-- Acciones -->
                         <div class="d-flex align-items-center gap-2">
                             <span><i class="bi bi-download"></i> 23</span>
                             <button class="btn btn-ver-card">Ver</button>
