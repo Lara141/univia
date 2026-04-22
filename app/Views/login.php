@@ -4,7 +4,7 @@
 /* ════════════════════════════════════════════
    HELPERS DE CODEIGNITER
    - form: facilita la creación de formularios
-   - url: manejo de rutas (base_url, site_url)
+   - url: manejo de rutas (site_url, site_url)
    - session: acceso a datos de sesión (errores, mensajes)
 ════════════════════════════════════════════ */ 
 helper(['form', 'url', 'session']);

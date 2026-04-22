@@ -492,10 +492,10 @@
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 
-           <a href="<?= base_url('') ?>" class="brand-name">Univia</a>
+           <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
 
             <form class="flex-grow-1 search-wrap d-none d-md-block"
-                  action="<?= base_url('materiales/buscar') ?>" method="GET">
+                  action="<?= site_url('materiales/buscar') ?>" method="GET">
                 <i class="bi bi-search"></i>
                 <input type="search" name="q" class="form-control search-input"
                        placeholder="Buscar materiales, materias, carreras…" autocomplete="off">
@@ -504,18 +504,17 @@
             <div class="ms-auto d-flex align-items-center gap-2">
 
                 <div class="dropdown">
-                    <div class="user-avatar dropdown-toggle"
-                         data-bs-toggle="dropdown" aria-expanded="false">
-                        VA
-                    </div>
+               <div class="user-avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <?= strtoupper(substr($usuario['nombre_usuario'], 0, 1) . substr($usuario['apellido_usuario'], 0, 1)) ?>
+</div>
 
-                    <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width:240px;">
-
-                        <li>
-                            <span class="dropdown-header">
-                                Valentina Acosta
-                            </span>
-                        </li>
+<ul class="dropdown-menu dropdown-menu-end shadow" style="min-width:240px;">
+    <li>
+        <span class="dropdown-header">
+            <?= esc($usuario['nombre_usuario']) . ' ' . esc($usuario['apellido_usuario']) ?>
+        </span>
+    </li>
+                   
 
                         <li><hr class="dropdown-divider"></li>
 
@@ -552,7 +551,7 @@
 
                         <li><hr class="dropdown-divider"></li>
                          <li>
-                            <a class="dropdown-item danger" href="<?= base_url('auth/cerrar_sesion') ?>" style="color:var(--danger);">
+                            <a class="dropdown-item danger" href="<?= site_url('auth/cerrar_sesion') ?>" style="color:var(--danger);">
                                 <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                             </a>
                         </li>
@@ -568,9 +567,7 @@
 
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-             <h1>
-                    Hola, Valentina 👋
-                </h1>
+            <h1>Hola, <?= esc($usuario['nombre_usuario']) ?> 👋</h1>
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
@@ -614,7 +611,7 @@
 
 <main class="container-lg py-4">
 
-    <form class="d-md-none mb-3" action="<?= base_url('materiales/buscar') ?>" method="GET">
+    <form class="d-md-none mb-3" action="<?= site_url('materiales/buscar') ?>" method="GET">
         <div class="search-wrap" style="max-width:100%;">
             <i class="bi bi-search"></i>
             <input type="search" name="q" class="form-control search-input"
@@ -634,288 +631,149 @@
         </div>
     </div>
 
-    <?php if (!empty($publicaciones)): ?>
-    <?php foreach ($publicaciones as $pub): ?>
-
-    <?php
-      $ext = strtolower(pathinfo($pub['nombre_archivo'] ?? '', PATHINFO_EXTENSION));
-      $url_imagen  = !empty($pub['nombre_imagen'])
-        ? base_url('uploads/imagenes/'.$pub['nombre_imagen']) : '';
-      $url_archivo = !empty($pub['nombre_archivo'])
-        ? base_url('uploads/archivos/'.$pub['nombre_archivo']) : '';
-    ?>
-
-    <div class="col-12 col-sm-6 col-lg-4" data-tipo="<?= $pub['tipo_recurso'] ?>">
-      <div class="pub-card"
-           data-bs-toggle="modal" data-bs-target="#modalDetalle"
-           data-id="<?= $pub['id'] ?>"
-           data-titulo="<?= htmlspecialchars($pub['titulo']) ?>"
-           data-descripcion="<?= htmlspecialchars($pub['descripcion']) ?>"
-           data-tipo-recurso="<?= $pub['tipo_recurso'] ?>"
-           data-tipo-acuerdo="<?= $pub['tipo_acuerdo'] ?>"
-           data-precio="<?= isset($pub['precio']) ? $pub['precio'] : '0' ?>"
-           data-estado="<?= $pub['estado'] ?>"
-           data-materia="<?= htmlspecialchars($pub['materia']) ?>"
-           data-fecha="<?= date('d/m/Y', strtotime($pub['fecha'])) ?>"
-           data-nombre-archivo="<?= htmlspecialchars($pub['nombre_archivo'] ?? '') ?>"
-           data-nombre-imagen="<?= htmlspecialchars($pub['nombre_imagen'] ?? '') ?>"
-           data-es-libro-fisico="<?= $pub['es_libro_fisico'] ? '1' : '0' ?>"
-           data-descargas="<?= $pub['descargas'] ?>"
-           data-url-imagen="<?= $url_imagen ?>"
-           data-url-archivo="<?= $url_archivo ?>">
-        ... (estructura interna como los ejemplos abajo)
-      </div>
-    </div>
-
-    <?php endforeach; ?>
-    
-    <?php endif; ?>
-
-
     <div class="row g-3" id="pub-grid">
+<?php if (!empty($publicaciones)): ?>
+    <?php foreach ($publicaciones as $pub): ?>
+        <?php 
+            // 1. Preparar variables seguras
+            $tipo_recurso = esc($pub['tipo_recurso'] ?? 'otro');
+            $tipo_acuerdo = esc($pub['tipo_acuerdo'] ?? 'gratis');
+            $estado_texto = (isset($pub['estado']) && ($pub['estado'] == 1 || $pub['estado'] == 'activo')) ? 'activo' : 'inactivo';
+            $estado_clase = $estado_texto === 'activo' ? 'status-active' : 'status-inactive';
+            
+            // 2. Lógica del archivo y su vista previa
+            $nombre_archivo = esc($pub['file_name'] ?? '');
+            $ruta_archivo = !empty($pub['ruta']) ? base_url($pub['ruta']) : '';
+            $formato = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+            
+            $preview_icon = 'bi-file-earmark';
+            $preview_color = 'var(--text-muted)';
+            $preview_text = 'Archivo';
 
-       <div class="col-12 col-sm-6 col-lg-4" data-tipo="apunte">
+            if ($formato === 'pdf') {
+                $preview_icon = 'bi-file-earmark-pdf'; $preview_color = '#ef4444'; $preview_text = 'PDF';
+            } elseif (in_array($formato, ['doc', 'docx'])) {
+                $preview_icon = 'bi-file-earmark-word'; $preview_color = '#2563eb'; $preview_text = 'Word';
+            } elseif (in_array($formato, ['jpg', 'jpeg', 'png', 'webp'])) {
+                $preview_icon = 'bi-image'; $preview_color = 'var(--success)'; $preview_text = 'Imagen';
+            }
+        ?>
+
+        <div class="col-12 col-sm-6 col-lg-4" data-tipo="<?= $tipo_recurso ?>">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                 data-id="1"
-                 data-titulo="Apuntes Ingeniería de Software I"
-                 data-descripcion="Resumen completo de todos los temas vistos durante la cursada: ciclos de vida, metodologías ágiles, casos de uso, diagramas UML y arquitecturas de software. Incluye ejemplos prácticos."
-                 data-tipo-recurso="apunte"
-                 data-tipo-acuerdo="gratis"
+                 data-id="<?= esc($pub['id_publicacion']) ?>"
+                 data-titulo="<?= esc($pub['titulo']) ?>"
+                 data-descripcion="<?= esc($pub['descripcion']) ?>"
+                 data-tipo-recurso="<?= $tipo_recurso ?>"
+                 data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
                  data-precio="0"
-                 data-estado="activo"
-                 data-materia="Ingeniería de Software I"
-                 data-fecha="15/05/2025"
-                 data-nombre-archivo="apuntes_is1_2024.pdf"
+                 data-estado="<?= $estado_texto ?>"
+                 data-materia="<?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?>"
+                 data-fecha="<?= esc($pub['fecha_publicacion']) ?>"
+                 data-nombre-archivo="<?= $nombre_archivo ?>"
                  data-nombre-imagen=""
                  data-es-libro-fisico="0"
-                 data-descargas="23"
+                 data-descargas="0"
                  data-url-imagen=""
-                 data-url-archivo="<?= base_url('uploads/archivos/apuntes_is1_2024.pdf') ?>">
+                 data-url-archivo="<?= $ruta_archivo ?>">
 
-                 <div class="card-preview">
-                    <i class="bi bi-file-earmark-pdf card-preview-icon" style="color:#ef4444;"></i>
-                    <span class="preview-pill"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</span>
+                <div class="card-preview">
+                    <i class="bi <?= $preview_icon ?> card-preview-icon" style="color:<?= $preview_color ?>;"></i>
+                    <span class="preview-pill"><i class="bi <?= $preview_icon ?> me-1"></i><?= $preview_text ?></span>
                 </div>
+
                 <div class="card-body-inner">
-                 <div class="d-flex flex-wrap gap-1 mb-2">
-                        <span class="badge-tipo badge-apunte">Apunte</span>
-                        <span class="badge-acuerdo badge-gratis"><i class="bi bi-gift"></i>Gratis</span>
+                    <div class="d-flex flex-wrap gap-1 mb-2">
+                        <span class="badge-tipo badge-<?= $tipo_recurso ?>"><?= ucfirst($tipo_recurso) ?></span>
+                        <span class="badge-acuerdo badge-<?= $tipo_acuerdo ?>">
+                            <i class="bi <?= $tipo_acuerdo == 'gratis' ? 'bi-gift' : 'bi-currency-dollar' ?>"></i><?= ucfirst($tipo_acuerdo) ?>
+                        </span>
                     </div>
-                    <h3 class="pub-card-title">Apuntes Ingeniería de Software I</h3>
+
+                    <h3 class="pub-card-title"><?= esc($pub['titulo']) ?></h3>
+                    
                     <div class="pub-card-materia">
                         <i class="bi bi-mortarboard"></i>
-                        <span>Ingeniería de Software I</span>
+                        <span><?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?></span>
                     </div>
-                    <p class="pub-card-desc">Resumen completo de todos los temas vistos: ciclos de vida, metodologías ágiles, casos de uso, diagramas UML y arquitecturas.</p>
-                     <div class="pub-card-footer">
-                        <div class="d-flex align-items-center gap-1">
-                            <span class="status-dot status-active"></span>
-                            <span>Activo</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span><i class="bi bi-download"></i> 23</span>
-                            <button class="btn btn-ver-card">Ver</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-lg-4" data-tipo="libro">
-            <div class="pub-card"
-                 data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                 data-id="2"
-                 data-titulo="Introducción a la Programación — Deitel"
-                 data-descripcion="Libro físico en excelente estado. Edición 2019. Cubre fundamentos de C++ hasta POO. Ideal para primer año de Ingeniería en Sistemas. Puedo prestarlo o intercambiarlo."
-                 data-tipo-recurso="libro"
-                 data-tipo-acuerdo="gratis"
-                 data-precio="0"
-                 data-estado="activo"
-                 data-materia="Programación I"
-                 data-fecha="02/04/2025"
-                 data-nombre-archivo=""
-                 data-nombre-imagen="deitel_portada.jpg"
-                 data-es-libro-fisico="1"
-                 data-descargas="0"
-                 data-url-imagen="https://placehold.co/400x560/1a1e35/5b7fff?text=Deitel+C%2B%2B&font=syne"
-                 data-url-archivo="">
-
-                <div class="card-preview">
-                    <img src="https://placehold.co/400x560/1a1e35/5b7fff?text=Deitel+C%2B%2B&font=syne"
-                         alt="Portada del libro" loading="lazy">
-                    <span class="preview-pill"><i class="bi bi-book-half me-1"></i>Libro físico</span>
-                </div>
-                <div class="card-body-inner">
-                    <div class="d-flex flex-wrap gap-1 mb-2">
-                        <span class="badge-tipo badge-libro">Libro</span>
-                    </div>
-                    <h3 class="pub-card-title">Introducción a la Programación — Deitel</h3>
-                    <div class="pub-card-materia"><i class="bi bi-mortarboard"></i><span>Programación I</span></div>
-                    <p class="pub-card-desc">Libro físico en excelente estado. Edición 2019. Cubro fundamentos de C++ hasta POO.</p>
+                    
+                    <p class="pub-card-desc"><?= esc($pub['descripcion']) ?></p>
+                    
                     <div class="pub-card-footer">
                         <div class="d-flex align-items-center gap-1">
-                            <span class="status-dot status-active"></span><span>Activo</span>
+                            <span class="status-dot <?= $estado_clase ?>"></span>
+                            <span><?= ucfirst($estado_texto) ?></span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
-                            <span style="color:var(--text-muted);">📚 Físico</span>
+                            <span><i class="bi bi-download"></i> 0</span>
                             <button class="btn btn-ver-card">Ver</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <div class="col-12 empty-state">
+        <i class="bi bi-folder-x empty-icon"></i>
+        <h4>Aún no tenés publicaciones</h4>
+        <p>Hacé clic en "Nueva Publicación" para empezar a subir material.</p>
+    </div>
+<?php endif; ?>
+    </div> </main>
 
-        <div class="col-12 col-sm-6 col-lg-4" data-tipo="examen">
-            <div class="pub-card"
-                 data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                 data-id="3"
-                 data-titulo="Parcial 1 Análisis Matemático II — 2024"
-                 data-descripcion="Primer parcial 2024 con soluciones paso a paso. Integrales dobles, triples y series de Taylor con 6 ejercicios resueltos. Precio simbólico para cubrir fotocopias."
-                 data-tipo-recurso="examen"
-                 data-tipo-acuerdo="pago"
-                 data-precio="1500"
-                 data-estado="activo"
-                 data-materia="Análisis Matemático II"
-                 data-fecha="10/03/2025"
-                 data-nombre-archivo="parcial1_amat2_2024.pdf"
-                 data-nombre-imagen=""
-                 data-es-libro-fisico="0"
-                 data-descargas="41"
-                 data-url-imagen=""
-                 data-url-archivo="<?= base_url('uploads/archivos/parcial1_amat2_2024.pdf') ?>">
-
-                <div class="card-preview">
-                    <i class="bi bi-file-earmark-check card-preview-icon" style="color:var(--warn);"></i>
-                    <span class="preview-pill"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</span>
-                </div>
-                <div class="card-body-inner">
-                    <div class="d-flex flex-wrap gap-1 mb-2">
-                        <span class="badge-tipo badge-examen">Examen</span>
-                        <span class="badge-acuerdo badge-pago"><i class="bi bi-currency-dollar"></i>Pago</span>
-                    </div>
-                    <h3 class="pub-card-title">Parcial 1 Análisis Matemático II — 2024</h3>
-                    <div class="pub-card-materia"><i class="bi bi-mortarboard"></i><span>Análisis Matemático II</span></div>
-                    <p class="pub-card-desc">Primer parcial 2024 con soluciones paso a paso: integrales dobles, triples y series de Taylor.</p>
-                    <div class="pub-card-footer">
-                        <div class="d-flex align-items-center gap-1">
-                            <span class="status-dot status-active"></span><span>Activo</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span><i class="bi bi-download"></i> 41</span>
-                            <button class="btn btn-ver-card">Ver</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-lg-4" data-tipo="resumen">
-            <div class="pub-card"
-                 data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                 data-id="4"
-                 data-titulo="Resumen Redes de Computadoras — Tanenbaum"
-                 data-descripcion="Resumen visual con esquemas y mapas conceptuales del libro de Tanenbaum. Capítulos 1 al 5. Incluye imágenes escaneadas de mis apuntes de clase con diagramas de capas OSI y TCP/IP."
-                 data-tipo-recurso="resumen"
-                 data-tipo-acuerdo="gratis"
-                 data-precio="0"
-                 data-estado="inactivo"
-                 data-materia="Redes de Computadoras"
-                 data-fecha="20/01/2025"
-                 data-nombre-archivo=""
-                 data-nombre-imagen="resumen_redes_portada.jpg"
-                 data-es-libro-fisico="0"
-                 data-descargas="8"
-                 data-url-imagen="https://placehold.co/600x400/1c2035/8b5cf6?text=Redes+Tanenbaum&font=syne"
-                 data-url-archivo="">
-
-                <div class="card-preview">
-                    <img src="https://placehold.co/600x400/1c2035/8b5cf6?text=Redes+Tanenbaum&font=syne"
-                         alt="Resumen Redes" loading="lazy">
-                    <span class="preview-pill"><i class="bi bi-image me-1"></i>Imagen</span>
-                </div>
-                <div class="card-body-inner">
-                    <div class="d-flex flex-wrap gap-1 mb-2">
-                        <span class="badge-tipo badge-resumen">Resumen</span>
-                        <span class="badge-acuerdo badge-gratis"><i class="bi bi-gift"></i>Gratis</span>
-                    </div>
-                    <h3 class="pub-card-title">Resumen Redes de Computadoras — Tanenbaum</h3>
-                    <div class="pub-card-materia"><i class="bi bi-mortarboard"></i><span>Redes de Computadoras</span></div>
-                    <p class="pub-card-desc">Resumen visual con esquemas y mapas conceptuales. Capítulos 1 al 5, diagramas OSI y TCP/IP.</p>
-                    <div class="pub-card-footer">
-                        <div class="d-flex align-items-center gap-1">
-                            <span class="status-dot status-inactive"></span><span>Inactivo</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span><i class="bi bi-download"></i> 8</span>
-                            <button class="btn btn-ver-card">Ver</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div></main>
-
-
-<div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-
-            <div class="modal-header">
-                <div class="d-flex flex-column w-100 pe-3">
-                    <div class="d-flex flex-wrap gap-1 mb-2" id="modal-badges"></div>
-                    <h5 class="modal-title mb-1" id="modal-titulo">—</h5>
-                    <div style="font-size:.82rem; color:var(--text-muted);" class="d-flex align-items-center gap-1">
-                        <i class="bi bi-mortarboard"></i>
-                        <span id="modal-materia">—</span>
+            
+            <div class="modal-header d-flex flex-wrap align-items-start gap-3">
+                <div class="flex-grow-1">
+                    <div id="modal-badges" class="d-flex gap-1 mb-1"></div>
+                    <h5 class="modal-title" id="modal-titulo">—</h5>
+                    <div style="font-size: .8rem; color: var(--text-muted); margin-top:4px;">
+                        <i class="bi bi-mortarboard me-1"></i><span id="modal-materia">—</span>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
             <div class="modal-body">
-
+                
                 <div id="modal-preview-wrap" class="modal-preview-wrap mb-4" style="display:none;"></div>
 
                 <div class="detail-grid mb-4">
-
                     <div>
                         <div class="detail-label">Tipo de recurso</div>
                         <p class="detail-value" id="modal-tipo-recurso">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Tipo de acuerdo</div>
                         <p class="detail-value" id="modal-tipo-acuerdo">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Precio</div>
                         <p class="detail-value" id="modal-precio">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Estado</div>
                         <p class="detail-value" id="modal-estado">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Fecha de publicación</div>
                         <p class="detail-value" id="modal-fecha">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Nombre del archivo</div>
                         <p class="detail-value" id="modal-nombre-archivo">—</p>
                     </div>
-
                     <div>
                         <div class="detail-label">Nombre de la imagen</div>
                         <p class="detail-value" id="modal-nombre-imagen">—</p>
                     </div>
-
-                </div><div class="detail-label mb-2">Descripción completa</div>
+                </div>
+                
+                <div class="detail-label mb-2">Descripción completa</div>
                 <div class="detail-desc-box" id="modal-descripcion">—</div>
 
                 <div class="mt-3" id="modal-descarga-wrap" style="display:none;">
@@ -923,8 +781,9 @@
                         <i class="bi bi-download"></i> Descargar archivo
                     </a>
                 </div>
+            </div>
 
-            </div><div class="modal-footer gap-2 justify-content-between flex-wrap">
+            <div class="modal-footer gap-2 justify-content-between flex-wrap">
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-cerrar-modal" data-bs-dismiss="modal">Cerrar</button>
                     <a href="#" id="modal-btn-eliminar" class="btn btn-eliminar">
@@ -1028,9 +887,9 @@ const ARCHIVO_ICON = {
 };
 
 /*
-    BASE_URL — usando base_url() de CodeIgniter para compatibilidad
+    site_url — usando site_url() de CodeIgniter para compatibilidad
 */
-const BASE_URL = "<?= rtrim(base_url(), '/') . '/' ?>";
+const site_url = "<?= rtrim(site_url(), '/') . '/' ?>";
 
 const modalEl = document.getElementById('modalDetalle');
 
@@ -1150,8 +1009,8 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     }
 
     /* —— Rutas de acción —— */
-    document.getElementById('modal-btn-editar').href   = BASE_URL + 'publicaciones/editar/'   + d.id;
-    document.getElementById('modal-btn-eliminar').href = BASE_URL + 'publicaciones/eliminar/' + d.id;
+    document.getElementById('modal-btn-editar').href   = site_url + 'publicaciones/editar/'   + d.id;
+    document.getElementById('modal-btn-eliminar').href = site_url + 'publicaciones/eliminar/' + d.id;
 });
 
 

@@ -272,16 +272,15 @@
       <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
       <span class="brand-nombre">Univia</span>
     </div>
-    <p class="brand-tagline">Plataforma de material académico universitario</p>
+    <p class="brand-tagline">Plataforma para compartir material académico universitario</p>
   </div>
 
   <div class="card-registro">
     <h1 class="card-titulo">Crear cuenta</h1>
     <p class="card-subtitulo">Completá tus datos para unirte a la comunidad.</p>
 
-    <form id="formRegistro" method="POST"
-          action="#" 
-          novalidate> <div class="seccion-label"><i class="bi bi-person me-1"></i> Datos personales</div>
+  <form id="formRegistro" method="POST" action="<?= site_url('inicio/procesar_registro') ?>" novalidate>
+     <div class="seccion-label"><i class="bi bi-person me-1"></i> Datos personales</div>
 
       <div class="row g-3">
 
@@ -410,7 +409,7 @@
 
     </form>
   </div>
- <p class="login-link mt-3">¿Ya tenés cuenta?  <a href="<?= base_url() ?>">Iniciá sesión</a></p>
+ <p class="login-link mt-3">¿Ya tenés cuenta?  <a href="<?= site_url() ?>">Iniciá sesión</a></p>
  </div>
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -423,7 +422,7 @@ const CARRERAS = {
   unc:     ['Arquitectura','Bioquímica','Ciencias Económicas','Derecho','Filosofía','Ingeniería Civil','Ingeniería en Computación','Medicina','Odontología','Psicología'],
   unl:     ['Abogacía','Agronomía','Arquitectura','Bioquímica','Ciencias Económicas','Ingeniería Industrial','Medicina Veterinaria','Sistemas de Información'],
   unlp:    ['Arquitectura','Astronomía','Bellas Artes','Ciencias Naturales','Derecho','Informática','Ingeniería','Medicina','Odontología','Periodismo'],
-  unne:    ['Abogacía','Agronomía','Arquitectura','Ciencias Económicas','Derecho','Ingeniería Civil','Medicina','Odontología'],
+  unne:    ['Abogacía','Agronomía','Arquitectura','Ciencias Económicas','Derecho','Ingeniería Electrica','Medicina','Odontología', 'Lisenciatura en Sistemas', 'otro'],
   utn:     ['Ingeniería Civil','Ingeniería Eléctrica','Ingeniería en Sistemas de Información','Ingeniería Industrial','Ingeniería Mecánica','Tecnicatura en Programación'],
   udesa:   ['Administración de Empresas','Ciencias Políticas','Comunicación','Economía','Educación','Historia'],
   austral: ['Administración','Comunicación','Derecho','Ingeniería Biomédica','Ingeniería Industrial','Medicina','Psicología'],
@@ -631,8 +630,17 @@ document.getElementById('formRegistro').addEventListener('submit', function (e) 
     return;
   }
 
-  e.preventDefault(); // Detenemos el envío para que puedas ver la animación del botón
-  
+  if (valido) {
+    // Mostrar el spinner visual
+    document.getElementById('btnTexto').classList.add('d-none');
+    document.getElementById('btnSpinner').classList.remove('d-none');
+    document.getElementById('btnRegistrar').disabled = true;
+
+    // Esperar un segundo para que se vea la animación y luego enviar el formulario a PHP
+    setTimeout(() => {
+        document.getElementById('formRegistro').submit();
+    }, 1000);
+  }
   // Mostrar spinner
   document.getElementById('btnTexto').classList.add('d-none');
   document.getElementById('btnSpinner').classList.remove('d-none');

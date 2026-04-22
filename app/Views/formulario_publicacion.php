@@ -693,7 +693,7 @@ function fsel($pub, $key, $value, $default = '') {
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
         <!-- Logo / nombre de la app -->    
-        <a href="<?= base_url('') ?>" class="brand-name">Univia</a>
+        <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
          <!-- Sección derecha -->    
         <div class="ms-auto d-flex align-items-center gap-2">
          <!-- Dropdown del usuario -->       
@@ -730,7 +730,7 @@ function fsel($pub, $key, $value, $default = '') {
                         </li>
                         <li><hr class="dropdown-divider"></li>
                          <!-- Links del usuario -->
-                        <li><a class="dropdown-item" href="<?= base_url('perfil') ?>"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="<?= site_url('perfil') ?>"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
                         <li><a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>"><i class="bi bi-speedometer2"></i> Mis publicaciones</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <!-- Cerrar sesión -->
@@ -752,7 +752,7 @@ function fsel($pub, $key, $value, $default = '') {
     <!-- Breadcrumb (navegación) -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Mi Panel</a></li>
+                <li class="breadcrumb-item"><a href="<?= site_url('dashboard') ?>">Mi Panel</a></li>
                  <!-- Texto dinámico -->
                 <li class="breadcrumb-item active"><?= $modoEdicion ? 'Editar Publicación' : 'Nueva Publicación' ?></li>
             </ol>
@@ -791,12 +791,12 @@ function fsel($pub, $key, $value, $default = '') {
         <!--
         ════════════════════════════════════════
          ACCIÓN DEL FORMULARIO:
-         nueva  → action="<?= base_url('publicaciones/guardar') ?>"
-         editar → action="<?= base_url('publicaciones/guardar') ?>"  (modo lo distingue el campo oculto)
+         nueva  → action="<?= site_url('publicaciones/guardar') ?>"
+         editar → action="<?= site_url('publicaciones/guardar') ?>"  (modo lo distingue el campo oculto)
         ════════════════════════════════════════
         -->
         <form id="pub-form"
-              action="<?= base_url('publicaciones/guardar') ?>"
+              action="<?= site_url('publicaciones/guardar') ?>"
               method="POST"
               enctype="multipart/form-data" <!-- Necesario para subir archivos -->
               novalidate> <!-- Desactiva validación HTML para usar JS -->
@@ -855,11 +855,15 @@ function fsel($pub, $key, $value, $default = '') {
                     <label class="field-label" for="materia">
                         <span class="required-dot"></span> Materia <span class="req">*</span>
                     </label>
-                    <input type="text" id="materia" name="materia"
-                           class="form-control"
-                           placeholder="Ej: Álgebra y Geometría Analítica"
-                           value="<?= fv($pub, 'materia') ?>"
-                           maxlength="150" required>
+                    <select id="materia" name="materia" class="form-select" required>
+    <option value="" disabled selected>— Seleccioná la materia —</option>
+    <option value="1">Programación I</option> 
+    <option value="2">Análisis Matemático II</option>
+    <option value="3">Álgebra y Geometría</option>
+    <option value="4">Ingeniería de software 2</option>
+    <option value="5">Economia aplicada</option>
+</select>
+                        
                     <div class="field-error" id="err-materia">Por favor ingresá el nombre de la materia.</div>
                 </div>
             </div>
