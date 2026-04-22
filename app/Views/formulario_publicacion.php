@@ -1,122 +1,12 @@
 <?php
-/**
- * UNIVIA — Vista: Formulario Nueva / Editar Publicación
- * Archivo: application/views/publicaciones/form_publicacion.php
- *
- * Datos que debe inyectar el controlador (Publicaciones.php → nueva() / editar($id)):
- *   $this->load->view('publicaciones/form_publicacion', [
- *       'usuario'    => $usuario,   // array: id, nombre, apellido, email
- *       'publicacion'=> $publicacion ?? null, // null = nueva, array = editar
- *       'modo'       => 'nueva' | 'editar',
- *   ]);
- *
- * CONTROLADOR PHP (Publicaciones.php) — fragmento de referencia:
- * ──────────────────────────────────────────────────────────────
- *
- * public function nueva() {
- *     $this->load->view('publicaciones/form_publicacion', [
- *         'usuario'     => $this->session->userdata('usuario'),
- *         'publicacion' => null,
- *         'modo'        => 'nueva',
- *     ]);
- * }
- *
- * public function editar($id) {
- *     $pub = $this->Publicacion_model->obtener($id);
- *     if (!$pub || $pub['usuario_id'] != $this->session->userdata('usuario')['id']) {
- *         redirect('dashboard');
- *     }
- *     $this->load->view('publicaciones/form_publicacion', [
- *         'usuario'     => $this->session->userdata('usuario'),
- *         'publicacion' => $pub,
- *         'modo'        => 'editar',
- *     ]);
- * }
- *
- * public function guardar() {
- *     $modo = $this->input->post('modo');
- *     $data = [
- *         'titulo'         => $this->input->post('titulo'),
- *         'descripcion'    => $this->input->post('descripcion'),
- *         'tipo_recurso'   => $this->input->post('tipo_recurso'),
- *         'tipo_acuerdo'   => $this->input->post('tipo_acuerdo'),
- *         'precio'         => $this->input->post('precio') ?: null,
- *         'materia'        => $this->input->post('materia'),
- *         'formato_archivo'=> $this->input->post('formato_archivo'),
- *         'es_libro_fisico'=> ($this->input->post('formato_archivo') === 'fisico') ? 1 : 0,
- *         'estado'         => $this->input->post('estado') ?? 'activo',
- *         'usuario_id'     => $this->session->userdata('usuario')['id'],
- *     ];
- *
- *     // Subida de archivo
- *     if (!empty($_FILES['archivo']['name'])) {
- *         $config_upload = [
- *             'upload_path'   => './uploads/archivos/',
- *             'allowed_types' => 'pdf|doc|docx|ppt|pptx|xls|xlsx|zip|rar|jpg|jpeg|png',
- *             'max_size'      => 20480, // 20 MB
- *             'encrypt_name'  => TRUE,
- *         ];
- *         $this->load->library('upload', $config_upload);
- *         if ($this->upload->do_upload('archivo')) {
- *             $data['nombre_archivo'] = $this->upload->data('file_name');
- *         }
- *     }
- *
- *     // Subida de imagen de portada
- *     if (!empty($_FILES['imagen_portada']['name'])) {
- *         $config_img = [
- *             'upload_path'   => './uploads/imagenes/',
- *             'allowed_types' => 'jpg|jpeg|png|webp',
- *             'max_size'      => 5120,
- *             'encrypt_name'  => TRUE,
- *         ];
- *         $this->load->library('upload', $config_img);
- *         if ($this->upload->do_upload('imagen_portada')) {
- *             $data['nombre_imagen'] = $this->upload->data('file_name');
- *         }
- *     }
- *
- *     if ($modo === 'editar') {
- *         $id = $this->input->post('id');
- *         $this->Publicacion_model->actualizar($id, $data);
- *     } else {
- *         $data['descargas'] = 0;
- *         $data['fecha']     = date('Y-m-d H:i:s');
- *         $this->Publicacion_model->insertar($data);
- *     }
- *     redirect('dashboard');
- * }
- *
- * MODELO MySQL — tabla `publicaciones`:
- * ──────────────────────────────────────
- * CREATE TABLE publicaciones (
- *   id              INT AUTO_INCREMENT PRIMARY KEY,
- *   usuario_id      INT NOT NULL,
- *   titulo          VARCHAR(255) NOT NULL,
- *   descripcion     TEXT,
- *   tipo_recurso    ENUM('resumen','apunte','libro','examen','guia','otro') NOT NULL,
- *   tipo_acuerdo    ENUM('gratis','pago','intercambio') NOT NULL,
- *   precio          DECIMAL(10,2) DEFAULT NULL,
- *   materia         VARCHAR(150),
- *   formato_archivo ENUM('fisico','pdf','word','excel','powerpoint','imagen','otro'),
- *   es_libro_fisico TINYINT(1) DEFAULT 0,
- *   estado          ENUM('activo','inactivo') DEFAULT 'activo',
- *   nombre_archivo  VARCHAR(255),
- *   nombre_imagen   VARCHAR(255),
- *   descargas       INT DEFAULT 0,
- *   fecha           DATETIME DEFAULT CURRENT_TIMESTAMP,
- *   FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
- * );
- */
 
-// Helpers para el formulario
+// ayudantes para el formulario
 // Determina si el formulario está en modo edición o creación
 $modoEdicion  = isset($modo) && $modo === 'editar';
 // Obtiene los datos de la publicación si existen (modo editar),
 // sino inicializa como array vacío
 $pub          = $publicacion ?? [];
 
-// Función helper para obtener valor del campo (editar = valor existente, nueva = vacío)
 // Función para obtener el valor de un campo del formulario
 // - Si es edición → devuelve el valor existente
 // - Si es nuevo → devuelve vacío o valor por defecto
@@ -124,7 +14,7 @@ $pub          = $publicacion ?? [];
 function fv($pub, $key, $default = '') {
     return htmlspecialchars($pub[$key] ?? $default);
 }
-// Función para manejar selects (opciones seleccionadas)
+// Función para manejar selects
 // - Compara el valor actual con el esperado
 // - Si coinciden → devuelve 'selected'
 function fsel($pub, $key, $value, $default = '') {
@@ -231,7 +121,7 @@ function fsel($pub, $key, $value, $default = '') {
     /*Quitar subrayado en links*/
     a { text-decoration: none; }
 
-    /* ══ NAVBAR (idéntico al dashboard)  Barra superior fija con usuario y menú══ */
+    /* ══ Cabecera. Barra superior fija con usuario y menú══ */
     .univia-navbar {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
@@ -297,7 +187,6 @@ function fsel($pub, $key, $value, $default = '') {
     /* Icono del tema */
     .t-icon { font-size:1rem; }
 
-    /* ══ HERO del formulario ══ */
     /* Encabezado principal del formulario */
     .form-hero {
         background: var(--bg-surface);
@@ -328,7 +217,6 @@ function fsel($pub, $key, $value, $default = '') {
     /* Badge modo edición */
     .mode-badge.editar-mode { background: rgba(251,191,36,.12); color: var(--warn); border: 1px solid rgba(251,191,36,.25); }
 
-    /* ══ LAYOUT PRINCIPAL ══ */
     /* Grid principal: formulario + sidebar */
     .form-layout {
         display: grid;
@@ -338,7 +226,6 @@ function fsel($pub, $key, $value, $default = '') {
         padding: 2rem 0 3rem;
     }
 
-    /* ══ CARDS DEL FORMULARIO ══ */
     /* Contenedor de secciones del formulario */
     .form-card {
         background: var(--bg-card);
@@ -362,7 +249,6 @@ function fsel($pub, $key, $value, $default = '') {
     /* Icono del título */
     .card-section-title i { font-size: .95rem; color: var(--accent); }
 
-    /* ══ CAMPOS ══ */
     /* Label de los campos */
     .field-label {
         font-size: .72rem; font-weight: 700; letter-spacing: .06em;
@@ -410,7 +296,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Mostrar error */
     .field-error.visible { display: block; }
 
-    /* ══ RADIO PILLS (tipo acuerdo) ══ */
+    
     /* Contenedor de los botones tipo “pill” (opciones tipo radio) */
     .radio-pills { display: flex; gap: 8px; flex-wrap: wrap; /* Permite que bajen de línea si no entran */ }
     /* Oculta el input real */
@@ -435,7 +321,6 @@ function fsel($pub, $key, $value, $default = '') {
     .radio-pill.activo  input:checked + label { background: rgba(52,211,153,.1); border-color: var(--success); color: var(--success); }
     .radio-pill.inactivo input:checked + label { background: rgba(100,116,139,.1); border-color: var(--text-muted); color: var(--text-muted); }
 
-    /* ══ PRECIO: campo oculto animado ══ */
     /* Contenedor del campo precio (inicialmente oculto) */
     #precio-wrap {
         overflow: hidden; max-height: 0;
@@ -455,7 +340,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Espaciado para que no tape el símbolo */
     .precio-input-wrap input { padding-left: 2.2rem !important; }
 
-    /* ══ ZONA DE SUBIDA DE ARCHIVOS ══ */
+ 
     /* Área tipo drag & drop */
     .drop-zone {
         border: 2px dashed var(--drop-border);
@@ -506,7 +391,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Icono del archivo */
     .existing-file i { color: var(--accent); }
 
-    /* ══ SIDEBAR DERECHA ══ */
+  
     /* Tarjetas del panel lateral (sticky) */
     .sidebar-card {
         background: var(--bg-card);
@@ -573,7 +458,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Título dentro del tip */
     .tip-text strong { color: var(--text); display: block; margin-bottom: 1px; font-family: 'Syne', sans-serif; font-size: .78rem; }
 
-    /* ══ BOTONES PRINCIPALES ══ */
+   
     /* Botón principal (submit) */
     .btn-submit {
         background: var(--gradient);
@@ -601,7 +486,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Hover cancelar */
     .btn-cancel:hover { background: rgba(255,255,255,.04); color: var(--text); }
 
-    /* ══ SPINNER DE CARGA ══ */
+  
     /* Overlay de carga */
     .spinner-overlay {
         display: none; position: fixed; inset: 0; z-index: 9999;
@@ -622,7 +507,7 @@ function fsel($pub, $key, $value, $default = '') {
     /* Animación */
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ══ IMAGEN DE PORTADA PREVIEW ══ */
+    
     /* Zona para subir imagen */
     .img-drop-zone {
         border: 2px dashed var(--drop-border);
@@ -674,9 +559,7 @@ function fsel($pub, $key, $value, $default = '') {
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     SPINNER DE CARGA
-══════════════════════════════════════════ -->
+
 <!-- Overlay que se muestra mientras se envía el formulario -->
 <div class="spinner-overlay" id="spinner">
     <!-- Animación circular -->
@@ -685,9 +568,6 @@ function fsel($pub, $key, $value, $default = '') {
     <span class="spinner-text"><?= $modoEdicion ? 'Guardando cambios…' : 'Publicando material…' ?></span>
 </div>
 
-<!-- ══════════════════════════════════════════
-     NAVBAR
-══════════════════════════════════════════ -->
 <!-- Barra superior de navegación -->
 <nav class="univia-navbar">
     <div class="container-lg">
