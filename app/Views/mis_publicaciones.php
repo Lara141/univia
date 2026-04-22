@@ -4,57 +4,39 @@
  * Archivo: application/views/dashboard.php
  *
  * Datos que debe inyectar el controlador (Dashboard.php → index()):
- *   $this->load->view('dashboard', [
- *       'usuario'          => $usuario,         // array: id, nombre, apellido, email
- *       'publicaciones'    => $publicaciones,   // array de publicaciones del usuario
- *       'total_pubs'       => $total_pubs,      // int
- *       'total_descargas'  => $total_descargas, // int
- *       'promedio_rating'  => $promedio_rating, // float
- *   ]);
+ * $this->load->view('dashboard', [
+ * 'usuario'          => $usuario,         // array: id, nombre, apellido, email
+ * 'publicaciones'    => $publicaciones,   // array de publicaciones del usuario
+ * 'total_pubs'       => $total_pubs,      // int
+ * 'total_descargas'  => $total_descargas, // int
+ * 'promedio_rating'  => $promedio_rating, // float
+ * ]);
  *
  * Estructura esperada de cada $pub:
- *   $pub['id']              → int
- *   $pub['titulo']          → string
- *   $pub['descripcion']     → string
- *   $pub['tipo_recurso']    → string: resumen | apunte | libro | examen | guia | otro
- *   $pub['tipo_acuerdo']    → string: gratis | pago | intercambio
- *   $pub['estado']          → string: activo | inactivo
- *   $pub['materia']         → string
- *   $pub['fecha']           → string: datetime MySQL
- *   $pub['nombre_archivo']  → string|null  (nombre del archivo subido)
- *   $pub['nombre_imagen']   → string|null  (nombre de la imagen de portada)
- *   $pub['es_libro_fisico'] → bool
- *   $pub['descargas']       → int
+ * $pub['id']              → int
+ * $pub['titulo']          → string
+ * $pub['descripcion']     → string
+ * $pub['tipo_recurso']    → string: resumen | apunte | libro | examen | guia | otro
+ * $pub['tipo_acuerdo']    → string: gratis | pago 
+ * $pub['precio']          → float|null   (AÑADIDO: precio si es de pago)
+ * $pub['estado']          → string: activo | inactivo
+ * $pub['materia']         → string
+ * $pub['fecha']           → string: datetime MySQL
+ * $pub['nombre_archivo']  → string|null  (nombre del archivo subido)
+ * $pub['nombre_imagen']   → string|null  (nombre de la imagen de portada)
+ * $pub['es_libro_fisico'] → bool
+ * $pub['descargas']       → int
  */
 ?>
 <!DOCTYPE html>
-<!--
-    VISTA: "Mis publicaciones" / Panel de usuario
-
-    Descripción:
-    Esta vista representa el panel principal del usuario dentro de Univia,
-    donde puede visualizar, filtrar y gestionar sus publicaciones.
-
-    Características principales:
-    - Sistema de temas (dark / light)
-    - Navbar con búsqueda y menú de usuario
-    - Estadísticas rápidas (chips)
-    - Listado de publicaciones en formato cards
-    - Filtros dinámicos
--->
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <!-- Configuración responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Título de la página -->
     <title>Univia — Mi Panel</title>
 
-     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos Bootstrap -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Tipografías -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
     <style>
@@ -95,9 +77,7 @@
         --badge-pago-bg:          rgba(251,191,36,.12);
         --badge-pago-color:       #fbbf24;
         --badge-pago-border:      rgba(251,191,36,.22);
-        --badge-intercambio-bg:   rgba(56,189,248,.12);
-        --badge-intercambio-color:#38bdf8;
-        --badge-intercambio-border:rgba(56,189,248,.22);
+    
         --switch-track:  rgba(255,255,255,.12);
         --preview-ph-bg: rgba(255,255,255,.03);
     }
@@ -131,9 +111,6 @@
         --badge-pago-bg:          rgba(217,119,6,.1);
         --badge-pago-color:       #d97706;
         --badge-pago-border:      rgba(217,119,6,.2);
-        --badge-intercambio-bg:   rgba(14,165,233,.1);
-        --badge-intercambio-color:#0284c7;
-        --badge-intercambio-border:rgba(14,165,233,.2);
         --switch-track:  rgba(0,0,0,.1);
         --preview-ph-bg: rgba(0,0,0,.02);
     }
@@ -299,14 +276,15 @@
     .t-icon { font-size: 1rem; }
 
     /* ══════════════════════════════════════════════
-       HERO (CABECERA DEL PANEL)
+      Cabecera del panel
        
        Contiene:
-       - Título de la sección
+       - titulo
        - Subtítulo
        - Botón "Nueva publicación"
        - Estadísticas
     ══════════════════════════════════════════════ */
+    .page-hero {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
         padding: 2rem 0 1.8rem;
@@ -412,8 +390,7 @@
     .badge-otro      { background:rgba(100,116,139,.12); color:var(--text-muted); border:1px solid rgba(100,116,139,.2); }
     .badge-gratis    { background:var(--badge-gratis-bg); color:var(--badge-gratis-color); border:1px solid var(--badge-gratis-border); }
     .badge-pago      { background:var(--badge-pago-bg);  color:var(--badge-pago-color);  border:1px solid var(--badge-pago-border); }
-    .badge-intercambio { background:var(--badge-intercambio-bg); color:var(--badge-intercambio-color); border:1px solid var(--badge-intercambio-border); }
-
+   
     .card-body-inner { padding: 1.05rem 1.15rem; display: flex; flex-direction: column; flex: 1; }
     .pub-card-title { font-family: 'Syne', sans-serif; font-size: .96rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; line-height: 1.3; }
     .pub-card-materia { font-size: .79rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-bottom: .5rem; }
@@ -511,20 +488,12 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════
-     NAVBAR
-═══════════════════════════════════════ -->
 <nav class="univia-navbar">
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 
-           <!-- Logo de la aplicación.
-                 Redirige al dashboard principal del usuario -->
-            <a href="<?= base_url('dashboard') ?>" class="brand-name">Univia</a>
+           <a href="<?= base_url('dashboard') ?>" class="brand-name">Univia</a>
 
-            <!-- Buscador (solo visible en desktop).
-                 Permite buscar materiales por texto (materia, título, etc).
-                 ENVÍA por GET a: materiales/buscar -->
             <form class="flex-grow-1 search-wrap d-none d-md-block"
                   action="<?= base_url('materiales/buscar') ?>" method="GET">
                 <i class="bi bi-search"></i>
@@ -532,42 +501,24 @@
                        placeholder="Buscar materiales, materias, carreras…" autocomplete="off">
             </form>
 
-            <!-- Sección derecha (usuario) -->
             <div class="ms-auto d-flex align-items-center gap-2">
 
-                <!-- ── DROPDOWN DE PERFIL (avatar arriba a la derecha) ── -->
                 <div class="dropdown">
-                    <!--
-                        DATO DINÁMICO: Iniciales del usuario
-                        PHP: echo strtoupper(
-                               substr($usuario['nombre'],0,1).
-                               substr($usuario['apellido'],0,1)
-                             );
-                    -->
                     <div class="user-avatar dropdown-toggle"
                          data-bs-toggle="dropdown" aria-expanded="false">
                         VA
                     </div>
 
-                    <!-- Menú desplegable -->
                     <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width:240px;">
 
-                        <!-- Nombre Completo del usuario -->
                         <li>
                             <span class="dropdown-header">
-                                <!--
-                                    PHP: echo htmlspecialchars(
-                                           $usuario['nombre'].' '.$usuario['apellido']
-                                         );
-                                -->
                                 Valentina Acosta
                             </span>
                         </li>
 
                         <li><hr class="dropdown-divider"></li>
 
-                        <!-- Toggle de tema (modo claro / oscuro).
-                             Se controla con JS cambiando data-theme en <html> -->
                         <li>
                             <div class="theme-row" id="theme-row">
                                 <div class="theme-row-left">
@@ -583,128 +534,86 @@
 
                         <li><hr class="dropdown-divider"></li>
 
-                        <!-- Navegación del usuario-->
                         <li>
-                            <!-- Redirige al perfil -->
                             <a class="dropdown-item" href="<?= base_url('perfil') ?>">
                                 <i class="bi bi-person-circle"></i> Mi Perfil
                             </a>
                         </li>
                         <li>
-                         <!-- Vista actual: publicaciones del usuario -->
-                            <a class="dropdown-item" href="<?= base_url('publicaciones') ?>">
+                         <a class="dropdown-item" href="<?= base_url('publicaciones') ?>">
                                 <i class="bi bi-folder2-open"></i> Mis Publicaciones
                             </a>
                         </li>
                         <li>
-                            <!-- Configuración del usuario -->
                             <a class="dropdown-item" href="<?= base_url('configuracion') ?>">
                                 <i class="bi bi-gear"></i> Configuración
                             </a>
                         </li>
 
                         <li><hr class="dropdown-divider"></li>
-                         <!-- Cerrar sesión -->
-                        <li>
-                            <!-- RUTA: base_url('auth/cerrar_sesion') -->
+                         <li>
                             <a class="dropdown-item danger" href="<?= base_url('auth/cerrar_sesion') ?>" style="color:var(--danger);">
                                 <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                             </a>
                         </li>
                     </ul>
-                </div><!-- /dropdown -->
-
-            </div>
+                </div></div>
         </div>
     </div>
 </nav>
 
 
-<!-- ═══════════════════════════════════════
-     HERO — saludo + acciones + estadísticas
-═══════════════════════════════════════ -->
 <section class="page-hero">
     <div class="container-lg">
 
-        <!-- Encabezado principal -->
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-             <!-- Saludo personalizado (dato dinámico) -->
-                <h1>
-                    <!--
-                        DATO DINÁMICO:
-                        PHP: echo 'Hola, '.htmlspecialchars($usuario['nombre']).' 👋';
-                    -->
+             <h1>
                     Hola, Valentina 👋
                 </h1>
-                <!-- Descripción del panel -->
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
             </div>
 
-            <!-- BOTÓN PRINCIPAL: Nueva Publicación -->
-            <!-- RUTA: base_url('publicaciones/nueva') -->
             <a href="<?= base_url('publicaciones/nueva') ?>" class="btn btn-nueva">
                 <i class="bi bi-plus-lg"></i>
                 <span class="btn-nueva-lbl">Nueva Publicación</span>
             </a>
         </div>
 
-        <!-- Estadísticas del usuario -->
         <div class="row g-3 mt-3">
-        <!-- Cantidad de publicaciones -->
-            <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-6 col-md-4 col-lg-3">
                 <div class="stat-chip">
                     <div class="icon-wrap" style="background:rgba(91,127,255,.12);">
                         <i class="bi bi-file-earmark-text" style="color:var(--accent);"></i>
                     </div>
                     <div>
-                        <!-- PHP: echo $total_pubs ?? 0; -->
                         <div class="stat-value">12</div>
                         <div class="stat-label">Mis publicaciones</div>
                     </div>
                 </div>
             </div>
-            <!-- Total de descargas -->
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="stat-chip">
                     <div class="icon-wrap" style="background:rgba(52,211,153,.12);">
                         <i class="bi bi-download" style="color:var(--success);"></i>
                     </div>
                     <div>
-                        <!-- PHP: echo $total_descargas ?? 0; -->
                         <div class="stat-value">84</div>
                         <div class="stat-label">Descargas totales</div>
                     </div>
                 </div>
             </div>
-            <!-- Valoración promedio -->
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="stat-chip">
-                    <div class="icon-wrap" style="background:rgba(251,191,36,.12);">
-                        <i class="bi bi-star" style="color:var(--warn);"></i>
-                    </div>
-                    <div>
-                        <!-- PHP: echo number_format($promedio_rating ?? 0, 1); -->
-                        <div class="stat-value">4.7</div>
-                        <div class="stat-label">Valoración media</div>
-                    </div>
-                </div>
-            </div>
+         
         </div>
 
     </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════
-     CONTENIDO PRINCIPAL
-═══════════════════════════════════════ -->
 <main class="container-lg py-4">
 
-    <!-- Buscador para mobile -->
-    <!-- Igual funcionalidad que el de desktop -->
     <form class="d-md-none mb-3" action="<?= base_url('materiales/buscar') ?>" method="GET">
         <div class="search-wrap" style="max-width:100%;">
             <i class="bi bi-search"></i>
@@ -713,10 +622,8 @@
         </div>
     </form>
 
-    <!-- Encabezado de sección + filtros -->
     <div class="section-header">
         <h2>Mis Publicaciones</h2>
-        <!-- Filtros por tipo de recurso (JS) -->
         <div class="filter-pills">
             <button class="filter-pill active" data-filter="todos">Todos</button>
             <button class="filter-pill" data-filter="resumen">Resúmenes</button>
@@ -726,21 +633,6 @@
             <button class="filter-pill" data-filter="guia">Guías</button>
         </div>
     </div>
-
-    <!--
-    GRILLA DE PUBLICACIONES (DINÁMICA)
-
-    - Se recorre el array $publicaciones desde PHP
-    - Cada publicación genera una card
-    - Se usan data-* attributes para pasar datos al modal
-
-    IMPORTANTE:
-    - data-id → identificar publicación
-    - data-titulo, descripcion → mostrar en modal
-    - data-url-archivo → descarga
-    - data-url-imagen → preview
-    -->
-
 
     <?php if (!empty($publicaciones)): ?>
     <?php foreach ($publicaciones as $pub): ?>
@@ -761,6 +653,7 @@
            data-descripcion="<?= htmlspecialchars($pub['descripcion']) ?>"
            data-tipo-recurso="<?= $pub['tipo_recurso'] ?>"
            data-tipo-acuerdo="<?= $pub['tipo_acuerdo'] ?>"
+           data-precio="<?= isset($pub['precio']) ? $pub['precio'] : '0' ?>"
            data-estado="<?= $pub['estado'] ?>"
            data-materia="<?= htmlspecialchars($pub['materia']) ?>"
            data-fecha="<?= date('d/m/Y', strtotime($pub['fecha'])) ?>"
@@ -775,17 +668,13 @@
     </div>
 
     <?php endforeach; ?>
-    <?php else: ?>
-      (empty state)
+    
     <?php endif; ?>
-    ═══════════════════════════════════════════════════════
-    -->
+
 
     <div class="row g-3" id="pub-grid">
 
-       <!-- CARD DE EJEMPLO: Apunte PDF -->
-        <!-- Representa un material digital descargable -->
-        <div class="col-12 col-sm-6 col-lg-4" data-tipo="apunte">
+       <div class="col-12 col-sm-6 col-lg-4" data-tipo="apunte">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
                  data-id="1"
@@ -793,6 +682,7 @@
                  data-descripcion="Resumen completo de todos los temas vistos durante la cursada: ciclos de vida, metodologías ágiles, casos de uso, diagramas UML y arquitecturas de software. Incluye ejemplos prácticos."
                  data-tipo-recurso="apunte"
                  data-tipo-acuerdo="gratis"
+                 data-precio="0"
                  data-estado="activo"
                  data-materia="Ingeniería de Software I"
                  data-fecha="15/05/2025"
@@ -803,35 +693,26 @@
                  data-url-imagen=""
                  data-url-archivo="<?= base_url('uploads/archivos/apuntes_is1_2024.pdf') ?>">
 
-                 <!-- Vista previa del archivo -->
-                <div class="card-preview">
+                 <div class="card-preview">
                     <i class="bi bi-file-earmark-pdf card-preview-icon" style="color:#ef4444;"></i>
                     <span class="preview-pill"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</span>
                 </div>
-                <!-- Contenido de la card -->
                 <div class="card-body-inner">
-                 <!-- Badges -->
-                    <div class="d-flex flex-wrap gap-1 mb-2">
+                 <div class="d-flex flex-wrap gap-1 mb-2">
                         <span class="badge-tipo badge-apunte">Apunte</span>
                         <span class="badge-acuerdo badge-gratis"><i class="bi bi-gift"></i>Gratis</span>
                     </div>
-                    <!-- Título -->
                     <h3 class="pub-card-title">Apuntes Ingeniería de Software I</h3>
                     <div class="pub-card-materia">
                         <i class="bi bi-mortarboard"></i>
-                        <!-- materia -->
                         <span>Ingeniería de Software I</span>
                     </div>
-                    <!-- Descripcion -->
                     <p class="pub-card-desc">Resumen completo de todos los temas vistos: ciclos de vida, metodologías ágiles, casos de uso, diagramas UML y arquitecturas.</p>
-                     <!-- Footer -->
-                    <div class="pub-card-footer">
+                     <div class="pub-card-footer">
                         <div class="d-flex align-items-center gap-1">
                             <span class="status-dot status-active"></span>
-                            <!-- Estado-->
                             <span>Activo</span>
                         </div>
-                        <!-- Acciones -->
                         <div class="d-flex align-items-center gap-2">
                             <span><i class="bi bi-download"></i> 23</span>
                             <button class="btn btn-ver-card">Ver</button>
@@ -841,7 +722,6 @@
             </div>
         </div>
 
-        <!-- ── CARD 2: Libro físico con imagen de portada ── -->
         <div class="col-12 col-sm-6 col-lg-4" data-tipo="libro">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
@@ -849,7 +729,8 @@
                  data-titulo="Introducción a la Programación — Deitel"
                  data-descripcion="Libro físico en excelente estado. Edición 2019. Cubre fundamentos de C++ hasta POO. Ideal para primer año de Ingeniería en Sistemas. Puedo prestarlo o intercambiarlo."
                  data-tipo-recurso="libro"
-                 data-tipo-acuerdo="intercambio"
+                 data-tipo-acuerdo="gratis"
+                 data-precio="0"
                  data-estado="activo"
                  data-materia="Programación I"
                  data-fecha="02/04/2025"
@@ -860,17 +741,7 @@
                  data-url-imagen="https://placehold.co/400x560/1a1e35/5b7fff?text=Deitel+C%2B%2B&font=syne"
                  data-url-archivo="">
 
-                <!-- Preview: imagen de portada del libro físico -->
                 <div class="card-preview">
-                    <!--
-                        DATO DINÁMICO: mostrar imagen si existe, sino ícono
-                        PHP:
-                        if (!empty($pub['nombre_imagen'])):
-                          echo '<img src="'.base_url('uploads/imagenes/'.$pub['nombre_imagen']).'" alt="Portada" loading="lazy">';
-                        else:
-                          echo '<i class="bi bi-book-half card-preview-icon" style="color:var(--success);"></i>';
-                        endif;
-                    -->
                     <img src="https://placehold.co/400x560/1a1e35/5b7fff?text=Deitel+C%2B%2B&font=syne"
                          alt="Portada del libro" loading="lazy">
                     <span class="preview-pill"><i class="bi bi-book-half me-1"></i>Libro físico</span>
@@ -878,7 +749,6 @@
                 <div class="card-body-inner">
                     <div class="d-flex flex-wrap gap-1 mb-2">
                         <span class="badge-tipo badge-libro">Libro</span>
-                        <span class="badge-acuerdo badge-intercambio"><i class="bi bi-arrow-left-right"></i>Intercambio</span>
                     </div>
                     <h3 class="pub-card-title">Introducción a la Programación — Deitel</h3>
                     <div class="pub-card-materia"><i class="bi bi-mortarboard"></i><span>Programación I</span></div>
@@ -896,7 +766,6 @@
             </div>
         </div>
 
-        <!-- ── CARD 3: Examen PDF pago ── -->
         <div class="col-12 col-sm-6 col-lg-4" data-tipo="examen">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
@@ -905,6 +774,7 @@
                  data-descripcion="Primer parcial 2024 con soluciones paso a paso. Integrales dobles, triples y series de Taylor con 6 ejercicios resueltos. Precio simbólico para cubrir fotocopias."
                  data-tipo-recurso="examen"
                  data-tipo-acuerdo="pago"
+                 data-precio="1500"
                  data-estado="activo"
                  data-materia="Análisis Matemático II"
                  data-fecha="10/03/2025"
@@ -940,7 +810,6 @@
             </div>
         </div>
 
-        <!-- ── CARD 4: Resumen con imagen escaneada ── -->
         <div class="col-12 col-sm-6 col-lg-4" data-tipo="resumen">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
@@ -949,6 +818,7 @@
                  data-descripcion="Resumen visual con esquemas y mapas conceptuales del libro de Tanenbaum. Capítulos 1 al 5. Incluye imágenes escaneadas de mis apuntes de clase con diagramas de capas OSI y TCP/IP."
                  data-tipo-recurso="resumen"
                  data-tipo-acuerdo="gratis"
+                 data-precio="0"
                  data-estado="inactivo"
                  data-materia="Redes de Computadoras"
                  data-fecha="20/01/2025"
@@ -985,42 +855,17 @@
             </div>
         </div>
 
-        <!--
-        ── EMPTY STATE ──
-        PHP: if (empty($publicaciones)):
-        <div class="col-12">
-            <div class="empty-state">
-                <div class="empty-icon"><i class="bi bi-folder2-open"></i></div>
-                <h5 style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text);">Todavía no subiste nada</h5>
-                <p style="max-width:300px;margin:0 auto 1.5rem;">Compartí tus apuntes, libros, guías o exámenes con la comunidad.</p>
-                <a href="<?= base_url('publicaciones/nueva') ?>" class="btn btn-nueva">
-                    <i class="bi bi-plus-lg"></i> Subir primer material
-                </a>
-            </div>
-        </div>
-        PHP: endif;
-        -->
-
-    </div><!-- /#pub-grid -->
-</main>
+    </div></main>
 
 
-<!-- ═══════════════════════════════════════
-     MODAL — DETALLE COMPLETO
-     Datos inyectados por JS desde los data-* de cada card
-═══════════════════════════════════════ -->
 <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
 
-            <!-- Header -->
             <div class="modal-header">
                 <div class="d-flex flex-column w-100 pe-3">
-                    <!-- Badges de tipo recurso y tipo acuerdo -->
                     <div class="d-flex flex-wrap gap-1 mb-2" id="modal-badges"></div>
-                    <!-- Título -->
                     <h5 class="modal-title mb-1" id="modal-titulo">—</h5>
-                    <!-- Materia -->
                     <div style="font-size:.82rem; color:var(--text-muted);" class="d-flex align-items-center gap-1">
                         <i class="bi bi-mortarboard"></i>
                         <span id="modal-materia">—</span>
@@ -1029,93 +874,63 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
-            <!-- Body -->
             <div class="modal-body">
 
-                <!-- ── ZONA DE PREVIEW ── -->
-                <!-- Se inyecta dinámicamente con JS según el tipo de material -->
                 <div id="modal-preview-wrap" class="modal-preview-wrap mb-4" style="display:none;"></div>
 
-                <!-- ── GRILLA DE DETALLES ── -->
                 <div class="detail-grid mb-4">
 
                     <div>
                         <div class="detail-label">Tipo de recurso</div>
-                        <!--
-                            PHP: echo ucfirst($pub['tipo_recurso']);
-                        -->
                         <p class="detail-value" id="modal-tipo-recurso">—</p>
                     </div>
 
                     <div>
                         <div class="detail-label">Tipo de acuerdo</div>
-                        <!--
-                            PHP: echo ucfirst($pub['tipo_acuerdo']);
-                        -->
                         <p class="detail-value" id="modal-tipo-acuerdo">—</p>
                     </div>
 
                     <div>
+                        <div class="detail-label">Precio</div>
+                        <p class="detail-value" id="modal-precio">—</p>
+                    </div>
+
+                    <div>
                         <div class="detail-label">Estado</div>
-                        <!--
-                            PHP: echo '<span class="status-dot '.($pub['activo'] ? 'status-active' : 'status-inactive').'"></span> '.ucfirst($pub['estado']);
-                        -->
                         <p class="detail-value" id="modal-estado">—</p>
                     </div>
 
                     <div>
                         <div class="detail-label">Fecha de publicación</div>
-                        <!--
-                            PHP: echo date('d/m/Y', strtotime($pub['fecha']));
-                        -->
                         <p class="detail-value" id="modal-fecha">—</p>
                     </div>
 
                     <div>
                         <div class="detail-label">Nombre del archivo</div>
-                        <!--
-                            PHP: echo $pub['nombre_archivo'] ?? '—';
-                        -->
                         <p class="detail-value" id="modal-nombre-archivo">—</p>
                     </div>
 
                     <div>
                         <div class="detail-label">Nombre de la imagen</div>
-                        <!--
-                            PHP: echo $pub['nombre_imagen'] ?? '—';
-                        -->
                         <p class="detail-value" id="modal-nombre-imagen">—</p>
                     </div>
 
-                </div><!-- /detail-grid -->
-
-                <!-- ── DESCRIPCIÓN COMPLETA ── -->
-                <div class="detail-label mb-2">Descripción completa</div>
-                <!--
-                    PHP: echo nl2br(htmlspecialchars($pub['descripcion']));
-                -->
+                </div><div class="detail-label mb-2">Descripción completa</div>
                 <div class="detail-desc-box" id="modal-descripcion">—</div>
 
-                <!-- ── BOTÓN DESCARGA (solo si hay archivo digital) ── -->
                 <div class="mt-3" id="modal-descarga-wrap" style="display:none;">
                     <a href="#" id="modal-btn-descargar" class="btn-descargar" target="_blank">
                         <i class="bi bi-download"></i> Descargar archivo
                     </a>
                 </div>
 
-            </div><!-- /modal-body -->
-
-            <!-- Footer -->
-            <div class="modal-footer gap-2 justify-content-between flex-wrap">
+            </div><div class="modal-footer gap-2 justify-content-between flex-wrap">
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-cerrar-modal" data-bs-dismiss="modal">Cerrar</button>
-                    <!-- RUTA: base_url('publicaciones/eliminar/{id}') -->
                     <a href="#" id="modal-btn-eliminar" class="btn btn-eliminar">
                         <i class="bi bi-trash3"></i> Eliminar
                     </a>
                 </div>
-                <!-- BOTÓN EDITAR — acción principal -->
-                <!-- RUTA: base_url('publicaciones/editar/{id}') -->
                 <a href="#" id="modal-btn-editar" class="btn btn-editar">
                     <i class="bi bi-pencil-square"></i> Editar Publicación
                 </a>
@@ -1123,13 +938,7 @@
 
         </div>
     </div>
-</div><!-- /#modalDetalle -->
-
-
-<!-- ═══════════════════════════════════════
-     SCRIPTS
-═══════════════════════════════════════ -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════
    1. SISTEMA DE TEMA  dark ↔ light
@@ -1199,17 +1008,16 @@ const TIPO_RECURSO_LABEL = {
 const TIPO_ACUERDO_LABEL = {
     gratis:      'Gratuito',
     pago:        'Pago',
-    intercambio: 'Intercambio',
 };
 const TIPO_RECURSO_BADGE_CLASS = {
     resumen:'badge-resumen', apunte:'badge-apunte', libro:'badge-libro',
     examen:'badge-examen',   guia:'badge-guia',     otro:'badge-otro',
 };
 const TIPO_ACUERDO_BADGE_CLASS = {
-    gratis:'badge-gratis', pago:'badge-pago', intercambio:'badge-intercambio',
+    gratis:'badge-gratis', pago:'badge-pago', 
 };
 const TIPO_ACUERDO_ICON = {
-    gratis:'bi-gift', pago:'bi-currency-dollar', intercambio:'bi-arrow-left-right',
+    gratis:'bi-gift', pago:'bi-currency-dollar',
 };
 const ARCHIVO_ICON = {
     pdf:'bi-file-earmark-pdf',   doc:'bi-file-earmark-word', docx:'bi-file-earmark-word',
@@ -1248,6 +1056,14 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     document.getElementById('modal-tipo-acuerdo').textContent = TIPO_ACUERDO_LABEL[d.tipoAcuerdo] || d.tipoAcuerdo || '—';
     document.getElementById('modal-fecha').textContent        = d.fecha       || '—';
     document.getElementById('modal-descripcion').textContent  = d.descripcion || '—';
+
+    // Precio
+    const precioVal = parseFloat(d.precio) || 0;
+    if (d.tipoAcuerdo === 'pago') {
+        document.getElementById('modal-precio').textContent = '$' + precioVal;
+    } else {
+        document.getElementById('modal-precio').textContent = 'Gratis';
+    }
 
     // Estado
     const activo = d.estado === 'activo';
@@ -1308,10 +1124,27 @@ modalEl.addEventListener('show.bs.modal', function (e) {
 
     /* —— Botón descarga —— */
     const descWrap = document.getElementById('modal-descarga-wrap');
-    const btnDesc  = document.getElementById('modal-btn-descargar');
+    let btnDesc  = document.getElementById('modal-btn-descargar');
+    
+    // Clonar el botón para eliminar event listeners previos de la sesión (evita apilar alerts)
+    const newBtnDesc = btnDesc.cloneNode(true);
+    btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
+
+    // Solo muestra la descarga si hay URL de archivo Y no es libro físico
     if (urlArchivo && !esLibroFisico) {
         descWrap.style.display = '';
-        btnDesc.href           = urlArchivo;
+        
+        if (d.tipoAcuerdo === 'pago') {
+            newBtnDesc.href = '#';
+            newBtnDesc.removeAttribute('target');
+            newBtnDesc.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Debe realizar el pago antes de poder realizar la descarga');
+            });
+        } else {
+            newBtnDesc.href = urlArchivo;
+            newBtnDesc.setAttribute('target', '_blank');
+        }
     } else {
         descWrap.style.display = 'none';
     }
