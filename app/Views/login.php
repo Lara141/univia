@@ -361,10 +361,9 @@ $errors = session()->getFlashdata('errors') ?? [];
         <div class="divider">¿No tenés cuenta?</div>
 
         <!-- Botón de Registro -->
-        <a href="<?= site_url('auth/register') ?>" class="btn-register">
-            Registrarme
-        </a>
-
+         <div class="divider">
+   <a href="<?= site_url('inicio/registro') ?>" class="btn btn-nueva">Registrarme</a>
+</div>
     </div><!-- /login-card -->
 
     <!-- Pie -->

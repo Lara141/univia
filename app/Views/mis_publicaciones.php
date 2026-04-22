@@ -576,7 +576,7 @@
                 </p>
             </div>
 
-            <a href="<?= base_url('publicaciones/nueva') ?>" class="btn btn-nueva">
+   <a href="<?= site_url('publicaciones/nueva') ?>" class="btn btn-nueva">
                 <i class="bi bi-plus-lg"></i>
                 <span class="btn-nueva-lbl">Nueva Publicación</span>
             </a>

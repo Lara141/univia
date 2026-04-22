@@ -1117,9 +1117,9 @@ function fsel($pub, $key, $value, $default = '') {
                     <?= $modoEdicion ? 'Guardar cambios' : 'Publicar material' ?>
                 </button>
                 <!-- Cancelar -->
-                <a href="<?= base_url('dashboard') ?>" class="btn-cancel">
-                    <i class="bi bi-arrow-left"></i> Cancelar
-                </a>
+<a href="<?= site_url('/') ?>" class="btn-cancel">
+    <i class="bi bi-arrow-left"></i> Cancelar
+</a>
             </div>
         </div>
 

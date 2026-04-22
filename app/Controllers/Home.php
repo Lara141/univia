@@ -2,12 +2,27 @@
 
 namespace App\Controllers;
 
+namespace App\Controllers;
+
 class Home extends BaseController
 {
     public function index(): string
     {
-       //return view('login');
-       //return view('formulario_publicacion');
-        return view('mis_publicaciones');
+        // La raíz de tu sistema ahora carga el dashboard de publicaciones
+        //return view('mis_publicaciones');
+         //return view('formulario_registro');
+         return view ('login');
+    }
+
+    public function nueva_publicacion(): string
+    {
+        // Una función dedicada exclusivamente al formulario
+        return view('formulario_publicacion');
+    }
+
+     public function registro(): string
+    {
+        // Una función dedicada exclusivamente al formulario
+        return view('formulario_registro');
     }
 }
