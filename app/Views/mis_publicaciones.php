@@ -667,7 +667,7 @@
                  data-descripcion="<?= esc($pub['descripcion']) ?>"
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
-                 data-precio="0"
+                 data-precio="<?= esc($pub['precio'] ?? 0) ?>"
                  data-estado="<?= $estado_texto ?>"
                  data-materia="<?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?>"
                  data-fecha="<?= esc($pub['fecha_publicacion']) ?>"

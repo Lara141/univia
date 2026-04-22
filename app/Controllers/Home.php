@@ -45,7 +45,7 @@ class Home extends BaseController
         $file = $this->request->getFile('archivo');
         $id_archivo = null;
 
-        // 1. Procesar archivo si existe
+        // 1. Procesar archivo si se subió uno nuevo
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $newName = $file->getRandomName();
             $file->move('./uploads/archivos', $newName);
@@ -56,29 +56,77 @@ class Home extends BaseController
                 'ruta'           => 'uploads/archivos/' . $newName,
                 'formato'        => $file->getClientMimeType()
             ]);
-        } // <-- Esta llave cierra el IF, NO la función.
+        }
 
-        // 2. Convertir texto de estado a número (booleano) para MySQL
+        // 2. Capturar datos del formulario
+        $modo   = $this->request->getPost('modo'); // 'nueva' o 'editar'
+        $id_pub = $this->request->getPost('id');   // ID de la publi si estamos editando
         $estado = $this->request->getPost('estado') === 'activo' ? 1 : 0;
+        $precio = $this->request->getPost('precio') ?: 0; // Capturamos el precio!
 
-        // 3. Guardar la publicación final
+        $data = [
+            'titulo'       => $this->request->getPost('titulo'),
+            'descripcion'  => $this->request->getPost('descripcion'),
+            'tipo_recurso' => $this->request->getPost('tipo_recurso'),
+            'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
+            'precio'       => $precio,
+            'dni_usuario'  => session()->get('usuario')['dni_usuario'],
+            'id_materia'   => $this->request->getPost('materia'),
+            'estado'       => $estado
+        ];
+
+        // Si subió un archivo nuevo, actualizamos el ID, sino dejamos el que estaba
+        if ($id_archivo) {
+            $data['id_archivo'] = $id_archivo;
+        }
+
         $pubModel = new \App\Models\PublicacionModel();
-        $pubModel->insert([
-            'titulo'            => $this->request->getPost('titulo'),
-            'descripcion'       => $this->request->getPost('descripcion'),
-            'tipo_recurso'      => $this->request->getPost('tipo_recurso'),
-            'tipo_acuerdo'      => $this->request->getPost('tipo_acuerdo'),
-            'dni_usuario'       => session()->get('usuario')['dni_usuario'],
-            'id_materia'        => $this->request->getPost('materia'), 
-            'id_archivo'        => $id_archivo,
-            'fecha_publicacion' => date('Y-m-d'),
-            'estado'            => $estado
-        ]);
+
+        // 3. ¿Insertar o Actualizar?
+        if ($modo === 'editar' && $id_pub) {
+            $pubModel->update($id_pub, $data); // Actualiza la existente
+        } else {
+            $data['fecha_publicacion'] = date('Y-m-d');
+            $pubModel->insert($data); // Crea una nueva
+        }
 
         return redirect()->to('publicaciones/propias');
     }
-     
- 
+
+    // --- NUEVA FUNCIÓN: Mostrar formulario relleno para Editar ---
+    public function editar_publicacion($id) {
+        if (!session()->get('isLoggedIn')) return redirect()->to('/');
+        
+        $pubModel = new \App\Models\PublicacionModel();
+        $publicacion = $pubModel->find($id);
+
+        // Seguridad: Verificar que la publicación exista y sea del usuario
+        if (!$publicacion || $publicacion['dni_usuario'] != session()->get('usuario')['dni_usuario']) {
+            return redirect()->to('publicaciones/propias');
+        }
+
+        return view('formulario_publicacion', [
+            'usuario'     => session()->get('usuario'),
+            'publicacion' => $publicacion,
+            'modo'        => 'editar' // Le avisa a la vista que active el modo edición
+        ]);
+    }
+
+    // --- NUEVA FUNCIÓN: Soft Delete (Pasar a inactivo) ---
+    public function eliminar_publicacion($id) {
+        if (!session()->get('isLoggedIn')) return redirect()->to('/');
+        
+        $pubModel = new \App\Models\PublicacionModel();
+        $publicacion = $pubModel->find($id);
+
+        // Seguridad: Verificar que sea del usuario
+        if ($publicacion && $publicacion['dni_usuario'] == session()->get('usuario')['dni_usuario']) {
+            // Cambiamos el estado a 0 (inactivo)
+            $pubModel->update($id, ['estado' => 0]);
+        }
+
+        return redirect()->to('publicaciones/propias');
+    }
     // ════════════════════════════════════════
     //  SECCIÓN REGISTRO
     // ════════════════════════════════════════

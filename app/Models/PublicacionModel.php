@@ -6,7 +6,7 @@ class PublicacionModel extends Model {
     protected $table = 'publicacion';
     protected $primaryKey = 'id_publicacion';
     protected $allowedFields = [
-        'titulo', 'descripcion', 'tipo_recurso', 'tipo_acuerdo', 
+        'titulo', 'descripcion', 'tipo_recurso', 'tipo_acuerdo', 'precio', // <-- PRECIO AGREGADO
         'fecha_publicacion', 'estado', 'dni_usuario', 'id_materia', 'id_archivo'
     ];
 }
