@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 
 <?php 
-/* ════════════════════════════════════════════
-   HELPERS DE CODEIGNITER
+/*
    - form: facilita la creación de formularios
    - url: manejo de rutas (site_url, site_url)
    - session: acceso a datos de sesión (errores, mensajes)
-════════════════════════════════════════════ */ 
+ */ 
 helper(['form', 'url', 'session']);
 /* Obtiene errores de validación guardados en flashdata */
 $errors = session()->getFlashdata('errors') ?? [];
@@ -32,7 +31,7 @@ $errors = session()->getFlashdata('errors') ?? [];
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        /* ─── Variables  CSS (paleta de colores y estilos) ─────────────────────────────────────── */
+        /* Variables  CSS (paleta de colores y estilos) */
         :root {
             --navy:      #0f2244;
             --blue:      #2563eb;
@@ -48,7 +47,7 @@ $errors = session()->getFlashdata('errors') ?? [];
 
         /* ─── Layout general 
          - Fondo oscuro con textura
-         - Centrado vertical y horizontal─────────────────────────────────── */
+         - Centrado vertical y horizontal */
         body {
             font-family: 'Source Sans 3', sans-serif;
             min-height: 100vh;
@@ -64,17 +63,14 @@ $errors = session()->getFlashdata('errors') ?? [];
             padding: 24px;
         }
 
-        /* ─── Wrapper centrado ───────────────────────────────── */
+        /* ─── Wrapper centrado  */
          /* Contenedor principal centrado */
         .login-wrapper {
             width: 100%;
             max-width: 420px;
         }
 
-         /* ════════════════════════════════════════════
-           BRANDING (logo + nombre)
-        ════════════════════════════════════════════ */
-        /* ─── Cabecera con logo ──────────────────────────────── */
+        /* Cabecera con logo */
         .brand-icon {
             width: 52px;
             height: 52px;
@@ -103,7 +99,7 @@ $errors = session()->getFlashdata('errors') ?? [];
             letter-spacing: .8px;
         }
 
-        /* ─── Tarjeta principal ──────────────────────────────── */
+        /* Tarjeta principal */
         .login-card {
             background: #fff;
             border-radius: var(--radius-card);

@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
     <style>
-    /* ══════════════════════════════════════════════
+    /* 
     temas oscuro y claro
        Permite cambiar dinámicamente entre modo oscuro
        y modo claro mediante el atributo:
        <html data-theme="dark | light">
 
        Se definen variables CSS reutilizables en todo el diseño.
-    ══════════════════════════════════════════════ */
+      */
     :root,
     [data-theme="dark"] {
         --bg-base:       #0c0e1a; /*Fondo principal*/
@@ -149,8 +149,7 @@
     }
 
     /* ══════════════════════════════════════════════
-       buscador
-       
+       buscador 
     ══════════════════════════════════════════════ */
     .search-input::placeholder { color: var(--text-muted); }
     .search-input:focus {
