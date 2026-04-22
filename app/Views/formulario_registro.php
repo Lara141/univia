@@ -409,7 +409,10 @@
       </div>
 
     </form>
-  </div><p class="login-link mt-3">¿Ya tenés cuenta? <a href="/inicio">Iniciá sesión</a></p> </div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </div>
+ <p class="login-link mt-3">¿Ya tenés cuenta?  <a href="<?= base_url() ?>">Iniciá sesión</a></p>
+ </div>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════════════

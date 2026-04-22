@@ -492,7 +492,7 @@
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 
-           <a href="<?= base_url('dashboard') ?>" class="brand-name">Univia</a>
+           <a href="<?= base_url('') ?>" class="brand-name">Univia</a>
 
             <form class="flex-grow-1 search-wrap d-none d-md-block"
                   action="<?= base_url('materiales/buscar') ?>" method="GET">
@@ -535,17 +535,17 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <a class="dropdown-item" href="<?= base_url('perfil') ?>">
+                            <a class="dropdown-item">
                                 <i class="bi bi-person-circle"></i> Mi Perfil
                             </a>
                         </li>
                         <li>
-                         <a class="dropdown-item" href="<?= base_url('publicaciones') ?>">
+                         <a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>">
                                 <i class="bi bi-folder2-open"></i> Mis Publicaciones
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?= base_url('configuracion') ?>">
+                            <a class="dropdown-item">
                                 <i class="bi bi-gear"></i> Configuración
                             </a>
                         </li>

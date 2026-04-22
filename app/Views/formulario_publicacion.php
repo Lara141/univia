@@ -693,7 +693,7 @@ function fsel($pub, $key, $value, $default = '') {
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
         <!-- Logo / nombre de la app -->    
-        <a href="<?= base_url('dashboard') ?>" class="brand-name">Univia</a>
+        <a href="<?= base_url('') ?>" class="brand-name">Univia</a>
          <!-- Sección derecha -->    
         <div class="ms-auto d-flex align-items-center gap-2">
          <!-- Dropdown del usuario -->       
@@ -731,10 +731,10 @@ function fsel($pub, $key, $value, $default = '') {
                         <li><hr class="dropdown-divider"></li>
                          <!-- Links del usuario -->
                         <li><a class="dropdown-item" href="<?= base_url('perfil') ?>"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('dashboard') ?>"><i class="bi bi-speedometer2"></i> Mi Panel</a></li>
+                        <li><a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>"><i class="bi bi-speedometer2"></i> Mis publicaciones</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <!-- Cerrar sesión -->
-                        <li><a class="dropdown-item danger" href="<?= base_url('auth/cerrar_sesion') ?>" style="color:var(--danger);"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+                        <li><a class="dropdown-item danger" href="<?= site_url('') ?>" style="color:var(--danger);"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
                     </ul>
                 </div>
             </div>
@@ -1117,7 +1117,7 @@ function fsel($pub, $key, $value, $default = '') {
                     <?= $modoEdicion ? 'Guardar cambios' : 'Publicar material' ?>
                 </button>
                 <!-- Cancelar -->
-<a href="<?= site_url('/') ?>" class="btn-cancel">
+<a href="<?= site_url('publicaciones/propias') ?>" class="btn-cancel">
     <i class="bi bi-arrow-left"></i> Cancelar
 </a>
             </div>
