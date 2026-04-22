@@ -808,7 +808,7 @@ function fsel($pub, $key, $value, $default = '') {
             <?php if ($modoEdicion): ?>
             <!-- ID de la publicación (solo si se edita) -->
             <!-- Campo oculto: id de la publicación (solo en modo editar) -->
-            <input type="hidden" name="id" value="<?= (int)($pub['id'] ?? 0) ?>">
+           <input type="hidden" name="id" value="<?= (int)($pub['id_publicacion'] ?? 0) ?>">
             <?php endif; ?>
 
 

@@ -1,33 +1,4 @@
-<?php
-/**
- * UNIVIA — Vista: Dashboard / Panel del Usuario  (v2)
- * Archivo: application/views/dashboard.php
- *
- * Datos que debe inyectar el controlador (Dashboard.php → index()):
- * $this->load->view('dashboard', [
- * 'usuario'          => $usuario,         // array: id, nombre, apellido, email
- * 'publicaciones'    => $publicaciones,   // array de publicaciones del usuario
- * 'total_pubs'       => $total_pubs,      // int
- * 'total_descargas'  => $total_descargas, // int
- * 'promedio_rating'  => $promedio_rating, // float
- * ]);
- *
- * Estructura esperada de cada $pub:
- * $pub['id']              → int
- * $pub['titulo']          → string
- * $pub['descripcion']     → string
- * $pub['tipo_recurso']    → string: resumen | apunte | libro | examen | guia | otro
- * $pub['tipo_acuerdo']    → string: gratis | pago 
- * $pub['precio']          → float|null   (AÑADIDO: precio si es de pago)
- * $pub['estado']          → string: activo | inactivo
- * $pub['materia']         → string
- * $pub['fecha']           → string: datetime MySQL
- * $pub['nombre_archivo']  → string|null  (nombre del archivo subido)
- * $pub['nombre_imagen']   → string|null  (nombre de la imagen de portada)
- * $pub['es_libro_fisico'] → bool
- * $pub['descargas']       → int
- */
-?>
+<?php?>
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
@@ -41,7 +12,7 @@
 
     <style>
     /* ══════════════════════════════════════════════
-       SISTEMA DE TEMAS  dark / light
+    temas oscuro y claro
        Permite cambiar dinámicamente entre modo oscuro
        y modo claro mediante el atributo:
        <html data-theme="dark | light">
@@ -115,14 +86,14 @@
         --preview-ph-bg: rgba(0,0,0,.02);
     }
 
-    /* ── Transición suaves al cambiar tema ── */
+    /* ── Transición al cambiar tema ── */
     html { transition: background-color .28s ease; }
     body, .univia-navbar, .page-hero, .stat-chip, .pub-card,
     .card-preview, .modal-content, .dropdown-menu, .detail-desc-box,
     .file-name-chip { transition: background-color .28s ease, border-color .28s ease, color .2s ease; }
 
     /* ══════════════════════════════════════════════
-       ESTILOS BASE
+       ESTILOS 
     ══════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -139,7 +110,7 @@
     a { text-decoration: none; }
 
     /* ══════════════════════════════════════════════
-       NAVBAR
+       cabecera
        Contiene:
        - Nombre de la app
        - Buscador
@@ -178,11 +149,8 @@
     }
 
     /* ══════════════════════════════════════════════
-       BUSCADOR (INPUT)
+       buscador
        
-       Personalización del input de búsqueda:
-       - Placeholder con color tenue
-       - Efecto focus con borde y glow
     ══════════════════════════════════════════════ */
     .search-input::placeholder { color: var(--text-muted); }
     .search-input:focus {
@@ -192,10 +160,7 @@
     }
 
     /* ══════════════════════════════════════════════
-       AVATAR DE USUARIO
-       
-       Muestra las iniciales del usuario.
-       También funciona como botón para abrir el dropdown.
+       avatar del usuario
     ══════════════════════════════════════════════ */
     .user-avatar {
         width: 36px; height: 36px; border-radius: 50%;
@@ -667,7 +632,7 @@
                  data-descripcion="<?= esc($pub['descripcion']) ?>"
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
-                 data-precio="<?= esc($pub['precio'] ?? 0) ?>"
+                data-precio="<?= esc($pub['precio'] ?? 0) ?>"
                  data-estado="<?= $estado_texto ?>"
                  data-materia="<?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?>"
                  data-fecha="<?= esc($pub['fecha_publicacion']) ?>"
