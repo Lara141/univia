@@ -531,7 +531,7 @@
 
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-            <h1>Hola, <?= esc($usuario['nombre_usuario']) ?> 👋</h1>
+            <h1>Hola, <?= esc($usuario['nombre_usuario']) ?> </h1>
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
