@@ -7,8 +7,8 @@ use CodeIgniter\Router\RouteCollection;
 
 // --- LOGIN Y SESIÓN ---
 $routes->get('/', 'Home::index'); 
-$routes->post('auth/login', 'Auth::login');
-$routes->get('auth/cerrar_sesion', 'Auth::logout');
+$routes->post('auth/login', 'Home::login');
+$routes->get('auth/cerrar_sesion', 'Home::logout');
 
 // --- PANEL Y PUBLICACIONES ---
 $routes->get('publicaciones/propias', 'Home::publicaciones');

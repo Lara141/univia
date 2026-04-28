@@ -279,6 +279,17 @@
     <h1 class="card-titulo">Crear cuenta</h1>
     <p class="card-subtitulo">Completá tus datos para unirte a la comunidad.</p>
 
+    <?php $errores = session()->getFlashdata('errores_registro'); ?>
+<?php if ($errores): ?>
+    <div class="alert alert-danger alert-ci mb-4" role="alert" style="background-color: var(--error-bg); border-color: var(--error-borde); color: var(--error);">
+        <ul class="mb-0 ps-3">
+            <?php foreach ($errores as $error): ?>
+                <li><?= esc($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
   <form id="formRegistro" method="POST" action="<?= site_url('inicio/procesar_registro') ?>" novalidate>
      <div class="seccion-label"><i class="bi bi-person me-1"></i> Datos personales</div>
 
@@ -288,10 +299,9 @@
           <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
           <div class="input-group-custom">
             <i class="bi bi-person input-icon"></i>
-            <input type="text"
-                   class="form-control" id="nombre" name="nombre"
-                   placeholder="Ej: Lucía"
-                   value="" autocomplete="given-name"/>
+            <input type="text" class="form-control" id="nombre" name="nombre" 
+       placeholder="Ej: Lucía" 
+       value="<?= old('nombre') ?>" autocomplete="given-name"/>
           </div>
         </div>
 
@@ -302,7 +312,7 @@
             <input type="text"
                    class="form-control" id="apellido" name="apellido"
                    placeholder="Ej: González"
-                   value="" autocomplete="family-name"/>
+                   value="<?= old('apellido') ?>" autocomplete="family-name"/>
           </div>
         </div>
 
@@ -313,7 +323,7 @@
             <input type="text"
                    class="form-control" id="dni" name="dni"
                    placeholder="8 dígitos exactos"
-                   value="" inputmode="numeric" maxlength="8" autocomplete="off"/>
+                   value="<?= old('dni') ?>" inputmode="numeric" maxlength="8" autocomplete="off"/>
           </div>
           <div class="dni-contador" id="dniContador">0 / 8 dígitos</div>
         </div>
@@ -325,7 +335,7 @@
             <input type="email"
                    class="form-control" id="correo" name="correo"
                    placeholder="nombre@universidad.edu"
-                   value="" autocomplete="email"/>
+                   value="<?= old('correo') ?>" autocomplete="email"/>
           </div>
         </div>
 

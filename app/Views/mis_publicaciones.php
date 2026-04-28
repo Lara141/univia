@@ -571,7 +571,19 @@
 
     </div>
 </section>
-
+<?php if (session()->getFlashdata('mensaje')): ?>
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" 
+         style="background-color: rgba(91, 127, 255, 0.1); color: var(--accent); border-radius: 12px; border-left: 5px solid var(--accent) !important;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill me-3" style="font-size: 1.2rem;"></i>
+            <div>
+                <span class="fw-bold" style="font-family: 'Syne', sans-serif;">¡Excelente!</span><br>
+                <?= session()->getFlashdata('mensaje') ?>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: var(--close-filter);"></button>
+    </div>
+<?php endif; ?>
 
 <main class="container-lg py-4">
 
