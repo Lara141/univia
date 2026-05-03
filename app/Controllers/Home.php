@@ -7,17 +7,12 @@ use App\Models\PublicacionModel;
 use App\Models\UsuarioModel;
 
 /**
- * Controlador principal de la aplicación.
- *
- * Maneja el acceso a publicaciones propias, el flujo de creación y edición
- * de publicaciones, así como el registro y el login de usuarios.
+ * este es el controlador principal de nuestra pagina
  */
 class Home extends BaseController
 {
     /**
-     * Muestra las publicaciones del usuario autenticado.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * esta funcion muestra las publicaciones que ah publicado el usuario
      */
     public function publicaciones()
     {
@@ -40,16 +35,14 @@ class Home extends BaseController
             'usuario' => session()->get('usuario'),
             'publicaciones' => $mis_publicaciones,
         ]);
-    }
+    } 
 
-    // ==========================
-    // CASO DE USO: CREAR PUBLICACIÓN
-    // ==========================
+   
+    // Subir material
+    
 
     /**
-     * Muestra el formulario para crear una nueva publicación.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * esta funcion se encarga de mostrar el formulario para crear una publicacion 
      */
     public function nueva_publicacion()
     {
@@ -63,9 +56,8 @@ class Home extends BaseController
     }
 
     /**
-     * Procesa el envío del formulario y crea una nueva publicación.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * en esta funcion procesamos el envío del formulario, y crea una nueva publicación
+    
      */
     public function guardar_publicacion()
     {
@@ -89,14 +81,10 @@ class Home extends BaseController
             ->with('mensaje', 'Publicación subida con éxito');
     }
 
-    // ==========================
-    // MÉTODOS DEL CASO DE USO
-    // ==========================
+    // metodos usados en la funcion guardar_publicacion
 
     /**
-     * Extrae los datos enviados desde el formulario de publicación.
-     *
-     * @return array
+     * en esta funcion extraemos los datos enviados desde el formulario de publicacion
      */
     private function obtenerDatosFormulario()
     {
@@ -113,10 +101,7 @@ class Home extends BaseController
     }
 
     /**
-     * Valida los datos del formulario de publicación.
-     *
-     * @param array $datos
-     * @return bool
+     * en este metodo se validan los datos del formulario de publicacion
      */
     private function validarDatos(array $datos)
     {
@@ -128,10 +113,7 @@ class Home extends BaseController
     }
 
     /**
-     * Guarda el archivo subido en el sistema de archivos y en la tabla archivo.
-     *
-     * @param \CodeIgniter\HTTP\Files\UploadedFile|null $file
-     * @return int|null
+     * guardamos el archivo subido en la tabla de archivos y retornamos su id para asociarlo a la publicacion
      */
     private function crearArchivo($file)
     {
@@ -152,11 +134,7 @@ class Home extends BaseController
     }
 
     /**
-     * Construye los datos de publicación para insertar en la base de datos.
-     *
-     * @param array $datos
-     * @param int|null $idArchivo
-     * @return array
+     * este metodo construye los datos de publicación para insertar en la base de datos.
      */
     private function crearPublicacion(array $datos, $idArchivo)
     {
@@ -175,10 +153,7 @@ class Home extends BaseController
     }
 
     /**
-     * Inserta la publicación en la tabla publicacion.
-     *
-     * @param array $data
-     * @return void
+     * esta funcion se encarga de guardar la publicacion en la base de datos usando el modelo de publicacion
      */
     private function guardarPublicacion(array $data)
     {
@@ -187,10 +162,7 @@ class Home extends BaseController
     }
 
     /**
-     * Muestra el formulario de edición para una publicación.
-     *
-     * @param int $id
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * en el caso de que el usuario quiera editar una publicacion, este metodo se encarga de mostrar el formulario con los datos ya cargados 
      */
     public function editar_publicacion($id)
     {
@@ -218,10 +190,7 @@ class Home extends BaseController
     }
 
     /**
-     * Marca una publicación como inactiva en lugar de eliminarla físicamente.
-     *
-     * @param int $id
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * este metodo nos permite eliminar una publicacion, pasando su estado de activo a inactivo con lo cual no se mostrara a otros usuarios
      */
     public function eliminar_publicacion($id)
     {
@@ -239,26 +208,20 @@ class Home extends BaseController
         return redirect()->to('publicaciones/propias');
     }
 
-    // ==========================
-    // UTILIDADES
-    // ==========================
+  
 
     /**
-     * Determina si el usuario está autenticado.
-     *
-     * @return bool
+     *esta funcion verifica si el usuario inicio sesion
      */
     private function usuarioLogueado()
     {
         return session()->get('isLoggedIn');
     }
 
-    // SECCIÓN REGISTRO Y LOGIN
+    // inicio de sesion y registro
 
     /**
-     * Muestra la vista de login.
-     *
-     * @return string
+     * esta funcion solo se encarga de mostrar el formulario de inicio de sesion
      */
     public function index()
     {
@@ -266,9 +229,7 @@ class Home extends BaseController
     }
 
     /**
-     * Muestra el formulario de registro.
-     *
-     * @return string
+     *esta funcion muestra el formulario de registro
      */
     public function registro_vista()
     {
@@ -276,9 +237,7 @@ class Home extends BaseController
     }
 
     /**
-     * Procesa el registro de un nuevo usuario.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * esta funcion se encarga de procesar el registro validando los datos y guardandolos en la bd
      */
     public function procesar_registro()
     {
@@ -321,9 +280,7 @@ class Home extends BaseController
     }
 
     /**
-     * Valida las credenciales de login y crea la sesión de usuario.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * esta funcion procesa el inicio de sesion, validando los datos ingresados
      */
     public function login()
     {
@@ -346,9 +303,7 @@ class Home extends BaseController
     }
 
     /**
-     * Cierra la sesión del usuario.
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * esta funcion solo se encarga de cerrar la sesion y redirigir al formulario de inicio de sesion
      */
     public function logout()
     {
