@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\ArchivoModel;
 use App\Models\PublicacionModel;
 use App\Models\UsuarioModel;
-
+use App\Services\PublicacionService;
 /**
  * este es el controlador principal de nuestra pagina
  */
@@ -58,28 +58,62 @@ class Home extends BaseController
     /**
      * en esta funcion procesamos el envío del formulario, y crea una nueva publicación
     
-     */
-    public function guardar_publicacion()
-    {
-        if (!$this->usuarioLogueado()) {
-            return redirect()->to('/');
-        }
+     
+   * public function guardar_publicacion()
+   * {
+       * if (!$this->usuarioLogueado()) {
+        *    return redirect()->to('/');
+        *}
 
-        $datos = $this->obtenerDatosFormulario();
+        *$datos = $this->obtenerDatosFormulario();
 
-        if (!$this->validarDatos($datos)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('errores', $this->validator->getErrors());
-        }
+       * if (!$this->validarDatos($datos)) {
+         *   return redirect()->back()
+             *   ->withInput()
+              *  ->with('errores', $this->validator->getErrors());
+      *  }
 
-        $archivo = $this->crearArchivo($datos['archivo']);
-        $publicacion = $this->crearPublicacion($datos, $archivo);
-        $this->guardarPublicacion($publicacion);
+       * $archivo = $this->crearArchivo($datos['archivo']);
+       * $publicacion = $this->crearPublicacion($datos, $archivo);
+       * $this->guardarPublicacion($publicacion);
+
+       * return redirect()->to('publicaciones/propias')
+       *     ->with('mensaje', 'Publicación subida con éxito');
+    *}
+
+*/
+public function guardar_publicacion()
+{
+    if (!$this->usuarioLogueado()) {
+        return redirect()->to('/');
+    }
+
+    try {
+        $datos = [
+            'titulo' => $this->request->getPost('titulo'),
+            'descripcion' => $this->request->getPost('descripcion'),
+            'materia' => $this->request->getPost('materia'),
+            'tipo' => $this->request->getPost('tipo_recurso'),
+            'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
+            'precio' => $this->request->getPost('precio'),
+            'dni' => session()->get('usuario')['dni_usuario'],
+        ];
+
+        $archivo = $this->request->getFile('archivo');
+
+        $service = new PublicacionService();
+        $service->procesarPublicacion($datos, $archivo);
 
         return redirect()->to('publicaciones/propias')
             ->with('mensaje', 'Publicación subida con éxito');
+
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', $e->getMessage());
     }
+}
+
 
     // metodos usados en la funcion guardar_publicacion
 
@@ -311,4 +345,41 @@ class Home extends BaseController
 
         return redirect()->to('/');
     }
+
+
+    public function api_materias()
+{
+    $db = \Config\Database::connect();
+    $materias = $db->table('materia')->get()->getResultArray();
+
+    return $this->response->setJSON($materias);
+}
+
+public function api_tipos()
+{
+    $tipos = [
+        ['id' => 1, 'nombre' => 'Apunte'],
+        ['id' => 2, 'nombre' => 'Resumen'],
+        ['id' => 3, 'nombre' => 'Examen']
+    ];
+
+    return $this->response->setJSON($tipos);
+}
+
+public function api_acuerdos()
+{
+    $acuerdos = [
+        ['id' => 1, 'nombre' => 'Gratis'],
+        ['id' => 2, 'nombre' => 'Pago']
+    ];
+
+    return $this->response->setJSON($acuerdos);
+}
+/*¿Qué hace esto?
+
+* Devuelve datos en JSON
+* No depende de una vista
+* Puede ser consumido por cualquier frontend
+*/
+
 }

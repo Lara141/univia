@@ -22,3 +22,9 @@ $routes->post('inicio/procesar_registro', 'Home::procesar_registro');
 // Rutas para editar y eliminar
 $routes->get('publicaciones/editar/(:num)', 'Home::editar_publicacion/$1');
 $routes->get('publicaciones/eliminar/(:num)', 'Home::eliminar_publicacion/$1');
+
+//apis
+$routes->get('api/materias', 'Home::api_materias');
+$routes->get('api/tipos', 'Home::api_tipos');
+$routes->get('api/acuerdos', 'Home::api_acuerdos');
+

@@ -1343,5 +1343,19 @@ document.getElementById('formato_archivo').addEventListener('change', function()
 // Trigger al cargar si ya hay valor (modo editar)
 document.getElementById('formato_archivo').dispatchEvent(new Event('change'));
 </script>
+<script>
+fetch('/api/materias')
+  .then(res => res.json())
+  .then(data => {
+    let select = document.getElementById('materia');
+
+    data.forEach(m => {
+      let option = document.createElement('option');
+      option.value = m.id_materia;
+      option.text = m.nombre_materia;
+      select.appendChild(option);
+    });
+  });
+</script>
 </body>
 </html>s
