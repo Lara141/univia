@@ -932,21 +932,21 @@ function fsel($pub, $key, $value, $default = '') {
                 <div class="radio-pills">
                 <!-- ACTIVO -->
                     <div class="radio-pill activo">
-                        <input type="radio" id="est-activo" name="estado" value="activo"
-                               <?= ($pub['estado'] ?? 'activo') === 'activo' ? 'checked' : '' ?>>
+                        <input type="radio" id="est-activo" name="estado" value="1"
+                               <?= (string) ($pub['estado'] ?? '1') === '1' ? 'checked' : '' ?>>
                         <label for="est-activo"><i class="bi bi-eye"></i> Activo</label>
                     </div>
                       <!-- INACTIVO -->
                     <div class="radio-pill inactivo">
-                        <input type="radio" id="est-inactivo" name="estado" value="inactivo"
-                               <?= ($pub['estado'] ?? '') === 'inactivo' ? 'checked' : '' ?>>
+                        <input type="radio" id="est-inactivo" name="estado" value="0"
+                               <?= (string) ($pub['estado'] ?? '1') === '0' ? 'checked' : '' ?>>
                         <label for="est-inactivo"><i class="bi bi-eye-slash"></i> Inactivo</label>
                     </div>
                 </div>
             </div>
             <?php else: ?>
             <!-- En modo nueva publicación, el estado siempre es activo -->
-            <input type="hidden" name="estado" value="activo">
+            <input type="hidden" name="estado" value="1">
             <?php endif; ?>
 
         </form>

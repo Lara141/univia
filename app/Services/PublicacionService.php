@@ -198,7 +198,26 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
      */
     public function actualizarPublicacion(int $id, array $datos): bool
     {
+        if (array_key_exists('estado', $datos)) {
+            $datos['estado'] = $this->normalizarEstado($datos['estado']);
+        }
+
         return $this->publicacionModel->update($id, $datos);
+    }
+
+    /**
+     * Normaliza el estado para guardarlo como entero 1/0
+     *
+     * @param mixed $estado
+     * @return int
+     */
+    private function normalizarEstado($estado): int
+    {
+        if ($estado === 'activo' || $estado === '1' || $estado === 1 || $estado === true) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**

@@ -30,7 +30,7 @@ class PublicacionController extends BaseController
         }
 
         $dni = session()->get('usuario')['dni_usuario'];
-        $mis_publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni);
+        $mis_publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni, false);
 
         return view('mis_publicaciones', [
             'usuario' => session()->get('usuario'),
