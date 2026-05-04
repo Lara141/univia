@@ -131,6 +131,7 @@ class PublicacionController extends BaseController
                 'tipo_recurso' => $this->request->getPost('tipo_recurso'),
                 'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
                 'precio' => $this->request->getPost('precio'),
+                'estado' => $this->request->getPost('estado'),
             ];
 
             $archivo = $this->request->getFile('archivo');
