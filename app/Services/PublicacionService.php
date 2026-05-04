@@ -62,17 +62,19 @@ class PublicacionService
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
     {
         $builder = $this->publicacionModel->builder();
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
-        $builder->from('publicacion p');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.dni_usuario', $dni);
 
-        if ($soloActivas) {
-            $builder->where('p.estado', 1);
-        }
+$builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
 
-        $builder->orderBy('p.fecha_publicacion', 'DESC');
+$builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+
+$builder->where('publicacion.dni_usuario', $dni);
+
+if ($soloActivas) {
+    $builder->where('publicacion.estado', 1);
+}
+
+$builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 
         return $builder->get()->getResultArray();
     }
@@ -85,12 +87,13 @@ class PublicacionService
      */
     public function obtenerPublicacionPorId(int $id): ?array
     {
-        $builder = $this->publicacionModel->builder();
-        $builder->select('p.*, a.nombre_archivo as file_name, a.ruta');
-        $builder->from('publicacion p');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.id_publicacion', $id);
+       $builder = $this->publicacionModel->builder();
 
+$builder->select('publicacion.*, a.nombre_archivo as file_name, a.ruta');
+
+$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+
+$builder->where('publicacion.id_publicacion', $id);
         return $builder->get()->getRowArray();
     }
 
@@ -102,14 +105,17 @@ class PublicacionService
      */
     public function obtenerPublicacionesPorMateria(int $idMateria): array
     {
-        $builder = $this->publicacionModel->builder();
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
-        $builder->from('publicacion p');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.id_materia', $idMateria);
-        $builder->where('p.estado', 1);
-        $builder->orderBy('p.fecha_publicacion', 'DESC');
+       $builder = $this->publicacionModel->builder();
+
+$builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+
+$builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+
+$builder->where('publicacion.id_materia', $idMateria);
+$builder->where('publicacion.estado', 1);
+
+$builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 
         return $builder->get()->getResultArray();
     }
@@ -132,6 +138,12 @@ class PublicacionService
 
         if ($datos['tipo_acuerdo'] === 'pago' && empty($datos['precio'])) {
             throw new \Exception("El precio es obligatorio para publicaciones de pago");
+        }
+
+        // Validar que tipo_acuerdo sea válido
+        $tiposAcuerdoValidos = ['gratis', 'pago'];
+        if (!in_array($datos['tipo_acuerdo'], $tiposAcuerdoValidos)) {
+            throw new \Exception("El tipo de acuerdo seleccionado no es válido");
         }
 
         if (strlen($datos['titulo']) < 3) {

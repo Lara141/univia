@@ -317,7 +317,6 @@ function fsel($pub, $key, $value, $default = '') {
     }
     /* Variantes por tipo */
     .radio-pill.pago    input:checked + label { background: rgba(251,191,36,.1); border-color: var(--warn); color: var(--warn); }
-    .radio-pill.intercambio input:checked + label { background: rgba(56,189,248,.1); border-color: var(--accent-3); color: var(--accent-3); }
     .radio-pill.activo  input:checked + label { background: rgba(52,211,153,.1); border-color: var(--success); color: var(--success); }
     .radio-pill.inactivo input:checked + label { background: rgba(100,116,139,.1); border-color: var(--text-muted); color: var(--text-muted); }
 
@@ -444,7 +443,6 @@ function fsel($pub, $key, $value, $default = '') {
     .mbadge-otro      { background:rgba(100,116,139,.12); color:var(--text-muted); border:1px solid rgba(100,116,139,.2); }
     .mbadge-gratis    { background:rgba(52,211,153,.1); color:var(--success); border:1px solid rgba(52,211,153,.2); }
     .mbadge-pago      { background:rgba(251,191,36,.1); color:var(--warn); border:1px solid rgba(251,191,36,.2); }
-    .mbadge-intercambio { background:rgba(56,189,248,.1); color:var(--accent-3); border:1px solid rgba(56,189,248,.2); }
 
     /* Tips */
     /* Item individual */
@@ -791,11 +789,6 @@ function fsel($pub, $key, $value, $default = '') {
                             <input type="radio" id="ac-pago" name="tipo_acuerdo" value="pago"
                                    <?= ($pub['tipo_acuerdo'] ?? '') === 'pago' ? 'checked' : '' ?>>
                             <label for="ac-pago"><i class="bi bi-currency-dollar"></i> Pago</label>
-                        </div>
-                        <div class="radio-pill intercambio">
-                            <input type="radio" id="ac-intercambio" name="tipo_acuerdo" value="intercambio"
-                                   <?= ($pub['tipo_acuerdo'] ?? '') === 'intercambio' ? 'checked' : '' ?>>
-                            <label for="ac-intercambio"><i class="bi bi-arrow-left-right"></i> Intercambio</label>
                         </div>
                     </div>
                     <div class="field-error" id="err-acuerdo">Por favor seleccioná el tipo de acuerdo.</div>
@@ -1199,9 +1192,9 @@ const TIPO_BADGE_CLASS = {
     resumen:'mbadge-resumen', apunte:'mbadge-apunte', libro:'mbadge-libro',
     examen:'mbadge-examen', guia:'mbadge-guia', otro:'mbadge-otro'
 };
-const ACUERDO_LABEL = { gratis:'Gratis', pago:'Pago', intercambio:'Intercambio' };
+const ACUERDO_LABEL = { gratis:'Gratis', pago:'Pago' };
 const ACUERDO_BADGE_CLASS = {
-    gratis:'mbadge-gratis', pago:'mbadge-pago', intercambio:'mbadge-intercambio'
+    gratis:'mbadge-gratis', pago:'mbadge-pago'
 };
 
 function updatePreview() {
