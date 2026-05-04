@@ -9,7 +9,12 @@
 helper(['form', 'url', 'session']);
 /* Obtiene errores de validación guardados en flashdata */
 $errors = session()->getFlashdata('errors') ?? [];
+
+// Extraer errores específicos para evitar problemas de análisis estático
+$dni_error = (string) ($errors['dni'] ?? '');
+$password_error = (string) ($errors['password'] ?? '');
 ?>
+
 
 <html lang="es">
 <head>
@@ -287,7 +292,7 @@ $errors = session()->getFlashdata('errors') ?? [];
                     type="number"
                     id="dni"
                     name="dni"
-                    class="form-control <?= isset($errors['dni']) ? 'is-invalid' : '' ?>"
+                    class="form-control <?= !empty($dni_error) ? 'is-invalid' : '' ?>"
                     placeholder="Ej: 40123456"
                     value="<?= set_value('dni') ?>"
                     min="1000000"
@@ -296,9 +301,9 @@ $errors = session()->getFlashdata('errors') ?? [];
                     required
                 >
                 <!-- Error específico -->
-                <?php if (isset($errors['dni'])): ?>
+                <?php if (!empty($dni_error)): ?>
                     <div class="invalid-feedback" style="font-size:13px;">
-                        <?= esc($errors['dni']) ?>
+                        <?= esc($dni_error) ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -311,7 +316,7 @@ $errors = session()->getFlashdata('errors') ?? [];
                         type="password"
                         id="password"
                         name="password"
-                        class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"
+                        class="form-control <?= !empty($password_error) ? 'is-invalid' : '' ?>"
                         placeholder="Tu contraseña"
                         autocomplete="current-password"
                         required
@@ -338,9 +343,9 @@ $errors = session()->getFlashdata('errors') ?? [];
                             <line x1="1" y1="1" x2="23" y2="23"/>
                         </svg>
                     </button>
-                    <?php if (isset($errors['password'])): ?>
+                    <?php if (!empty($password_error)): ?>
                         <div class="invalid-feedback" style="font-size:13px;">
-                            <?= esc($errors['password']) ?>
+                            <?= esc($password_error) ?>
                         </div>
                     <?php endif; ?>
                 </div>

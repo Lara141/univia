@@ -1,6 +1,10 @@
 <?php
 /** @var array $usuario */
 /** @var array $publicaciones */
+
+// Extraer datos del usuario para evitar errores de análisis estático
+$nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
+$apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 ?>
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
@@ -472,13 +476,13 @@
 
                 <div class="dropdown">
                <div class="user-avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    <?= strtoupper(substr($usuario['nombre_usuario'], 0, 1) . substr($usuario['apellido_usuario'], 0, 1)) ?>
+    <?= strtoupper(substr($nombre_usuario, 0, 1) . substr($apellido_usuario, 0, 1)) ?>
 </div>
 
 <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width:240px;">
     <li>
         <span class="dropdown-header">
-            <?= esc($usuario['nombre_usuario']) . ' ' . esc($usuario['apellido_usuario']) ?>
+            <?= esc($nombre_usuario) . ' ' . esc($apellido_usuario) ?>
         </span>
     </li>
                    
@@ -534,7 +538,7 @@
 
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-            <h1>Hola, <?= esc($usuario['nombre_usuario']) ?> </h1>
+            <h1>Hola, <?= esc($nombre_usuario) ?> </h1>
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
@@ -615,15 +619,23 @@
     <?php foreach ($publicaciones as $pub): ?>
         <?php 
             // 1. Preparar variables seguras
-            $tipo_recurso = esc($pub['tipo_recurso'] ?? 'otro');
-            $tipo_acuerdo = esc($pub['tipo_acuerdo'] ?? 'gratis');
+            $tipo_recurso = (string) esc($pub['tipo_recurso'] ?? 'otro');
+            $tipo_acuerdo = (string) esc($pub['tipo_acuerdo'] ?? 'gratis');
             $estado_texto = (isset($pub['estado']) && ($pub['estado'] == 1 || $pub['estado'] == 'activo')) ? 'activo' : 'inactivo';
             $estado_clase = $estado_texto === 'activo' ? 'status-active' : 'status-inactive';
             
             // 2. Lógica del archivo y su vista previa
-            $nombre_archivo = esc($pub['file_name'] ?? '');
+            $nombre_archivo = (string) esc($pub['file_name'] ?? '');
             $ruta_archivo = !empty($pub['ruta']) ? base_url($pub['ruta']) : '';
             $formato = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+            
+            // 3. Variables para datos de la publicación
+            $id_publicacion = (string) esc($pub['id_publicacion'] ?? '');
+            $titulo = (string) esc($pub['titulo'] ?? '');
+            $descripcion = (string) esc($pub['descripcion'] ?? '');
+            $precio = (string) esc($pub['precio'] ?? 0);
+            $nombre_materia = (string) esc($pub['nombre_materia'] ?? 'Sin materia');
+            $fecha_publicacion = (string) esc($pub['fecha_publicacion'] ?? '');
             
             $preview_icon = 'bi-file-earmark';
             $preview_color = 'var(--text-muted)';
@@ -641,15 +653,15 @@
         <div class="col-12 col-sm-6 col-lg-4" data-tipo="<?= $tipo_recurso ?>">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
-                 data-id="<?= esc($pub['id_publicacion']) ?>"
-                 data-titulo="<?= esc($pub['titulo']) ?>"
-                 data-descripcion="<?= esc($pub['descripcion']) ?>"
+                 data-id="<?= $id_publicacion ?>"
+                 data-titulo="<?= $titulo ?>"
+                 data-descripcion="<?= $descripcion ?>"
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
-                data-precio="<?= esc($pub['precio'] ?? 0) ?>"
+                data-precio="<?= $precio ?>"
                  data-estado="<?= $estado_texto ?>"
-                 data-materia="<?= esc($pub['nombre_materia'] ?? 'Sin materia') ?>"
-                 data-fecha="<?= esc($pub['fecha_publicacion']) ?>"
+                 data-materia="<?= $nombre_materia ?>"
+                 data-fecha="<?= $fecha_publicacion ?>"
                  data-nombre-archivo="<?= $nombre_archivo ?>"
                  data-nombre-imagen=""
                  data-es-libro-fisico="0"
@@ -670,14 +682,14 @@
                         </span>
                     </div>
 
-                    <h3 class="pub-card-title"><?= esc($pub['titulo']) ?></h3>
+                    <h3 class="pub-card-title"><?= $titulo ?></h3>
                     
                     <div class="pub-card-materia">
                         <i class="bi bi-mortarboard"></i>
-                        <span><?= esc($pub['nombre_materia'] ?? 'Sin materia') ?></span>
+                        <span><?= $nombre_materia ?></span>
                     </div>
                     
-                    <p class="pub-card-desc"><?= esc($pub['descripcion']) ?></p>
+                    <p class="pub-card-desc"><?= $descripcion ?></p>
                     
                     <div class="pub-card-footer">
                         <div class="d-flex align-items-center gap-1">

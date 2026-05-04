@@ -284,7 +284,7 @@
     <div class="alert alert-danger alert-ci mb-4" role="alert" style="background-color: var(--error-bg); border-color: var(--error-borde); color: var(--error);">
         <ul class="mb-0 ps-3">
             <?php foreach ($errores as $error): ?>
-                <li><?= esc($error) ?></li>
+                <li><?= esc(is_array($error) ? implode(', ', $error) : (string) $error) ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
