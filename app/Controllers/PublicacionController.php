@@ -2,7 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\PublicacionModel;
+use App\Models\ArchivoModel;
+use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 
 /**
@@ -11,11 +12,12 @@ use App\Services\PublicacionService;
  */
 class PublicacionController extends BaseController
 {
-    protected $publicacionService;
+    protected PublicacionService $publicacionService;
 
     public function __construct()
     {
-        $this->publicacionService = new PublicacionService();
+        $archivoService = new ArchivoService(new ArchivoModel());
+        $this->publicacionService = new PublicacionService($archivoService);
     }
 
     /**
@@ -28,15 +30,7 @@ class PublicacionController extends BaseController
         }
 
         $dni = session()->get('usuario')['dni_usuario'];
-        $db = \Config\Database::connect();
-        $builder = $db->table('publicacion p');
-
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.dni_usuario', $dni);
-
-        $mis_publicaciones = $builder->get()->getResultArray();
+        $mis_publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni);
 
         return view('mis_publicaciones', [
             'usuario' => session()->get('usuario'),
@@ -101,13 +95,7 @@ class PublicacionController extends BaseController
             return redirect()->to('/');
         }
 
-        $db = \Config\Database::connect();
-        $builder = $db->table('publicacion p');
-        $builder->select('p.*, a.nombre_archivo');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.id_publicacion', $id);
-
-        $publicacion = $builder->get()->getRowArray();
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
 
         if (!$publicacion || $publicacion['dni_usuario'] != session()->get('usuario')['dni_usuario']) {
             return redirect()->to('publicaciones/propias');
@@ -130,8 +118,7 @@ class PublicacionController extends BaseController
         }
 
         try {
-            $pubModel = new PublicacionModel();
-            $publicacion = $pubModel->find($id);
+            $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
 
             if (!$publicacion || $publicacion['dni_usuario'] != session()->get('usuario')['dni_usuario']) {
                 throw new \Exception('No tienes permisos para editar esta publicación');
@@ -152,7 +139,7 @@ class PublicacionController extends BaseController
                 $datos['id_archivo'] = $idArchivo;
             }
 
-            $pubModel->update($id, $datos);
+            $this->publicacionService->actualizarPublicacion($id, $datos);
 
             return redirect()->to('publicaciones/propias')
                 ->with('mensaje', 'Publicación actualizada con éxito');
@@ -173,11 +160,10 @@ class PublicacionController extends BaseController
             return redirect()->to('/');
         }
 
-        $pubModel = new PublicacionModel();
-        $publicacion = $pubModel->find($id);
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
 
         if ($publicacion && $publicacion['dni_usuario'] == session()->get('usuario')['dni_usuario']) {
-            $pubModel->update($id, ['estado' => 0]);
+            $this->publicacionService->marcarPublicacionInactiva($id);
         }
 
         return redirect()->to('publicaciones/propias');

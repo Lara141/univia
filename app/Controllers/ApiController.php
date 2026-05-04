@@ -2,7 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Models\PublicacionModel;
+use App\Models\ArchivoModel;
+use App\Services\CatalogoService;
+use App\Services\ArchivoService;
+use App\Services\PublicacionService;
 
 /**
  * Controlador de APIs REST
@@ -10,14 +13,23 @@ use App\Models\PublicacionModel;
  */
 class ApiController extends BaseController
 {
+    private CatalogoService $catalogoService;
+    private PublicacionService $publicacionService;
+
+    public function __construct()
+    {
+        $archivoService = new ArchivoService(new ArchivoModel());
+        $this->catalogoService = new CatalogoService();
+        $this->publicacionService = new PublicacionService($archivoService);
+    }
+
     /**
      * GET /api/materias
      * Retorna todas las materias disponibles
      */
     public function materias()
     {
-        $db = \Config\Database::connect();
-        $materias = $db->table('materia')->get()->getResultArray();
+        $materias = $this->catalogoService->obtenerMaterias();
 
         return $this->response->setJSON([
             'success' => true,
@@ -66,16 +78,7 @@ class ApiController extends BaseController
      */
     public function publicacion($id)
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('publicacion p');
-
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo, a.ruta');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.id_publicacion', $id);
-        $builder->where('p.estado', 1);
-
-        $publicacion = $builder->get()->getRowArray();
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId((int) $id);
 
         if (!$publicacion) {
             return $this->response->setJSON([
@@ -104,16 +107,7 @@ class ApiController extends BaseController
         }
 
         $dni = session()->get('usuario')['dni_usuario'];
-        $db = \Config\Database::connect();
-        $builder = $db->table('publicacion p');
-
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo, a.ruta');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.dni_usuario', $dni);
-        $builder->orderBy('p.fecha_publicacion', 'DESC');
-
-        $publicaciones = $builder->get()->getResultArray();
+        $publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni);
 
         return $this->response->setJSON([
             'success' => true,
@@ -128,17 +122,7 @@ class ApiController extends BaseController
      */
     public function porMateria($idMateria)
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('publicacion p');
-
-        $builder->select('p.*, m.nombre_materia, a.nombre_archivo, a.ruta');
-        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
-        $builder->where('p.id_materia', $idMateria);
-        $builder->where('p.estado', 1);
-        $builder->orderBy('p.fecha_publicacion', 'DESC');
-
-        $publicaciones = $builder->get()->getResultArray();
+        $publicaciones = $this->publicacionService->obtenerPublicacionesPorMateria((int) $idMateria);
 
         return $this->response->setJSON([
             'success' => true,

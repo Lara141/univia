@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Services;
@@ -11,11 +10,13 @@ use App\Models\PublicacionModel;
  */
 class PublicacionService
 {
-    private $archivoService;
+    private ArchivoService $archivoService;
+    private PublicacionModel $publicacionModel;
 
-    public function __construct()
+    public function __construct(ArchivoService $archivoService, PublicacionModel $publicacionModel = null)
     {
-        $this->archivoService = new ArchivoService();
+        $this->archivoService = $archivoService;
+        $this->publicacionModel = $publicacionModel ?? new PublicacionModel();
     }
 
     /**
@@ -52,6 +53,68 @@ class PublicacionService
     }
 
     /**
+     * Obtiene las publicaciones de un usuario
+     *
+     * @param string $dni
+     * @param bool $soloActivas
+     * @return array
+     */
+    public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
+    {
+        $builder = $this->publicacionModel->builder();
+        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+        $builder->from('publicacion p');
+        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
+        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
+        $builder->where('p.dni_usuario', $dni);
+
+        if ($soloActivas) {
+            $builder->where('p.estado', 1);
+        }
+
+        $builder->orderBy('p.fecha_publicacion', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
+     * Obtiene una publicación por su id
+     *
+     * @param int $id
+     * @return array|null
+     */
+    public function obtenerPublicacionPorId(int $id): ?array
+    {
+        $builder = $this->publicacionModel->builder();
+        $builder->select('p.*, a.nombre_archivo as file_name, a.ruta');
+        $builder->from('publicacion p');
+        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
+        $builder->where('p.id_publicacion', $id);
+
+        return $builder->get()->getRowArray();
+    }
+
+    /**
+     * Obtiene publicaciones por materia
+     *
+     * @param int $idMateria
+     * @return array
+     */
+    public function obtenerPublicacionesPorMateria(int $idMateria): array
+    {
+        $builder = $this->publicacionModel->builder();
+        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+        $builder->from('publicacion p');
+        $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
+        $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
+        $builder->where('p.id_materia', $idMateria);
+        $builder->where('p.estado', 1);
+        $builder->orderBy('p.fecha_publicacion', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
      * Valida todos los campos requeridos de una publicación
      * 
      * @param array $datos Datos a validar
@@ -67,12 +130,10 @@ class PublicacionService
             }
         }
 
-        // Validación específica: si es tipo "pago", debe tener precio
         if ($datos['tipo_acuerdo'] === 'pago' && empty($datos['precio'])) {
             throw new \Exception("El precio es obligatorio para publicaciones de pago");
         }
 
-        // Validar longitud mínima del título
         if (strlen($datos['titulo']) < 3) {
             throw new \Exception("El título debe tener al menos 3 caracteres");
         }
@@ -109,12 +170,34 @@ class PublicacionService
      */
     private function guardarPublicacion(array $data)
     {
-        $model = new PublicacionModel();
-        $resultado = $model->insert($data);
+        $resultado = $this->publicacionModel->insert($data);
 
         if (!$resultado) {
             throw new \Exception("Error al guardar la publicación en la base de datos");
         }
+    }
+
+    /**
+     * Actualiza los datos de una publicación existente
+     *
+     * @param int $id
+     * @param array $datos
+     * @return bool
+     */
+    public function actualizarPublicacion(int $id, array $datos): bool
+    {
+        return $this->publicacionModel->update($id, $datos);
+    }
+
+    /**
+     * Marca una publicación como inactiva
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function marcarPublicacionInactiva(int $id): bool
+    {
+        return $this->publicacionModel->update($id, ['estado' => 0]);
     }
 }
 

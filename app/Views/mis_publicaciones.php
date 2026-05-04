@@ -1,4 +1,7 @@
-<?php?>
+<?php
+/** @var array $usuario */
+/** @var array $publicaciones */
+?>
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
@@ -645,7 +648,7 @@
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
                 data-precio="<?= esc($pub['precio'] ?? 0) ?>"
                  data-estado="<?= $estado_texto ?>"
-                 data-materia="<?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?>"
+                 data-materia="<?= esc($pub['nombre_materia'] ?? 'Sin materia') ?>"
                  data-fecha="<?= esc($pub['fecha_publicacion']) ?>"
                  data-nombre-archivo="<?= $nombre_archivo ?>"
                  data-nombre-imagen=""
@@ -671,7 +674,7 @@
                     
                     <div class="pub-card-materia">
                         <i class="bi bi-mortarboard"></i>
-                        <span><?= esc($pub['Nombre_materia'] ?? 'Sin materia') ?></span>
+                        <span><?= esc($pub['nombre_materia'] ?? 'Sin materia') ?></span>
                     </div>
                     
                     <p class="pub-card-desc"><?= esc($pub['descripcion']) ?></p>

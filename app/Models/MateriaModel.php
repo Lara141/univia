@@ -6,5 +6,5 @@ use CodeIgniter\Model;
 class MateriaModel extends Model {
     protected $table = 'materia';
     protected $primaryKey = 'id_materia';
-    protected $allowedFields = ['Nombre_materia'];
+    protected $allowedFields = ['nombre_materia'];
 }
