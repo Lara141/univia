@@ -5,8 +5,7 @@ namespace App\Services;
 use App\Models\ArchivoModel;
 
 /**
- * Servicio de Gestión de Archivos
- * Centraliza la lógica de guardar, validar y gestionar archivos
+ * servicio de gestion de archivos 
  */
 class ArchivoService
 {
@@ -22,11 +21,7 @@ class ArchivoService
     }
 
     /**
-     * Guarda un archivo en el servidor
-     * 
-     * @param object $file Archivo subido
-     * @return int ID del archivo guardado
-     * @throws \Exception Si el archivo es inválido
+     * se encarga de llamar al metodo validarArchivo y guardarArchivo para poder guardar el archivo subido
      */
     public function guardar($file)
     {
@@ -34,6 +29,19 @@ class ArchivoService
             throw new \Exception('Archivo inválido o no proporcionado');
         }
 
+        $this->validarArchivo($file);
+
+        return $this->guardarArchivo($file);
+    }
+
+    /**
+     * Valida el archivo subido antes de guardarlo
+     *
+     * @param object $file Archivo subido
+     * @throws \Exception Si el archivo no cumple las reglas
+     */
+    private function validarArchivo($file): void
+    {
         if ($file->getSize() > self::MAX_TAMANIO) {
             throw new \Exception('El archivo excede el tamaño máximo permitido (20MB)');
         }
@@ -42,8 +50,20 @@ class ArchivoService
         if (!in_array($extension, self::EXTENSIONES_PERMITIDAS)) {
             throw new \Exception('Tipo de archivo no permitido. Extensiones válidas: ' . implode(', ', self::EXTENSIONES_PERMITIDAS));
         }
+    }
 
+    /**
+     * Guarda el archivo en el servidor y registra su metadata en la base de datos
+     *
+     * @param object $file Archivo subido
+     * @return int ID del archivo guardado
+     * @throws \Exception Si ocurre un error durante el guardado
+     */
+    private function guardarArchivo($file): int
+    {
+        $extension = strtolower($file->getClientExtension());
         $nombre = $file->getRandomName();
+
         if (!$file->move(self::RUTA_UPLOADS, $nombre)) {
             throw new \Exception('Error al guardar el archivo en el servidor');
         }
