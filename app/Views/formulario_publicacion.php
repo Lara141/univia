@@ -671,24 +671,21 @@ function fsel($pub, $key, $value, $default = '') {
         <!--
         ════════════════════════════════════════
          ACCIÓN DEL FORMULARIO:
-         nueva  → action="<?= site_url('publicaciones/guardar') ?>"
-         editar → action="<?= site_url('publicaciones/guardar') ?>"  (modo lo distingue el campo oculto)
+         nueva  → POST /publicaciones/guardar
+         editar → POST /publicaciones/actualizar/:id
         ════════════════════════════════════════
         -->
         <form id="pub-form"
-              action="<?= site_url('publicaciones/guardar') ?>"
+              action="<?= $modoEdicion 
+                  ? site_url('publicaciones/actualizar/' . (int)($pub['id_publicacion'] ?? 0))
+                  : site_url('publicaciones/guardar') ?>"
               method="POST"
-              enctype="multipart/form-data" <!-- Necesario para subir archivos -->
-              novalidate> <!-- Desactiva validación HTML para usar JS -->
-
-
-            <!-- Campo oculto: modo (nueva / editar) -->
-            <input type="hidden" name="modo" value="<?= $modoEdicion ? 'editar' : 'nueva' ?>">
+              enctype="multipart/form-data"
+              novalidate>
 
             <?php if ($modoEdicion): ?>
             <!-- ID de la publicación (solo si se edita) -->
-            <!-- Campo oculto: id de la publicación (solo en modo editar) -->
-           <input type="hidden" name="id" value="<?= (int)($pub['id_publicacion'] ?? 0) ?>">
+            <input type="hidden" name="id" value="<?= (int)($pub['id_publicacion'] ?? 0) ?>">
             <?php endif; ?>
 
 

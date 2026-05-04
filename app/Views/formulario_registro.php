@@ -290,7 +290,7 @@
     </div>
 <?php endif; ?>
 
-  <form id="formRegistro" method="POST" action="<?= site_url('inicio/procesar_registro') ?>" novalidate>
+  <form id="formRegistro" method="POST" action="<?= site_url('auth/procesar_registro') ?>" novalidate>
      <div class="seccion-label"><i class="bi bi-person me-1"></i> Datos personales</div>
 
       <div class="row g-3">

@@ -358,7 +358,7 @@ $errors = session()->getFlashdata('errors') ?? [];
 
         <!-- Botón de Registro -->
          <div class="divider">
-   <a href="<?= site_url('inicio/registro') ?>" class="btn btn-nueva">Registrarme</a>
+   <a href="<?= site_url('auth/registro') ?>" class="btn btn-nueva">Registrarme</a>
 </div>
     </div><!-- /login-card -->
 

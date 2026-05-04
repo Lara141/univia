@@ -515,7 +515,7 @@
 
                         <li><hr class="dropdown-divider"></li>
                          <li>
-                            <a class="dropdown-item danger" href="<?= site_url('auth/cerrar_sesion') ?>" style="color:var(--danger);">
+                            <a class="dropdown-item danger" href="<?= site_url('auth/logout') ?>" style="color:var(--danger);">
                                 <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                             </a>
                         </li>
@@ -537,7 +537,7 @@
                 </p>
             </div>
 
-   <a href="<?= site_url('publicaciones/nueva') ?>" class="btn btn-nueva">
+   <a href="<?= site_url('publicaciones/crear') ?>" class="btn btn-nueva">
                 <i class="bi bi-plus-lg"></i>
                 <span class="btn-nueva-lbl">Nueva Publicación</span>
             </a>
