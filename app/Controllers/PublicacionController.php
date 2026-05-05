@@ -177,4 +177,20 @@ class PublicacionController extends BaseController
     {
         return session()->get('isLoggedIn');
     }
+
+    public function buscar()
+    {
+        $filtros = [
+            'palabra_clave' => $this->request->getGet('q'),
+            'materia' => $this->request->getGet('materia'),
+            'tipo' => $this->request->getGet('tipo'),
+        ];
+
+        $resultados = $this->publicacionService->buscarPublicaciones($filtros);
+
+        return view('resultados_busqueda', [
+            'usuario' => session()->get('usuario'),
+            'resultados' => $resultados,
+        ]);
+    }
 }

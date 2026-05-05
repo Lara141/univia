@@ -230,5 +230,40 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     {
         return $this->publicacionModel->update($id, ['estado' => 0]);
     }
+public function buscarPublicaciones(array $filtros): array
+{
+    $builder = $this->publicacionModel->builder();
+
+    $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+
+    $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+    $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+
+    // 🔎 FILTROS DINÁMICOS
+    if (!empty($filtros['palabra_clave'])) {
+        $builder->groupStart()
+            ->like('publicacion.titulo', $filtros['palabra_clave'])
+            ->orLike('publicacion.descripcion', $filtros['palabra_clave'])
+        ->groupEnd();
+    }
+
+    if (!empty($filtros['materia'])) {
+        $builder->where('publicacion.id_materia', $filtros['materia']);
+    }
+
+    if (!empty($filtros['tipo'])) {
+        $builder->where('publicacion.tipo_recurso', $filtros['tipo']);
+    }
+
+    // solo activos
+    $builder->where('publicacion.estado', 1);
+
+    $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+
+    return $builder->get()->getResultArray();
+}
+
+
+
 }
 

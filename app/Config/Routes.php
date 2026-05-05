@@ -49,4 +49,6 @@ $routes->get('inicio/registro', 'AuthController::registro_vista');
 $routes->post('inicio/procesar_registro', 'AuthController::procesar_registro');
 
 
+$routes->get('materiales/buscar', 'PublicacionController::buscar');
+
 
