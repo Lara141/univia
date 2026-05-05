@@ -239,7 +239,7 @@ public function buscarPublicaciones(array $filtros): array
     $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
     $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
-    // 🔎 FILTROS DINÁMICOS
+    // filtros dinamicos
     if (!empty($filtros['palabra_clave'])) {
         $builder->groupStart()
             ->like('publicacion.titulo', $filtros['palabra_clave'])

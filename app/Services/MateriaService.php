@@ -4,11 +4,8 @@ namespace App\Services;
 
 use Config\Database;
 
-/**
- * Servicio de Catálogos
- * Encapsula la obtención de datos de catálogo como materias
- */
-class CatalogoService
+
+class MateriaService
 {
     public function obtenerMaterias(): array
     {

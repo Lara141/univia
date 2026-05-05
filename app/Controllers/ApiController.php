@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ArchivoModel;
-use App\Services\CatalogoService;
+use App\Services\MateriaService;
 use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 
@@ -13,13 +13,13 @@ use App\Services\PublicacionService;
  */
 class ApiController extends BaseController
 {
-    private CatalogoService $catalogoService;
+    private MateriaService $materiaService;
     private PublicacionService $publicacionService;
 
     public function __construct()
     {
         $archivoService = new ArchivoService(new ArchivoModel());
-        $this->catalogoService = new CatalogoService();
+        $this->materiaService = new MateriaService();
         $this->publicacionService = new PublicacionService($archivoService);
     }
 
@@ -29,7 +29,7 @@ class ApiController extends BaseController
      */
     public function materias()
     {
-        $materias = $this->catalogoService->obtenerMaterias();
+        $materias = $this->materiaService->obtenerMaterias();
 
         return $this->response->setJSON([
             'success' => true,
