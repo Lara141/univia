@@ -1,8 +1,7 @@
 <?php
-/** @var array $usuario */
-/** @var array $publicaciones */
 
-// Extraer datos del usuario para evitar errores de análisis estático
+
+// Extraer datos del usuario para evitar errores de analisis estatico
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
 $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 ?>
@@ -19,17 +18,12 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
     <style>
     /* 
-    temas oscuro y claro
-       Permite cambiar dinámicamente entre modo oscuro
-       y modo claro mediante el atributo:
-       <html data-theme="dark | light">
-
-       Se definen variables CSS reutilizables en todo el diseño.
+    temas oscuro y claro, permite cambiar dinámicamente entre modo oscuro y modo claro 
       */
     :root,
     [data-theme="dark"] {
         --bg-base:       #0c0e1a; /*Fondo principal*/
-        --bg-surface:    #111422; /*Navbar / secciones*/
+        --bg-surface:    #111422; /*secciones*/
         --bg-card:       #181c30; /*tarjetas*/
         --bg-card-alt:   #1c2035; /*Alternativa*/
         --bg-input:      rgba(255,255,255,.04);
@@ -93,15 +87,13 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         --preview-ph-bg: rgba(0,0,0,.02);
     }
 
-    /* ── Transición al cambiar tema ── */
+    /* ── transicion al cambiar tema ── */
     html { transition: background-color .28s ease; }
     body, .univia-navbar, .page-hero, .stat-chip, .pub-card,
     .card-preview, .modal-content, .dropdown-menu, .detail-desc-box,
     .file-name-chip { transition: background-color .28s ease, border-color .28s ease, color .2s ease; }
 
-    /* ══════════════════════════════════════════════
-       ESTILOS 
-    ══════════════════════════════════════════════ */
+    /* Estilos*/
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
@@ -116,14 +108,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     h1,h2,h3,h4,h5,.brand-name { font-family: 'Syne', sans-serif; }
     a { text-decoration: none; }
 
-    /* ══════════════════════════════════════════════
-       cabecera
-       Contiene:
-       - Nombre de la app
-       - Buscador
-       - Avatar del usuario
-       - Menú desplegable
-    ══════════════════════════════════════════════ */
+    /* cabecera */
     .univia-navbar {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
@@ -131,7 +116,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         position: sticky; top: 0; z-index: 1030;
         backdrop-filter: blur(14px);
     }
-    /* Logo / nombre */
+    /* Logo*/
     .brand-name {
         font-size: 1.45rem; font-weight: 800; letter-spacing: -.5px;
         background: var(--gradient);
@@ -139,7 +124,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         background-clip: text;
     }
 
-    /* BUSCADOR */
+    /* buscador */
     .search-wrap { position: relative; max-width: 380px; width: 100%; }
     .search-wrap .bi-search {
         position: absolute; left: 12px; top: 50%;
@@ -155,9 +140,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         font-family: 'DM Sans', sans-serif; font-size: .88rem;
     }
 
-    /* ══════════════════════════════════════════════
-       buscador 
-    ══════════════════════════════════════════════ */
     .search-input::placeholder { color: var(--text-muted); }
     .search-input:focus {
         border-color: var(--accent) !important;
@@ -165,9 +147,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         outline: none;
     }
 
-    /* ══════════════════════════════════════════════
-       avatar del usuario
-    ══════════════════════════════════════════════ */
+    /* avatar del usuario*/
     .user-avatar {
         width: 36px; height: 36px; border-radius: 50%;
         background: var(--gradient);
@@ -177,15 +157,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         user-select: none;
     }
 
-     /* ══════════════════════════════════════════════
-       DROPDOWN (MENÚ DE USUARIO)
-       
-       Contiene opciones como:
-       - Perfil
-       - Panel
-       - Cerrar sesión
-       - Cambio de tema
-    ══════════════════════════════════════════════ */
+     /* menu */
     .dropdown-menu {
         background: var(--bg-card-alt);
         border: 1px solid var(--border);
@@ -198,19 +170,13 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         display: flex; align-items: center; gap: 9px;
         background: transparent;
     }
-     /* Hover general */
+    
     .dropdown-item:hover { background: rgba(91,127,255,.1); color: var(--accent); }
-     /* Hover para opción peligrosa (logout) */
     .dropdown-item.danger:hover { background: rgba(220,38,38,.1); color: var(--danger); }
     .dropdown-divider { border-color: var(--border); margin: 4px 0; }
     .dropdown-header { color: var(--text-muted); font-size: .75rem; padding: 6px 14px; font-family: 'Syne', sans-serif; }
 
-    /* ══════════════════════════════════════════════
-       TOGGLE DE TEMA (dark / light)
-       
-       Switch que permite cambiar entre modo oscuro
-       y modo claro dinámicamente.
-    ══════════════════════════════════════════════ */
+
     .theme-row {
         display: flex; align-items: center; justify-content: space-between;
         padding: 9px 14px; border-radius: 9px; cursor: pointer; color: var(--text);
@@ -246,15 +212,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
     .t-icon { font-size: 1rem; }
 
-    /* ══════════════════════════════════════════════
-      Cabecera del panel
-       
-       Contiene:
-       - titulo
-       - Subtítulo
-       - Botón "Nueva publicación"
-       - Estadísticas
-    ══════════════════════════════════════════════ */
+    /* cabecera */
     .page-hero {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
@@ -263,7 +221,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .page-hero h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: .2rem; letter-spacing: -.4px; }
     .page-hero .subtitle { color: var(--text-muted); font-size: .92rem; }
 
-     /* Botón nueva publicación */
+     /* boton de nueva publicacion */
     .btn-nueva {
         background: var(--gradient);
         border: none; color: #fff;
@@ -275,13 +233,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     }
     .btn-nueva:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(91,127,255,.5); filter: brightness(1.08); color: #fff; }
 
-     /* ══════════════════════════════════════════════
-       TARJETAS DE ESTADÍSTICAS
-       
-       Muestran información resumida:
-       - Cantidad de publicaciones
-       - Activas / inactivas, etc.
-    ══════════════════════════════════════════════ */
+     /*tarjetas estaticas */
     .stat-chip {
         background: var(--bg-card);
         border: 1px solid var(--border); border-radius: 12px;
@@ -292,13 +244,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .stat-chip .stat-value { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; line-height: 1; }
     .stat-chip .stat-label { font-size: .77rem; color: var(--text-muted); margin-top: 2px; }
 
-     /* ══════════════════════════════════════════════
-       FILTROS (PILLS)
-       
-       Permiten filtrar publicaciones:
-       - Por tipo
-       - Por estado
-    ══════════════════════════════════════════════ */
+     /* filtros */
     .section-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1.4rem; }
     .section-header h2 { font-size: 1.15rem; font-weight: 700; margin: 0; }
     .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -311,9 +257,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     }
     .filter-pill:hover, .filter-pill.active { background: rgba(91,127,255,.1); border-color: var(--accent); color: var(--accent); }
 
-    /* ══════════════════════════════════════════════
-       CARDS DE PUBLICACIONES
-    ══════════════════════════════════════════════ */
+    /* tarjetas de publicaciones */
     .pub-card {
         background: var(--bg-card);
         border: 1px solid var(--border); border-radius: 16px;
@@ -323,7 +267,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     }
     .pub-card:hover { border-color: var(--border-hover); box-shadow: var(--glow); transform: translateY(-2px); }
 
-    /* Preview */
+   
     .card-preview {
         width: 100%; height: 148px;
         background: var(--bg-card-alt);
@@ -346,7 +290,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     }
     [data-theme="light"] .preview-pill { background: rgba(255,255,255,.78); color: #1e293b; border-color: rgba(0,0,0,.08); }
 
-    /* Badges de tipo y acuerdo */
     .badge-tipo, .badge-acuerdo {
         font-size: .69rem; font-weight: 700;
         padding: 3px 9px; border-radius: 20px;
@@ -383,16 +326,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
     .empty-state .empty-icon { font-size: 3.2rem; opacity: .25; margin-bottom: 1rem; }
 
-    /* ══════════════════════════════════════════════
-       MODAL DE DETALLE
-       
-       Se abre al hacer click en una publicación.
-       Permite:
-       - Ver detalles completos
-       - Descargar archivo
-       - Editar
-       - Eliminar
-    ══════════════════════════════════════════════ */
+    
     .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.45); }
     .modal-header  { border-bottom: 1px solid var(--border); padding: 1.3rem 1.6rem .9rem; }
     .modal-body    { padding: 1.4rem 1.6rem; }
@@ -400,7 +334,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .modal-title   { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
     .btn-close     { filter: var(--close-filter); }
 
-    /* Contenedor de preview (imagen o PDF) */
+    /* contenedor de la vista previa de la imagen o documento*/
     .modal-preview-wrap {
         width: 100%; border-radius: 12px; overflow: hidden;
         border: 1px solid var(--border); background: var(--bg-card-alt);
@@ -432,7 +366,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .detail-desc-box { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; font-size: .88rem; color: var(--text-soft); line-height: 1.65; white-space: pre-wrap; max-height: 120px; overflow-y: auto; }
     .file-name-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 7px; padding: 4px 11px; font-size: .8rem; color: var(--text-soft); font-family: 'DM Mono', monospace; word-break: break-all; }
 
-    /* Botones modal */
+    /* botones */
      /* Editar */
     .btn-editar { background: var(--gradient); border: none; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 16px rgba(91,127,255,.3); display: inline-flex; align-items: center; gap: 7px; transition: filter .15s, box-shadow .15s; }
     .btn-editar:hover { filter: brightness(1.08); box-shadow: 0 6px 22px rgba(91,127,255,.45); color: #fff; }
@@ -445,7 +379,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .btn-descargar { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.22); color: var(--success); font-size: .86rem; padding: 8px 16px; border-radius: 9px; display: inline-flex; align-items: center; gap: 7px; transition: background .15s; }
     .btn-descargar:hover { background: rgba(52,211,153,.16); color: var(--success); }
 
-    /* Scrollbar */
+   
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(128,128,128,.2); border-radius: 3px; }
@@ -790,10 +724,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     </div>
 </div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-/* ═══════════════════════════════════════════════════
-   1. SISTEMA DE TEMA  dark ↔ light
-   Persiste en localStorage con la clave 'univia_theme'
-═══════════════════════════════════════════════════ */
+
 (function () {
     const ROOT     = document.documentElement;
     const KEY      = 'univia_theme';
@@ -832,12 +763,11 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     // Cargar preferencia guardada
     apply(localStorage.getItem(KEY) || 'dark', false);
 
-    // Toggle via checkbox
+   
     checkbox.addEventListener('change', function () {
         apply(this.checked ? 'dark' : 'light', true);
     });
 
-    // Clic en toda la fila también activa
     document.getElementById('theme-row').addEventListener('click', function (e) {
         if (e.target !== checkbox && e.target.tagName !== 'LABEL') {
             checkbox.checked = !checkbox.checked;
@@ -847,9 +777,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 })();
 
 
-/* ═══════════════════════════════════════════════════
-   2. MODAL DE DETALLE — inyección de datos desde data-*
-═══════════════════════════════════════════════════ */
 const TIPO_RECURSO_LABEL = {
     resumen: 'Resumen',           apunte:  'Apunte de clase',
     libro:   'Libro',             examen:  'Examen / Parcial',
@@ -877,9 +804,7 @@ const ARCHIVO_ICON = {
     jpg:'bi-image', jpeg:'bi-image', png:'bi-image', webp:'bi-image',
 };
 
-/*
-    site_url — usando site_url() de CodeIgniter para compatibilidad
-*/
+
 const site_url = "<?= rtrim(site_url(), '/') . '/' ?>";
 
 const modalEl = document.getElementById('modalDetalle');
@@ -893,7 +818,6 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     document.getElementById('modal-titulo').textContent  = d.titulo   || '—';
     document.getElementById('modal-materia').textContent = d.materia  || '—';
 
-    /* —— Badges —— */
     const trBC = TIPO_RECURSO_BADGE_CLASS[d.tipoRecurso] || 'badge-otro';
     const taBC = TIPO_ACUERDO_BADGE_CLASS[d.tipoAcuerdo] || '';
     const taIC = TIPO_ACUERDO_ICON[d.tipoAcuerdo] || 'bi-tag';
@@ -921,19 +845,19 @@ modalEl.addEventListener('show.bs.modal', function (e) {
         `<span class="status-dot ${activo ? 'status-active' : 'status-inactive'}" style="display:inline-block;margin-right:5px;"></span>` +
         (activo ? 'Activo' : 'Inactivo');
 
-    // Nombre archivo
+    // Nombre del archivo
     const archEl = document.getElementById('modal-nombre-archivo');
     archEl.innerHTML = d.nombreArchivo
         ? `<span class="file-name-chip"><i class="bi bi-paperclip"></i>${d.nombreArchivo}</span>`
         : '<span style="color:var(--text-muted);">Sin archivo adjunto</span>';
 
-    // Nombre imagen
+    // Nombre de laimagen
     const imgEl = document.getElementById('modal-nombre-imagen');
     imgEl.innerHTML = d.nombreImagen
         ? `<span class="file-name-chip"><i class="bi bi-image"></i>${d.nombreImagen}</span>`
         : '<span style="color:var(--text-muted);">Sin imagen de portada</span>';
 
-    /* —— ZONA DE PREVIEW —— */
+   
     const previewWrap   = document.getElementById('modal-preview-wrap');
     previewWrap.style.display = 'none';
     previewWrap.innerHTML     = '';
@@ -944,7 +868,7 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     const ext           = (d.nombreArchivo || '').split('.').pop().toLowerCase();
 
     if (urlImagen) {
-        // Imagen de portada (libro físico o resumen escaneado)
+        // Imagen de portada 
         previewWrap.style.display = 'block';
         const label = esLibroFisico ? 'Libro físico' : 'Vista previa';
         const labelIcon = esLibroFisico ? 'bi-book-half' : 'bi-image';
@@ -953,7 +877,7 @@ modalEl.addEventListener('show.bs.modal', function (e) {
              <span class="preview-tag"><i class="bi ${labelIcon} me-1"></i>${label}</span>`;
 
     } else if (ext === 'pdf' && urlArchivo) {
-        // PDF → primeras páginas via iframe
+        
         previewWrap.style.display = 'block';
         previewWrap.innerHTML =
             `<iframe src="${urlArchivo}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=FitH"
@@ -961,7 +885,7 @@ modalEl.addEventListener('show.bs.modal', function (e) {
              <span class="preview-tag"><i class="bi bi-file-earmark-pdf me-1"></i>Primeras páginas</span>`;
 
     } else if (urlArchivo) {
-        // Otro formato → placeholder con ícono
+        
         const ic = ARCHIVO_ICON[ext] || 'bi-file-earmark';
         previewWrap.style.display = 'block';
         previewWrap.innerHTML =
@@ -976,11 +900,11 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     const descWrap = document.getElementById('modal-descarga-wrap');
     let btnDesc  = document.getElementById('modal-btn-descargar');
     
-    // Clonar el botón para eliminar event listeners previos de la sesión (evita apilar alerts)
+    
     const newBtnDesc = btnDesc.cloneNode(true);
     btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
 
-    // Solo muestra la descarga si hay URL de archivo Y no es libro físico
+    // Solo muestra la descarga si hay URL de archivo y no es libro físico
     if (urlArchivo && !esLibroFisico) {
         descWrap.style.display = '';
         
@@ -1005,9 +929,6 @@ modalEl.addEventListener('show.bs.modal', function (e) {
 });
 
 
-/* ═══════════════════════════════════════════════════
-   3. FILTROS CLIENT-SIDE
-═══════════════════════════════════════════════════ */
 document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', function () {
         document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
@@ -1020,9 +941,7 @@ document.querySelectorAll('.filter-pill').forEach(pill => {
 });
 
 
-/* ═══════════════════════════════════════════════════
-   4. CONFIRMAR ELIMINACIÓN
-═══════════════════════════════════════════════════ */
+
 document.getElementById('modal-btn-eliminar').addEventListener('click', function (e) {
     const t = document.getElementById('modal-titulo').textContent;
     if (!confirm(`¿Seguro que querés eliminar "${t}"?\nEsta acción no se puede deshacer.`)) {

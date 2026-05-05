@@ -1,22 +1,16 @@
 <?php
 
-// ayudantes para el formulario
+
 // Determina si el formulario está en modo edición o creación
 $modoEdicion  = isset($modo) && $modo === 'editar';
-// Obtiene los datos de la publicación si existen (modo editar),
-// sino inicializa como array vacío
+// Obtiene los datos de la publicación si existen
 $pub          = $publicacion ?? [];
 
 // Función para obtener el valor de un campo del formulario
-// - Si es edición → devuelve el valor existente
-// - Si es nuevo → devuelve vacío o valor por defecto
-// Además aplica htmlspecialchars para evitar XSS
 function fv($pub, $key, $default = '') {
     return htmlspecialchars($pub[$key] ?? $default);
 }
-// Función para manejar selects
-// - Compara el valor actual con el esperado
-// - Si coinciden → devuelve 'selected'
+
 function fsel($pub, $key, $value, $default = '') {
     $actual = $pub[$key] ?? $default;
     return $actual === $value ? 'selected' : '';
@@ -28,7 +22,7 @@ function fsel($pub, $key, $value, $default = '') {
    <!-- Configuración básica del documento HTML -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <!-- Título dinámico según modo (editar o nueva publicación) -->
+   <!-- Título dinámico según modo-->
     <title>Univia — <?= $modoEdicion ? 'Editar' : 'Nueva' ?> Publicación</title>
 
    <!-- Librerías externas (Bootstrap, iconos y fuentes) -->
@@ -37,10 +31,7 @@ function fsel($pub, $key, $value, $default = '') {
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 
     <style>
-    /* ══════════════════════════════════════════════
-       SISTEMA DE TEMAS  (mismo que dashboard)
-       Define variables CSS reutilizables en todo el diseño
-    ══════════════════════════════════════════════ */
+    /* temas*/
     :root,
     [data-theme="dark"] {
         /*Colores base*/
@@ -48,7 +39,7 @@ function fsel($pub, $key, $value, $default = '') {
         --bg-surface:   #111422;
         --bg-card:      #181c30;
         --bg-card-alt:  #1c2035;
-        /*Inputs y bordes*/
+       
         --bg-input:     rgba(255,255,255,.05);
         --border:       rgba(255,255,255,.07);
         --border-hover: rgba(91,127,255,.5);
@@ -57,26 +48,22 @@ function fsel($pub, $key, $value, $default = '') {
         --accent:       #5b7fff;
         --accent-2:     #8b5cf6;
         --accent-3:     #38bdf8;
-        /*Estados*/
         --success:      #34d399;
         --warn:         #fbbf24;
         --danger:       #f87171;
-        /*Tipografia*/
         --text:         #e2e8f0;
         --text-muted:   #64748b;
         --text-soft:    #94a3b8;
-        /*Extras visuales*/
         --gradient:     linear-gradient(135deg,#5b7fff 0%,#8b5cf6 100%);
         --glow:         0 0 40px rgba(91,127,255,.18);
         --shadow-card:  0 4px 24px rgba(0,0,0,.35);
-        /*Componentes especiales*/
         --close-filter: invert(1) grayscale(1);
         --switch-track: rgba(255,255,255,.12);
         --drop-bg:      rgba(91,127,255,.06);
         --drop-border:  rgba(91,127,255,.25);
     }
 
-    /*Tema claro (sobrescribe variables del tema oscuro*/
+    /*Tema claro*/
     [data-theme="light"] {
         --bg-base:      #f0f2f8;
         --bg-surface:   #ffffff;
@@ -108,7 +95,7 @@ function fsel($pub, $key, $value, $default = '') {
     html { transition: background-color .28s ease; scroll-behavior: smooth; }
     *, *::before, *::after { box-sizing: border-box; }
 
-    /*Estilos base del body*/
+    /*Estilos base*/
     body {
         background: var(--bg-base);
         color: var(--text);
@@ -116,12 +103,12 @@ function fsel($pub, $key, $value, $default = '') {
         font-size: .95rem;
         min-height: 100vh;
     }
-    /*Tipografia para titulos*/
+   
     h1,h2,h3,h4,h5,.brand-name,.field-label { font-family: 'Syne', sans-serif; }
-    /*Quitar subrayado en links*/
+    
     a { text-decoration: none; }
 
-    /* ══ Cabecera. Barra superior fija con usuario y menú══ */
+
     .univia-navbar {
         background: var(--bg-surface);
         border-bottom: 1px solid var(--border);
@@ -129,7 +116,7 @@ function fsel($pub, $key, $value, $default = '') {
         position: sticky; top: 0; z-index: 1030;
         backdrop-filter: blur(14px);
     }
-    /* Nombre de marca con gradiente */
+  
     .brand-name {
         font-size: 1.45rem; font-weight: 800; letter-spacing: -.5px;
         background: var(--gradient);
@@ -144,7 +131,7 @@ function fsel($pub, $key, $value, $default = '') {
         font-weight: 700; font-size: .85rem; color: #fff;
         cursor: pointer; border: 2px solid rgba(91,127,255,.4);
     }
-      /* Dropdown de usuario */
+    
     .dropdown-menu {
         background: var(--bg-card-alt); border: 1px solid var(--border);
         border-radius: 14px; padding: 6px; min-width: 230px;
@@ -156,35 +143,21 @@ function fsel($pub, $key, $value, $default = '') {
         display: flex; align-items: center; gap: 9px;
         background: transparent;
     }
-     /* Hover normal */
+    
     .dropdown-item:hover { background: rgba(91,127,255,.1); color: var(--accent); }
-    /* Hover peligro */
     .dropdown-item.danger:hover { background: rgba(220,38,38,.1); color: var(--danger); }
-     /* Separador */
     .dropdown-divider { border-color: var(--border); margin: 4px 0; }
-    /* Header del dropdown */
     .dropdown-header { color: var(--text-muted); font-size: .75rem; padding: 6px 14px; font-family: 'Syne', sans-serif; }
 
-    /* ── Toggle tema ── */
-    /* Contenedor principal del switch de tema (dark/light) */
     .theme-row { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; border-radius:9px; cursor:pointer; color:var(--text); font-size:.88rem; gap:9px; }
-    /* Efecto hover del toggle */
     .theme-row:hover { background: rgba(91,127,255,.1); }
-    /* Lado izquierdo del toggle (icono + texto) */
-    .theme-row-left { display:flex; align-items:center; gap:8px; }
-    /* Contenedor del switch */
+   .theme-row-left { display:flex; align-items:center; gap:8px; }
     .t-switch { position:relative; width:40px; height:22px; flex-shrink:0; }
-    /* Input oculto del switch */
     .t-switch input { opacity:0; width:0; height:0; position:absolute; }
-    /* Barra del switch */
     .t-track { position:absolute; inset:0; background:var(--switch-track); border:1px solid var(--border); border-radius:22px; cursor:pointer; transition:background .25s; }
-    /* Círculo deslizante */
     .t-track::before { content:''; position:absolute; left:3px; top:50%; transform:translateY(-50%); width:16px; height:16px; background:#fff; border-radius:50%; transition:transform .25s; box-shadow:0 1px 4px rgba(0,0,0,.25); }
-    /* Estado activo del switch */
     .t-switch input:checked + .t-track { background:var(--accent); border-color:var(--accent); }
-    /* Movimiento del círculo cuando está activo */
     .t-switch input:checked + .t-track::before { transform:translate(18px,-50%); }
-    /* Icono del tema */
     .t-icon { font-size:1rem; }
 
     /* Encabezado principal del formulario */
@@ -193,31 +166,25 @@ function fsel($pub, $key, $value, $default = '') {
         border-bottom: 1px solid var(--border);
         padding: 2rem 0 1.6rem;
     }
-    /* Breadcrumb (navegación) */
+   
     .form-hero .breadcrumb { font-size: .8rem; }
-    /* Links del breadcrumb */
     .form-hero .breadcrumb-item a { color: var(--accent); }
-    /* Item activo del breadcrumb */
     .form-hero .breadcrumb-item.active { color: var(--text-muted); }
-    /* Separador del breadcrumb */
     .form-hero .breadcrumb-item + .breadcrumb-item::before { color: var(--text-muted); }
-    /* Título principal */
     .form-hero h1 { font-size: 1.75rem; font-weight: 800; margin: .5rem 0 .3rem; letter-spacing: -.4px; }
-    /* Subtítulo */
     .form-hero .subtitle { color: var(--text-muted); font-size: .9rem; }
 
-    /* Badge de modo (editar / nueva) */
+
     .mode-badge {
         display: inline-flex; align-items: center; gap: 6px;
         font-size: .75rem; font-weight: 700; padding: 4px 12px;
         border-radius: 20px; font-family: 'Syne', sans-serif; letter-spacing: .3px;
     }
-    /* Badge nueva publicación */
+  
     .mode-badge.nueva      { background: rgba(91,127,255,.12); color: var(--accent); border: 1px solid rgba(91,127,255,.25); }
-    /* Badge modo edición */
     .mode-badge.editar-mode { background: rgba(251,191,36,.12); color: var(--warn); border: 1px solid rgba(251,191,36,.25); }
 
-    /* Grid principal: formulario + sidebar */
+    
     .form-layout {
         display: grid;
         grid-template-columns: 1fr 340px;
@@ -226,7 +193,7 @@ function fsel($pub, $key, $value, $default = '') {
         padding: 2rem 0 3rem;
     }
 
-    /* Contenedor de secciones del formulario */
+   
     .form-card {
         background: var(--bg-card);
         border: 1px solid var(--border);
@@ -235,10 +202,10 @@ function fsel($pub, $key, $value, $default = '') {
         box-shadow: var(--shadow-card);
         transition: border-color .2s;
     }
-    /* Separación entre cards */
+  
     .form-card + .form-card { margin-top: 1.2rem; }
 
-    /* Título de cada sección */
+   
     .card-section-title {
         font-size: .8rem; font-weight: 700; letter-spacing: .1em;
         text-transform: uppercase; color: var(--text-muted);
@@ -246,16 +213,16 @@ function fsel($pub, $key, $value, $default = '') {
         margin-bottom: 1.4rem; padding-bottom: .85rem;
         border-bottom: 1px solid var(--border);
     }
-    /* Icono del título */
+   
     .card-section-title i { font-size: .95rem; color: var(--accent); }
 
-    /* Label de los campos */
+  
     .field-label {
         font-size: .72rem; font-weight: 700; letter-spacing: .06em;
         text-transform: uppercase; color: var(--text-muted);
         margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
     }
-    /* Puntito de campo obligatorio */
+    
     .field-label .required-dot {
         width: 5px; height: 5px; border-radius: 50%;
         background: var(--accent); display: inline-block;
@@ -578,18 +545,10 @@ function fsel($pub, $key, $value, $default = '') {
         <div class="dropdown">
         <!--Avatar con iniciales-->
                     <div class="user-avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <!--php
-                        // PHP: echo strtoupper(substr($usuario['nombre'],0,1).substr($usuario['apellido'],0,1));
-                        echo strtoupper(substr($usuario['nombre'],0,1).substr($usuario['apellido'],0,1));
--->
-                    </div>
+                   </div>
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu dropdown-menu-end shadow">
-                       <!-- <li>
-                            <span class="dropdown-header">
-                                htmlspecialchars($usuario['nombre'].' '.$usuario['apellido']) ?>
-                            </span>
-                        </li>-->
+                    
                          <!-- Separador -->
                         <li><hr class="dropdown-divider"></li>
                         <!-- Toggle de tema (dark/light) -->
@@ -621,9 +580,7 @@ function fsel($pub, $key, $value, $default = '') {
 </nav>
 
 
-<!-- ══════════════════════════════════════════
-     HERO
-══════════════════════════════════════════ -->
+
 <!-- Encabezado del formulario -->
 <section class="form-hero">
     <div class="container-lg">
@@ -657,22 +614,14 @@ function fsel($pub, $key, $value, $default = '') {
 </section>
 
 
-<!-- ══════════════════════════════════════════
-     FORMULARIO PRINCIPAL
-══════════════════════════════════════════ -->
+<!--Formulario principal-->
 <div class="container-lg">
 <div class="form-layout">
 
     <!-- ── COLUMNA PRINCIPAL ── -->
     <div>
 
-        <!--
-        ════════════════════════════════════════
-         ACCIÓN DEL FORMULARIO:
-         nueva  → POST /publicaciones/guardar
-         editar → POST /publicaciones/actualizar/:id
-        ════════════════════════════════════════
-        -->
+        <!--Accion del formulario -->
         <form id="pub-form"
               action="<?= $modoEdicion 
                   ? site_url('publicaciones/actualizar/' . (int)($pub['id_publicacion'] ?? 0))
@@ -687,9 +636,7 @@ function fsel($pub, $key, $value, $default = '') {
             <?php endif; ?>
 
 
-            <!-- ┌─────────────────────────────────────┐
-                 │  SECCIÓN 1 — INFORMACIÓN BÁSICA     │
-                 └─────────────────────────────────────┘ -->
+            <!-- Informacion basica -->
             <div class="form-card">
              <!-- Título de sección -->
                 <div class="card-section-title">
@@ -744,9 +691,7 @@ function fsel($pub, $key, $value, $default = '') {
             </div>
 
 
-            <!-- ┌─────────────────────────────────────┐
-                 │  SECCIÓN 2 — TIPO Y ACUERDO         │
-                 └─────────────────────────────────────┘ -->
+            <!-- tipo y acuerdo -->
             <div class="form-card">
                 <div class="card-section-title">
                     <i class="bi bi-tag"></i> Tipo de recurso y acuerdo
@@ -813,9 +758,7 @@ function fsel($pub, $key, $value, $default = '') {
             </div>
 
 
-            <!-- ┌─────────────────────────────────────┐
-                 │  SECCIÓN 3 — ARCHIVO Y FORMATO      │
-                 └─────────────────────────────────────┘ -->
+            <!-- Archivo y formato -->
             <div class="form-card">
                 <div class="card-section-title">
                     <i class="bi bi-paperclip"></i> Formato y archivo
@@ -845,7 +788,7 @@ function fsel($pub, $key, $value, $default = '') {
                         <span class="required-dot"></span> Archivo del material
                         <span class="req" id="archivo-req">*</span>
                     </label>
-                    <!-- Si está en modo edición, muestra archivo existente
+                    <!-- Si está en modo edición, muestra archivo existente -->
                     <?php if ($modoEdicion && !empty($pub['nombre_archivo'])): ?>
                     <!-- Archivo existente en modo editar -->
                     <div class="existing-file" id="existing-file">
@@ -914,9 +857,7 @@ function fsel($pub, $key, $value, $default = '') {
 
 
             <?php if ($modoEdicion): ?>
-            <!-- ┌─────────────────────────────────────────────┐
-                 │  SECCIÓN 4 — ESTADO (solo en modo editar)  │
-                 └─────────────────────────────────────────────┘ -->
+            <!-- estado (solo en modo editar) -->
             <div class="form-card">
             <!-- Título de sección -->
                 <div class="card-section-title">
@@ -953,7 +894,7 @@ function fsel($pub, $key, $value, $default = '') {
     </div><!-- /columna principal -->
 
 
-    <!-- ── SIDEBAR ── -->
+ 
     <div>
 
         <!-- Vista previa de la card -->
@@ -1056,9 +997,7 @@ function fsel($pub, $key, $value, $default = '') {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-/* ════════════════════════════════════════════
-   1. SISTEMA DE TEMA 
-════════════════════════════════════════════ */
+/* Sistema de tema*/
 /*
 - Permite alternar entre modo oscuro y claro
 - Guarda la preferencia en localStorage
@@ -1097,9 +1036,7 @@ function fsel($pub, $key, $value, $default = '') {
 })();
 
 
-/* ════════════════════════════════════════════
-   2. PRECIO — mostrar/ocultar
-════════════════════════════════════════════ */
+/* mostrar o ocultar el precio*/
 const precioWrap  = document.getElementById('precio-wrap');
 const precioInput = document.getElementById('precio');
 const errPrecio   = document.getElementById('err-precio');
@@ -1117,9 +1054,7 @@ document.querySelectorAll('[name="tipo_acuerdo"]').forEach(r =>
 togglePrecio();
 
 
-/* ════════════════════════════════════════════
-   3. DROP ZONE — Archivo principal
-════════════════════════════════════════════ */
+/* la drop zone */
 const dropZone   = document.getElementById('drop-zone');
 const archivoInp = document.getElementById('archivo');
 const fileChip   = document.getElementById('file-chip');
@@ -1160,9 +1095,7 @@ dropZone.addEventListener('drop', e => {
 });
 
 
-/* ════════════════════════════════════════════
-   4. PREVIEW DE IMAGEN DE PORTADA
-════════════════════════════════════════════ */
+/* vista previa de la imagen de portada */
 function previewImagen(input) {
     if (!input.files[0]) return;
     const reader = new FileReader();
@@ -1181,9 +1114,7 @@ function previewImagen(input) {
 }
 
 
-/* ════════════════════════════════════════════
-   5. VISTA PREVIA EN TIEMPO REAL
-════════════════════════════════════════════ */
+/* la vista previa en tiempo real */
 const TIPO_LABEL = {
     resumen:'Resumen', apunte:'Apunte', libro:'Libro',
     examen:'Examen', guia:'Guía', otro:'Otro'
@@ -1234,9 +1165,7 @@ document.querySelectorAll('[name="tipo_acuerdo"]').forEach(r => r.addEventListen
 updatePreview(); // estado inicial
 
 
-/* ════════════════════════════════════════════
-   6. VALIDACIÓN Y SUBMIT
-════════════════════════════════════════════ */
+/* Validacion */
 const form      = document.getElementById('pub-form');
 const spinner   = document.getElementById('spinner');
 const btnSubmit = document.getElementById('btn-submit');

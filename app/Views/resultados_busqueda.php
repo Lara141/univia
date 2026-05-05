@@ -1,7 +1,9 @@
 <?php
-/** @var array $usuario */
-/** @var array $resultados */
+/**
+ * Muestra los resultados de búsqueda de publicaciones
+ */
 
+// Extraer datos del usuario para evitar errores en el analisis estatico
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
 $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 ?>
@@ -35,7 +37,7 @@ body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
 
 <body>
 
-<!-- NAVBAR -->
+
 
 <nav class="navbar navbar-dark px-4">
     <a href="<?= site_url('publicaciones/propias') ?>" class="navbar-brand">Univia</a>
@@ -49,12 +51,11 @@ body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
 
 </nav>
 
-<!-- HEADER -->
 
 <div class="container mt-4">
     <h2 class="mb-3">Resultados de búsqueda</h2>
 
-<!-- RESULTADOS -->
+<!-- resultados -->
 <div class="row g-3">
 
 <?php if (!empty($resultados)): ?>
@@ -103,7 +104,7 @@ body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
 
 <?php else: ?>
 
-    <!-- SIN RESULTADOS -->
+    <!-- no hay resultados -->
     <div class="col-12 text-center mt-5">
         <i class="bi bi-search" style="font-size:50px; opacity:.3;"></i>
         <h4 class="mt-3">No se encontraron resultados</h4>

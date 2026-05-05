@@ -19,11 +19,10 @@
       --blanco:       #ffffff;
       --gris-texto:   #6b7a99;
       --borde:        #d0d9f0;
-      /* ── Colores de error: naranja/ámbar, NO rojo ── */
       --error:        #c46a00;
       --error-bg:     #fff7ed;
       --error-borde:  #f5a623;
-      /* ── Color de campo válido ── */
+
       --exito:        #1a7f4b;
       --exito-bg:     #f0faf5;
       --exito-borde:  #34c479;
@@ -59,7 +58,7 @@
     .deco-circle-2 { width: 200px; height: 200px; border: 1px solid rgba(74,158,255,0.10); bottom: 60px; left: -60px; }
     .deco-circle-3 { width: 120px; height: 120px; background: rgba(74,158,255,0.06); bottom: 120px; right: 80px; }
 
-    /* ── Wrapper ── */
+  
     .main-wrapper {
       position: relative;
       z-index: 1;
@@ -72,7 +71,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Marca ── */
+   
     .brand-header { text-align: center; margin-bottom: 28px; }
     .brand-logo-wrap { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 6px; }
     .brand-icon {
@@ -90,7 +89,7 @@
     }
     .brand-tagline { font-size: 0.875rem; color: rgba(255,255,255,0.6); font-weight: 300; letter-spacing: 0.04em; }
 
-    /* ── Card ── */
+   
     .card-registro {
       background: rgba(255,255,255,0.97);
       border-radius: 24px;
@@ -101,7 +100,7 @@
     .card-titulo { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--azul-oscuro); margin-bottom: 4px; }
     .card-subtitulo { font-size: 0.875rem; color: var(--gris-texto); margin-bottom: 28px; }
 
-    /* ── Separador de sección ── */
+    
     .seccion-label {
       font-size: 0.72rem; font-weight: 700; color: var(--azul-vivo);
       text-transform: uppercase; letter-spacing: 0.1em;
@@ -110,10 +109,10 @@
     }
     .seccion-label::after { content: ''; flex: 1; height: 1.5px; background: linear-gradient(to right, var(--azul-claro), transparent); }
 
-    /* ── Labels ── */
+   
     .form-label { font-size: 0.8rem; font-weight: 600; color: #2c3e6b; margin-bottom: 6px; letter-spacing: 0.01em; }
 
-    /* ── Inputs ── */
+  
     .input-group-custom { position: relative; }
 
     .input-icon {
@@ -139,10 +138,7 @@
       background: #ffffff; outline: none;
     }
 
-    /* ══════════════════════════════════════════════
-       ESTADO INVÁLIDO — borde naranja + fondo cálido
-       + ícono de advertencia + shake animation
-    ══════════════════════════════════════════════ */
+
     .form-control.is-invalid,
     .form-select.is-invalid {
       border-color: var(--error-borde) !important;
@@ -160,13 +156,13 @@
       90%      { transform: translateX(-2px); }
     }
 
-    /* Banderita de error dentro del campo */
+    
     .form-control.is-invalid ~ .input-icon,
     .form-select.is-invalid ~ .input-icon {
       color: var(--error-borde);
     }
 
-    /* ESTADO VÁLIDO — borde verde suave */
+    
     .form-control.is-valid {
       border-color: var(--exito-borde) !important;
       background: var(--exito-bg) !important;
@@ -178,11 +174,11 @@
       background-image: none !important;
     }
 
-    /* Sobreescribir colores Bootstrap que pisan el rojo */
+   
     .was-validated .form-control:invalid,
     .was-validated .form-select:invalid { border-color: var(--error-borde); }
 
-    /* ── Toggle contraseña ── */
+   
     .btn-pass-toggle {
       position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       background: none; border: none; color: var(--gris-texto);
@@ -191,13 +187,12 @@
     }
     .btn-pass-toggle:hover { color: var(--azul-vivo); }
 
-    /* ── Fuerza contraseña ── */
+    
     .password-strength { margin-top: 6px; }
     .strength-bar { height: 4px; background: var(--borde); border-radius: 4px; overflow: hidden; margin-bottom: 3px; }
     .strength-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease, background 0.4s; width: 0%; }
     .strength-text { font-size: 0.72rem; color: var(--gris-texto); }
 
-    /* ── Botón submit ── */
     .btn-registrar {
       background: linear-gradient(135deg, var(--azul-vivo) 0%, var(--acento) 100%);
       border: none; border-radius: 12px; color: white;
@@ -212,15 +207,15 @@
     .btn-registrar:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
     .btn-registrar .spinner-border { width: 1.1rem; height: 1.1rem; border-width: 2px; vertical-align: middle; margin-right: 6px; }
 
-    /* ── Alerta CI ── */
+    
     .alert-ci { border-radius: 12px; font-size: 0.875rem; border: none; padding: 12px 16px; }
 
-    /* ── Link login ── */
+    
     .login-link { text-align: center; margin-top: 20px; font-size: 0.875rem; color: rgba(255,255,255,0.65); }
     .login-link a { color: var(--acento); text-decoration: none; font-weight: 600; }
     .login-link a:hover { text-decoration: underline; }
 
-    /* ── Modal éxito ── */
+    
     .modal-content { border-radius: 20px; border: none; }
     .modal-exito-icon {
       width: 72px; height: 72px;
@@ -231,7 +226,7 @@
     }
     .modal-exito-icon i { font-size: 2rem; color: var(--azul-vivo); }
 
-    /* ── Contador DNI ── */
+   
     .dni-contador {
       font-size: 0.72rem;
       color: var(--gris-texto);
@@ -424,9 +419,8 @@
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  CARRERAS POR UNIVERSIDAD
-// ═══════════════════════════════════════════════════════
+// carreras por la universidad
+
 const CARRERAS = {
   uba:     ['Abogacía','Administración','Arquitectura','Ciencias de la Comunicación','Ciencias Económicas','Diseño Gráfico','Farmacia','Ingeniería Civil','Ingeniería Industrial','Medicina','Psicología','Sociología'],
   unc:     ['Arquitectura','Bioquímica','Ciencias Económicas','Derecho','Filosofía','Ingeniería Civil','Ingeniería en Computación','Medicina','Odontología','Psicología'],
@@ -440,7 +434,7 @@ const CARRERAS = {
   otra:    ['Administración','Arquitectura','Contabilidad','Derecho','Diseño','Economía','Educación','Ingeniería','Medicina','Otra carrera'],
 };
 
-const carreraPreseleccionada = ''; /* '' */
+const carreraPreseleccionada = ''; 
 
 function actualizarCarreras() {
   const uniSelect     = document.getElementById('universidad');
@@ -468,9 +462,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('universidad').value) actualizarCarreras();
 });
 
-// ═══════════════════════════════════════════════════════
-//  DNI — solo números, máximo 8, contador en tiempo real
-// ═══════════════════════════════════════════════════════
+
 const dniInput     = document.getElementById('dni');
 const dniContador  = document.getElementById('dniContador');
 
@@ -487,9 +479,7 @@ dniInput.addEventListener('input', function () {
   if (this.classList.contains('is-invalid')) validarCampo('dni');
 });
 
-// ═══════════════════════════════════════════════════════
-//  FUERZA DE CONTRASEÑA
-// ═══════════════════════════════════════════════════════
+
 document.getElementById('password').addEventListener('input', function () {
   const val  = this.value;
   const fill = document.getElementById('strengthFill');
@@ -513,9 +503,7 @@ document.getElementById('password').addEventListener('input', function () {
   text.style.color      = niveles[score].color;
 });
 
-// ═══════════════════════════════════════════════════════
-//  TOGGLE VER/OCULTAR CONTRASEÑA
-// ═══════════════════════════════════════════════════════
+
 function togglePass(fieldId, btn) {
   const input  = document.getElementById(fieldId);
   const icon   = btn.querySelector('i');
@@ -524,9 +512,7 @@ function togglePass(fieldId, btn) {
   icon.className = esPass ? 'bi bi-eye-slash' : 'bi bi-eye';
 }
 
-// ═══════════════════════════════════════════════════════
-//  HELPERS DE VALIDACIÓN
-// ═══════════════════════════════════════════════════════
+
 function marcarError(id, msg) {
   const el  = document.getElementById(id);
   const wrap = el.closest('.input-group-custom') || el.parentElement;
@@ -555,9 +541,7 @@ function marcarValido(id) {
   el.classList.add('is-valid');
 }
 
-// ═══════════════════════════════════════════════════════
-//  VALIDACIÓN POR CAMPO
-// ═══════════════════════════════════════════════════════
+
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function validarCampo(id) {
@@ -611,9 +595,7 @@ function validarCampo(id) {
   });
 });
 
-// ═══════════════════════════════════════════════════════
-//  SUBMIT CON VALIDACIÓN COMPLETA
-// ═══════════════════════════════════════════════════════
+
 document.getElementById('formRegistro').addEventListener('submit', function (e) {
   const campos = ['nombre','apellido','dni','correo','password','password_confirm'];
   let valido   = true;
@@ -641,29 +623,23 @@ document.getElementById('formRegistro').addEventListener('submit', function (e) 
   }
 
   if (valido) {
-    // Mostrar el spinner visual
+    
     document.getElementById('btnTexto').classList.add('d-none');
     document.getElementById('btnSpinner').classList.remove('d-none');
     document.getElementById('btnRegistrar').disabled = true;
 
-    // Esperar un segundo para que se vea la animación y luego enviar el formulario a PHP
+   
     setTimeout(() => {
         document.getElementById('formRegistro').submit();
     }, 1000);
   }
-  // Mostrar spinner
+  
   document.getElementById('btnTexto').classList.add('d-none');
   document.getElementById('btnSpinner').classList.remove('d-none');
   document.getElementById('btnRegistrar').disabled = true;
 });
 
-// Mostrar modal si CI devolvió éxito 
-/*
-  if (isset($exito)):
-    const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
-    modalExito.show();
-  endif; 
-*/
+
 </script>
 </body>
 </html>

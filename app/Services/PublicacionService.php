@@ -5,14 +5,37 @@ namespace App\Services;
 use App\Models\PublicacionModel;
 
 /**
- * Servicio de Publicaciones
- * Maneja la lógica de negocio para crear y actualizar publicaciones
+ * ═══════════════════════════════════════════════════════════════
+ * SERVICIO: GESTIÓN DE PUBLICACIONES
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Responsable de:
+ *   - CRUD de publicaciones
+ *   - Procesamiento y validación de datos
+ *   - Gestión de archivos adjuntos
+ *   - Búsqueda y filtrado
+ * 
+ * Funcionalidades principales:
+ *   - procesarPublicacion(): Crea o actualiza publicación
+ *   - obtenerPublicacionesUsuario(): Lista de usuario
+ *   - obtenerPublicacionPorId(): Detalle completo
+ *   - actualizarPublicacion(): Actualización con validación
+ *   - buscarPublicaciones(): Búsqueda con filtros
+ * 
+ * @author Sistema Univia
+ * @package App\Services
  */
 class PublicacionService
 {
     private ArchivoService $archivoService;
     private PublicacionModel $publicacionModel;
 
+    /**
+     * Constructor del servicio
+     * 
+     * @param ArchivoService $archivoService Servicio de gestión de archivos
+     * @param PublicacionModel|null $publicacionModel Modelo (opcional)
+     */
     public function __construct(ArchivoService $archivoService, PublicacionModel $publicacionModel = null)
     {
         $this->archivoService = $archivoService;
@@ -20,11 +43,18 @@ class PublicacionService
     }
 
     /**
-     * Procesa una nueva publicación o actualización
+     * Procesa una nueva publicación (creación)
      * 
-     * @param array $datos Datos de la publicación
+     * Flujo:
+     *   1. Valida datos de entrada
+     *   2. Guarda archivo
+     *   3. Construye objeto publicación
+     *   4. Inserta en BD
+     * 
+     * @param array $datos Datos: titulo, descripcion, materia, tipo, tipo_acuerdo, precio, dni
      * @param object $archivo Archivo subido
      * @throws \Exception Si hay error en validación o guardado
+     * @return void
      */
     public function procesarPublicacion(array $datos, $archivo)
     {
@@ -42,10 +72,13 @@ class PublicacionService
     }
 
     /**
-     * Procesa solamente un archivo (para ediciones)
+     * Procesa un archivo sin procesar publicación completa
+     * 
+     * Utilizado en la edición de publicaciones
      * 
      * @param object $archivo Archivo subido
      * @return int ID del archivo guardado
+     * @throws \Exception Si el archivo no es válido
      */
     public function procesarArchivo($archivo)
     {
@@ -53,11 +86,13 @@ class PublicacionService
     }
 
     /**
-     * Obtiene las publicaciones de un usuario
+     * Obtiene todas las publicaciones de un usuario específico
+     * 
+     * Realiza joins para obtener información de materia y archivo
      *
-     * @param string $dni
-     * @param bool $soloActivas
-     * @return array
+     * @param string $dni DNI del usuario propietario
+     * @param bool $soloActivas true = solo activas (estado=1), false = todas
+     * @return array Array de publicaciones con datos completos
      */
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
     {
@@ -80,10 +115,12 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     }
 
     /**
-     * Obtiene una publicación por su id
+     * Obtiene una publicación específica por su ID
+     * 
+     * Incluye información del archivo adjunto
      *
-     * @param int $id
-     * @return array|null
+     * @param int $id ID de la publicación
+     * @return array|null Array con datos completos o null si no existe
      */
     public function obtenerPublicacionPorId(int $id): ?array
     {
@@ -98,10 +135,10 @@ $builder->where('publicacion.id_publicacion', $id);
     }
 
     /**
-     * Obtiene publicaciones por materia
+     * Obtiene todas las publicaciones activas de una materia específica
      *
-     * @param int $idMateria
-     * @return array
+     * @param int $idMateria ID de la materia
+     * @return array Array de publicaciones ordenadas por fecha descendente
      */
     public function obtenerPublicacionesPorMateria(int $idMateria): array
     {
@@ -191,10 +228,12 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 
     /**
      * Actualiza los datos de una publicación existente
+     * 
+     * Si se actualiza el estado, se normaliza el valor (activo/1 o inactivo/0)
      *
-     * @param int $id
-     * @param array $datos
-     * @return bool
+     * @param int $id ID de la publicación
+     * @param array $datos Campos a actualizar
+     * @return bool true si se actualizó correctamente
      */
     public function actualizarPublicacion(int $id, array $datos): bool
     {
@@ -206,10 +245,10 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     }
 
     /**
-     * Normaliza el estado para guardarlo como entero 1/0
+     * Normaliza el valor de estado a 1 (activo) o 0 (inactivo)
      *
-     * @param mixed $estado
-     * @return int
+     * @param mixed $estado Valor a normalizar (puede ser string, int, bool)
+     * @return int 1 si activo, 0 si inactivo
      */
     private function normalizarEstado($estado): int
     {
@@ -221,16 +260,30 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     }
 
     /**
-     * Marca una publicación como inactiva
+     * Marca una publicación como inactiva (no la elimina)
      *
-     * @param int $id
-     * @return bool
+     * @param int $id ID de la publicación
+     * @return bool true si se actualizó correctamente
      */
     public function marcarPublicacionInactiva(int $id): bool
     {
         return $this->publicacionModel->update($id, ['estado' => 0]);
     }
-public function buscarPublicaciones(array $filtros): array
+    /**
+     * Busca publicaciones aplicando múltiples filtros
+     * 
+     * Filtros soportados:
+     *   - palabra_clave: busca en titulo y descripcion (LIKE)
+     *   - materia: filtra por id_materia
+     *   - tipo: filtra por tipo_recurso
+     * 
+     * Solo retorna publicaciones activas (estado=1)
+     * Resultados ordenados por fecha descendente
+     *
+     * @param array $filtros Array con claves: palabra_clave, materia, tipo
+     * @return array Array de publicaciones que cumplen los criterios
+     */
+    public function buscarPublicaciones(array $filtros): array
 {
     $builder = $this->publicacionModel->builder();
 

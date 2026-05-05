@@ -5,7 +5,22 @@ namespace App\Services;
 use App\Models\ArchivoModel;
 
 /**
- * servicio de gestion de archivos 
+ * ═══════════════════════════════════════════════════════════════
+ * SERVICIO: GESTIÓN DE ARCHIVOS
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Responsable de:
+ *   - Validar archivos subidos (tamaño, extensión)
+ *   - Guardar archivos en el servidor
+ *   - Registrar información de archivos en BD
+ *   - Eliminar archivos (servidor y BD)
+ * 
+ * Validaciones:
+ *   - Tamaño máximo: 20MB
+ *   - Extensiones permitidas: pdf, doc, docx, txt, xls, xlsx, ppt, pptx, zip, jpg, png, jpeg
+ * 
+ * @author Sistema Univia
+ * @package App\Services
  */
 class ArchivoService
 {
@@ -15,13 +30,27 @@ class ArchivoService
 
     private ArchivoModel $archivoModel;
 
+    /**
+     * Constructor del servicio
+     * 
+     * @param ArchivoModel|null $archivoModel Instancia del modelo (opcional)
+     */
     public function __construct(ArchivoModel $archivoModel = null)
     {
         $this->archivoModel = $archivoModel ?? new ArchivoModel();
     }
 
     /**
-     * se encarga de llamar al metodo validarArchivo y guardarArchivo para poder guardar el archivo subido
+     * Valida y guarda un archivo subido
+     * 
+     * Proceso:
+     *   1. Valida que el archivo sea válido
+     *   2. Valida tamaño y extensión
+     *   3. Guarda en servidor y registra en BD
+     * 
+     * @param object $file Archivo subido (de $_FILES)
+     * @return int ID del archivo guardado
+     * @throws \Exception Si el archivo no cumple las reglas
      */
     public function guardar($file)
     {
@@ -35,10 +64,15 @@ class ArchivoService
     }
 
     /**
-     * Valida el archivo subido antes de guardarlo
+     * Valida el archivo antes de guardarlo
+     * 
+     * Validaciones:
+     *   - Tamaño no puede exceder 20MB
+     *   - Extensión debe estar en lista permitida
      *
      * @param object $file Archivo subido
      * @throws \Exception Si el archivo no cumple las reglas
+     * @return void
      */
     private function validarArchivo($file): void
     {
@@ -53,11 +87,16 @@ class ArchivoService
     }
 
     /**
-     * Guarda el archivo en el servidor y registra su metadata en la base de datos
-     *
+     * Guarda el archivo en el servidor y registra metadata en BD
+     * 
+     * Proceso:
+     *   1. Genera nombre aleatorio para el archivo
+     *   2. Mueve archivo al directorio de uploads
+     *   3. Registra información en tabla archivo
+     * 
      * @param object $file Archivo subido
-     * @return int ID del archivo guardado
-     * @throws \Exception Si ocurre un error durante el guardado
+     * @return int ID del archivo en la BD
+     * @throws \Exception Si ocurre error durante el guardado
      */
     private function guardarArchivo($file): int
     {
@@ -82,10 +121,10 @@ class ArchivoService
     }
 
     /**
-     * Obtiene información de un archivo
+     * Obtiene información de un archivo por su ID
      * 
      * @param int $idArchivo ID del archivo
-     * @return array|null Datos del archivo
+     * @return array|null Datos del archivo o null si no existe
      */
     public function obtener($idArchivo)
     {
@@ -93,10 +132,11 @@ class ArchivoService
     }
 
     /**
-     * Elimina un archivo del servidor y la base de datos
+     * Elimina un archivo del servidor y registra en BD
      * 
      * @param int $idArchivo ID del archivo a eliminar
-     * @return bool
+     * @return bool true si se eliminó correctamente
+     * @throws \Exception Si el archivo no existe
      */
     public function eliminar($idArchivo)
     {

@@ -7,13 +7,39 @@ use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 
 /**
- * Controlador de Publicaciones
- * Maneja CRUD de publicaciones
+ * ═══════════════════════════════════════════════════════════════
+ * CONTROLADOR DE PUBLICACIONES
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Responsable de:
+ *   - CRUD completo de publicaciones (crear, leer, actualizar, eliminar)
+ *   - Gestión de publicaciones del usuario autenticado
+ *   - Búsqueda y filtrado de publicaciones
+ *   - Manejo de archivos adjuntos
+ * 
+ * Funcionalidades principales:
+ *   - propias(): Muestra publicaciones del usuario logueado
+ *   - crear(): Formulario para nueva publicación
+ *   - guardar(): Procesa creación de publicación
+ *   - editar(): Formulario de edición
+ *   - actualizar(): Procesa actualización
+ *   - eliminar(): Marca como inactiva
+ *   - buscar(): Búsqueda con filtros (materia, tipo, palabra clave)
+ * 
+ * @author Sistema Univia
+ * @package App\Controllers
  */
 class PublicacionController extends BaseController
 {
     protected PublicacionService $publicacionService;
 
+    /**
+     * Constructor del controlador
+     * 
+     * Inicializa las dependencias necesarias:
+     *   - ArchivoService para gestión de archivos
+     *   - PublicacionService para lógica de publicaciones
+     */
     public function __construct()
     {
         $archivoService = new ArchivoService(new ArchivoModel());
@@ -171,13 +197,29 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Verifica si el usuario está autenticado
+     * Verifica si el usuario actual está autenticado
+     * 
+     * Comprueba si existe la flag 'isLoggedIn' en la sesión
+     * 
+     * @return bool True si está logueado, false en caso contrario
      */
     private function usuarioLogueado()
     {
         return session()->get('isLoggedIn');
     }
 
+    /**
+     * Busca publicaciones según filtros proporcionados
+     * 
+     * Filtros disponibles (vía GET):
+     *   - q: palabra clave para buscar en título y descripción
+     *   - materia: ID de materia
+     *   - tipo: tipo de recurso
+     * 
+     * Solo retorna publicaciones activas (estado = 1)
+     * 
+     * @return \CodeIgniter\HTTP\Response Vista con resultados de búsqueda
+     */
     public function buscar()
     {
         $filtros = [

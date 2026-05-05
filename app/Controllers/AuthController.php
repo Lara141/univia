@@ -5,13 +5,25 @@ namespace App\Controllers;
 use App\Models\UsuarioModel;
 
 /**
- * Controlador de Autenticación
- * Maneja login, registro y logout de usuarios
+ * ═══════════════════════════════════════════════════════════════
+ * CONTROLADOR DE AUTENTICACIÓN
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Responsable de:
+ *   - Mostrar formularios de login y registro
+ *   - Procesar autenticación de usuarios
+ *   - Gestionar sesiones (login/logout)
+ *   - Validar credenciales y datos de registro
+ * 
+ * @author Sistema Univia
+ * @package App\Controllers
  */
 class AuthController extends BaseController
 {
     /**
-     * Muestra el formulario de inicio de sesión
+     * Muestra la vista del formulario de inicio de sesión
+     * 
+     * @return \CodeIgniter\HTTP\Response Vista de login
      */
     public function index()
     {
@@ -19,7 +31,17 @@ class AuthController extends BaseController
     }
 
     /**
-     * Procesa el inicio de sesión
+     * Procesa el inicio de sesión del usuario
+     * 
+     * Valida las credenciales (DNI y contraseña) contra la base de datos.
+     * Si son correctas:
+     *   - Crea una sesión con los datos del usuario
+     *   - Redirige a publicaciones/propias
+     * 
+     * Si son incorrectas:
+     *   - Retorna al formulario con mensaje de error
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección a panel o login
      */
     public function login()
     {
@@ -29,7 +51,9 @@ class AuthController extends BaseController
         $usuarioModel = new UsuarioModel();
         $usuario = $usuarioModel->find($dni);
 
+        // Verificar que el usuario existe y la contraseña es correcta
         if ($usuario && password_verify($password, $usuario['contrasena'])) {
+            // Crear sesión autenticada
             session()->set([
                 'isLoggedIn' => true,
                 'usuario' => $usuario,
@@ -42,7 +66,9 @@ class AuthController extends BaseController
     }
 
     /**
-     * Muestra el formulario de registro
+     * Muestra la vista del formulario de registro de nuevos usuarios
+     * 
+     * @return \CodeIgniter\HTTP\Response Vista de formulario de registro
      */
     public function registro_vista()
     {
@@ -50,7 +76,21 @@ class AuthController extends BaseController
     }
 
     /**
-     * Procesa el registro de nuevo usuario
+     * Procesa el registro de un nuevo usuario
+     * 
+     * Validaciones:
+     *   - Email debe ser válido y único en la BD
+     *   - DNI debe ser único en la BD
+     *   - Contraseña se encripta con PASSWORD_DEFAULT
+     * 
+     * Campos insertados:
+     *   - dni_usuario, correo, contrasena (encriptada)
+     *   - Nombre_usuario, Apellido_usuario
+     *   - id_carrera (por defecto 1)
+     *   - fecha_registro (fecha actual)
+     *   - estado (activo por defecto)
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección con mensaje de éxito o errores
      */
     public function procesar_registro()
     {
@@ -93,7 +133,11 @@ class AuthController extends BaseController
     }
 
     /**
-     * Cierra la sesión del usuario
+     * Cierra la sesión del usuario actual
+     * 
+     * Destruye todos los datos de sesión y redirige al login
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirección a página de login
      */
     public function logout()
     {

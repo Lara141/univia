@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 
 <?php 
-/*
-   - form: facilita la creación de formularios
-   - url: manejo de rutas (site_url, site_url)
-   - session: acceso a datos de sesión (errores, mensajes)
- */ 
+
 helper(['form', 'url', 'session']);
 /* Obtiene errores de validación guardados en flashdata */
 $errors = session()->getFlashdata('errors') ?? [];
@@ -20,23 +16,12 @@ $password_error = (string) ($errors['password'] ?? '');
 <head>
     <meta charset="UTF-8">
 
-    <!-- Configuración responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Título de la página 
-    Framework CSS para estilos y componentes-->
     <title>Iniciar Sesión — Univia</title>
-
-    <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Fonts
-    - Playfair: títulos
-    - Source Sans: texto general-->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        /* Variables  CSS (paleta de colores y estilos) */
         :root {
             --navy:      #0f2244;
             --blue:      #2563eb;
@@ -50,9 +35,6 @@ $password_error = (string) ($errors['password'] ?? '');
             --radius-input: 10px;
         }
 
-        /* ─── Layout general 
-         - Fondo oscuro con textura
-         - Centrado vertical y horizontal */
         body {
             font-family: 'Source Sans 3', sans-serif;
             min-height: 100vh;
@@ -68,8 +50,6 @@ $password_error = (string) ($errors['password'] ?? '');
             padding: 24px;
         }
 
-        /* ─── Wrapper centrado  */
-         /* Contenedor principal centrado */
         .login-wrapper {
             width: 100%;
             max-width: 420px;
@@ -112,7 +92,6 @@ $password_error = (string) ($errors['password'] ?? '');
             box-shadow: 0 24px 60px rgba(0,0,0,.35);
         }
 
-        /* Inputs, labels y botones ya estilizados */
         .login-card .card-title {
             font-family: 'Playfair Display', serif;
             font-size: 20px;
@@ -125,7 +104,6 @@ $password_error = (string) ($errors['password'] ?? '');
             margin-bottom: 28px;
         }
 
-        /* ─── Labels ─────────────────────────────────────────── */
         .form-label {
             font-size: 12px;
             font-weight: 600;
@@ -135,7 +113,6 @@ $password_error = (string) ($errors['password'] ?? '');
             margin-bottom: 6px;
         }
 
-        /* ─── Inputs ─────────────────────────────────────────── */
         .form-control {
             border: 1.5px solid var(--border);
             border-radius: var(--radius-input);
@@ -153,12 +130,11 @@ $password_error = (string) ($errors['password'] ?? '');
         }
         .form-control::placeholder { color: #94a3b8; }
 
-        /* Quitar flechas del input type=number */
+     
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
         input[type=number] { appearance: textfield; -moz-appearance: textfield; }
 
-        /* ─── Campo de contraseña con toggle ─────────────────── */
         .password-wrapper {
             position: relative;
         }
@@ -182,7 +158,6 @@ $password_error = (string) ($errors['password'] ?? '');
         .btn-toggle-pw svg { width: 18px; height: 18px; display: block; }
         .icon-eye-closed { display: none; }
 
-        /* ─── Botón principal ────────────────────────────────── */
         .btn-login {
             width: 100%;
             padding: 13px;
@@ -204,8 +179,6 @@ $password_error = (string) ($errors['password'] ?? '');
             box-shadow: 0 6px 20px rgba(37,99,235,.45);
         }
         .btn-login:active { transform: scale(.98); }
-
-        /* ─── Divisor ────────────────────────────────────────── */
         .divider {
             display: flex;
             align-items: center;
@@ -222,7 +195,6 @@ $password_error = (string) ($errors['password'] ?? '');
             background: var(--border);
         }
 
-        /* ─── Botón secundario (Registro) ────────────────────── */
         .btn-register {
             display: block;
             width: 100%;
@@ -244,7 +216,7 @@ $password_error = (string) ($errors['password'] ?? '');
             color: var(--blue-dark);
         }
 
-        /* ─── Pie de página ──────────────────────────────────── */
+        
         .footer-note {
             font-size: 12px;
             color: rgba(255,255,255,.3);
@@ -255,26 +227,23 @@ $password_error = (string) ($errors['password'] ?? '');
 
 <div class="login-wrapper">
 
-    <!-- Cabecera / Branding -->
+    <!-- Cabecera -->
     <div class="text-center mb-4">
         <div class="brand-icon">
-            <!-- Ícono de libro/graduación -->
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
             </svg>
         </div>
-        <!-- Nombre del sistema -->
         <div class="brand-name">Univia</div>
         <div class="brand-sub mt-1">PLATAFORMA UNIVERSITARIA</div>
     </div>
 
-    <!-- Tarjeta de Login -->
+    
     <div class="login-card">
 
         <p class="card-title">Bienvenido de nuevo</p>
         <p class="card-subtitle">Ingresá tus credenciales para continuar</p>
 
-        <!-- Mensajes de error de CodeIgniter (session flash) -->
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show py-2 px-3 mb-4" role="alert" style="font-size:14px; border-radius:10px;">
                 <?= session()->getFlashdata('error') ?>
@@ -282,10 +251,10 @@ $password_error = (string) ($errors['password'] ?? '');
             </div>
         <?php endif; ?>
 
-        <!-- Formulario — action apunta al controlador de CodeIgniter -->
+        
         <?= form_open('auth/login', ['id' => 'loginForm']) ?>
 
-            <!-- Campo DNI -->
+            
             <div class="mb-3">
                 <label for="dni" class="form-label">DNI</label>
                 <input
@@ -300,7 +269,6 @@ $password_error = (string) ($errors['password'] ?? '');
                     autocomplete="username"
                     required
                 >
-                <!-- Error específico -->
                 <?php if (!empty($dni_error)): ?>
                     <div class="invalid-feedback" style="font-size:13px;">
                         <?= esc($dni_error) ?>
@@ -308,7 +276,7 @@ $password_error = (string) ($errors['password'] ?? '');
                 <?php endif; ?>
             </div>
 
-            <!-- Campo Contraseña con toggle -->
+       
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
                 <div class="password-wrapper">
@@ -351,34 +319,32 @@ $password_error = (string) ($errors['password'] ?? '');
                 </div>
             </div>
 
-            <!-- Botón principal -->
+            <!-- Boton de iniciar sesion -->
             <button type="submit" class="btn-login">
                 Iniciar sesión
             </button>
 
         <?= form_close() ?>
 
-        <!-- Divisor -->
+        
         <div class="divider">¿No tenés cuenta?</div>
 
         <!-- Botón de Registro -->
          <div class="divider">
    <a href="<?= site_url('auth/registro') ?>" class="btn btn-nueva">Registrarme</a>
 </div>
-    </div><!-- /login-card -->
-
-    <!-- Pie -->
+    </div>
+    
     <p class="footer-note text-center mt-4">
         © <?= date('Y') ?> Univia &middot; Todos los derechos reservados
     </p>
 
-</div><!-- /login-wrapper -->
+</div>
 
 
-<!-- Bootstrap 5 JS (para dismiss de alertas) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Toggle mostrar/ocultar contraseña — JavaScript puro -->
+
 <script>
     (function () {
         var toggle  = document.getElementById('togglePassword');
@@ -387,17 +353,14 @@ $password_error = (string) ($errors['password'] ?? '');
         var iconClosed = toggle.querySelector('.icon-eye-closed');
 
         toggle.addEventListener('click', function () {
-            // Cambia entre password y texto
+            
             var isPassword = pwInput.type === 'password';
 
-            // Alternar tipo de input
             pwInput.type = isPassword ? 'text' : 'password';
 
-            // Alternar íconos
             iconOpen.style.display   = isPassword ? 'none'  : 'block';
             iconClosed.style.display = isPassword ? 'block' : 'none';
 
-            // Accesibilidad: actualizar aria-label
             toggle.setAttribute(
                 'aria-label',
                 isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'

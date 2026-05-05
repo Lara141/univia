@@ -2,21 +2,49 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * MODELO: PUBLICACIÓN
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Gestión de publicaciones de materiales de la plataforma
+ * 
+ * Tabla: publicacion
+ * Clave primaria: id_publicacion
+ * 
+ * Relaciones:
+ *   - usuario (dni_usuario)
+ *   - materia (id_materia)
+ *   - archivo (id_archivo)
+ * 
+ * @author Sistema Univia
+ * @package App\Models
+ */
 class PublicacionModel extends Model {
+    /** @var string Tabla de la base de datos */
     protected $table = 'publicacion';
+    
+    /** @var string Clave primaria */
     protected $primaryKey = 'id_publicacion';
-    // Agregamos 'precio' a la lista
+    
+    /**
+     * Campos permitidos para insertar/actualizar
+     * @var array
+     */
     protected $allowedFields = [
         'titulo', 'descripcion', 'tipo_recurso', 'tipo_acuerdo', 'precio', 
         'fecha_publicacion', 'estado', 'dni_usuario', 'id_materia', 'id_archivo'
     ];
 
     /**
-     * Retorna las publicaciones de un usuario con datos de materia y archivo.
+     * Obtiene las publicaciones de un usuario específico
+     * 
+     * Realiza joins con las tablas materia y archivo para obtener
+     * información completa de cada publicación.
      *
-     * @param string $dni DNI del usuario
-     * @param bool $soloActivas Filtrar solo publicaciones activas
-     * @return array
+     * @param string $dni DNI del usuario propietario
+     * @param bool $soloActivas true = solo activas (estado=1), false = todas
+     * @return array Array de publicaciones con datos completos
      */
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
     {
