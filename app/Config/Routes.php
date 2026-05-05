@@ -20,7 +20,7 @@ $routes->post('auth/procesar_registro', 'AuthController::procesar_registro');
 // PUBLICACIONES (PublicacionController)
 // ═══════════════════════════════════════════════════════════════
 $routes->get('publicaciones/propias', 'PublicacionController::propias');
-$routes->get('publicaciones/crear', 'PublicacionController::crear');
+$routes->get('publicaciones/crear', 'PublicacionController::mostrarFormulario');
 $routes->post('publicaciones/guardar', 'PublicacionController::guardar');
 $routes->get('publicaciones/editar/(:num)', 'PublicacionController::editar/$1');
 $routes->post('publicaciones/actualizar/(:num)', 'PublicacionController::actualizar/$1');

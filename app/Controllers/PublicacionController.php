@@ -67,7 +67,7 @@ class PublicacionController extends BaseController
     /**
      * Muestra el formulario para crear una nueva publicación
      */
-    public function crear()
+    public function mostrarFormulario()
     {
         if (!$this->usuarioLogueado()) {
             return redirect()->to('/');
