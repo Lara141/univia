@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-04-2026 a las 16:51:57
+-- Tiempo de generación: 07-05-2026 a las 21:45:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,13 +39,11 @@ CREATE TABLE `archivo` (
 --
 
 INSERT INTO `archivo` (`id_archivo`, `nombre_archivo`, `ruta`, `formato`) VALUES
-(1, 'GUIA DE TP N° 0 (1).pdf', 'uploads/archivos/1776864312_c5e07c45f99e093b91de.pdf', 'application/pdf'),
-(2, 'GUIA DE TP N° 0 (1).pdf', 'uploads/archivos/1776864599_b0bccf58dc636cab773d.pdf', 'application/pdf'),
-(3, 'Arquitecturas (1).pdf', 'uploads/archivos/1776865102_7c73ceaba184689dedcb.pdf', 'application/pdf'),
-(4, 'GUÍA DE EJERCICIOS PRÁCTICOS 2025 (ECO APLICADA).pdf', 'uploads/archivos/1776866415_096a7cdfcb85fc2421d7.pdf', 'application/pdf'),
-(5, 'GUÍA DE EJERCICIOS PRÁCTICOS 2025 (ECO APLICADA).pdf', 'uploads/archivos/1776866891_515dd11a3d044833cfaa.pdf', 'application/pdf'),
-(6, 'Economía Aplicada 2026.pdf', 'uploads/archivos/1776867299_d18aeef0d50d209b81be.pdf', 'application/pdf'),
-(7, 'Anexo_A_-_Manual_de_Usuarios_del_sistema.pdf', 'uploads/archivos/1776868102_994eb874cd360219074e.pdf', 'application/pdf');
+(11, 'GUIA DE TP N° 0 (1).pdf', './uploads/archivos/1778182424_48603281070032f89ffa.pdf', 'pdf'),
+(12, 'Economía Aplicada 2026.pdf', './uploads/archivos/1778182635_444221bdef8a48a5a4d0.pdf', 'pdf'),
+(13, 'Economía Aplicada 2026.pdf', './uploads/archivos/1778182672_924a828cb2159aa56005.pdf', 'pdf'),
+(14, 'Mesa Regular 18-12-25.pdf', './uploads/archivos/1778182885_bc1766fe9000e47b5ebc.pdf', 'pdf'),
+(15, 'Mesa Regular 18-12-25.pdf', './uploads/archivos/1778182942_af963ffed2a1ec9f25a4.pdf', 'pdf');
 
 -- --------------------------------------------------------
 
@@ -133,9 +131,9 @@ CREATE TABLE `materia` (
 --
 
 INSERT INTO `materia` (`id_materia`, `nombre_materia`) VALUES
-(1, 'Programación I'),
-(2, 'Análisis Matemático II'),
-(3, 'Álgebra y Geometría'),
+(1, 'Ingenieria de software 2'),
+(2, 'Probabilidad y estadistica'),
+(3, 'Base de datos 1'),
 (4, 'Ingeniería de software 2'),
 (5, 'Economia aplicada');
 
@@ -182,11 +180,9 @@ CREATE TABLE `publicacion` (
 --
 
 INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `descripcion`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `fecha_publicacion`, `estado`, `dni_usuario`, `id_materia`, `id_archivo`) VALUES
-(2, 'trabajo de ingenieria 2', 'este es el trabajo practico 0 de la materia ingeniería de software 2', 'guia', 'pago', NULL, '2026-04-22', 1, 45876789, 1, 2),
-(3, 'tp1', 'dfggd', 'apunte', 'pago', 677.99, '2026-04-22', 1, 45876789, 5, 3),
-(5, 'economia', 'practico de economia ', 'resumen', 'gratis', NULL, '2026-04-22', 1, 45876789, 5, 5),
-(6, 'sdfe', 'sfer', 'examen', 'pago', NULL, '2026-04-22', 0, 45876789, 5, 6),
-(7, 'trabajo de ingenieria 2', 'este es el trabajo practico 0 de la materia ingeniería de software 2', 'guia', 'pago', 405.00, '2026-04-22', 0, 45876789, 4, NULL);
+(10, 'Practico N°0', 'Es el practico N°o de la materia de ingenieria 2, solo contiene un ejercicio practico sin resolver', 'guia', 'gratis', 0.00, '2026-05-07', 1, 22333444, 4, 11),
+(11, 'Modulo 1 de teoria', 'Contiene el módulo 1 completo de teoría con ejemplos prácticos', 'otro', 'pago', 50.01, '2026-05-07', 1, 22333444, 5, 13),
+(12, 'Modelo de examen final', 'Es un modelo de mesa de examen regular del año 2025', 'examen', 'gratis', 0.00, '2026-05-07', 0, 22333444, 3, 15);
 
 -- --------------------------------------------------------
 
@@ -229,8 +225,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`dni_usuario`, `correo`, `contrasena`, `fecha_registro`, `estado`, `nombre_usuario`, `apellido_usuario`, `id_carrera`) VALUES
-(45678903, 'edf@gmail.com', 'de5fr6gt7.*rdf', '2026-04-22', 1, 'ds', 'de', 1),
-(45876789, 'diamelaacosta2004@gmail.com', 'Pancha78*', '2026-04-22', 1, 'Lara', 'Acosta', 1);
+(22333444, 'diamelaacosta2004@gmail.com', '$2y$10$wrgpwd1YKBtcPkCC9ZFiXe18vfDeCKTqGrhn6EnyR2Y4/RsTcagnS', '2026-05-07', 1, 'Lara', 'Acosta', 1);
 
 --
 -- Índices para tablas volcadas
@@ -315,7 +310,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `carrera`
@@ -357,7 +352,7 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `universidad`

@@ -1,0 +1,93 @@
+DEBUG - 2026-05-07 19:15:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:16:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:16:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:16:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-05-07 19:18:15 --> Duplicate entry '22333444' for key 'PRIMARY'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (:dni_usuario:, :Nombre_usuario:, :Apellido_usuario:, :correo:, :contrasena:, :id_carrera:, :fecha_registro:, :estado:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Controllers\AuthController.php(130): CodeIgniter\Model->insert([...])
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->procesar_registro()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-05-07 19:18:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-05-07 19:18:15 --> CodeIgniter\Database\Exceptions\DatabaseException: Duplicate entry '22333444' for key 'PRIMARY'
+[Method: POST, Route: auth/procesar_registro]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (:dni_usuario:, :Nombre_usuario:, :Apellido_usuario:, :correo:, :contrasena:, :id_carrera:, :fecha_registro:, :estado:)', [...], false)
+ 2 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 4 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 5 APPPATH\Controllers\AuthController.php(130): CodeIgniter\Model->insert([...])
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->procesar_registro()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-05-07 19:18:15 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Duplicate entry '22333444' for key 'PRIMARY'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (:dni_usuario:, :Nombre_usuario:, :Apellido_usuario:, :correo:, :contrasena:, :id_carrera:, :fecha_registro:, :estado:)', [...], false)
+ 4 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 6 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 7 APPPATH\Controllers\AuthController.php(130): CodeIgniter\Model->insert([...])
+ 8 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->procesar_registro()
+ 9 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+10 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-05-07 19:18:15 --> [Caused by] mysqli_sql_exception: Duplicate entry '22333444' for key 'PRIMARY'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (\'22333444\', \'Lara\', \'Acosta\', \'diamelaacosta2004@gmail.com\', \'$2y$10$7d4BAaDVFwIkMvNhEirh8OihbXyxfe.4GiU..V3Tw9OTt69ltP7Le\', 1, \'2026-05-07\', 1)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `usuario` (`dni_usuario`, `Nombre_usuario`, `Apellido_usuario`, `correo`, `contrasena`, `id_carrera`, `fecha_registro`, `estado`) VALUES (:dni_usuario:, :Nombre_usuario:, :Apellido_usuario:, :correo:, :contrasena:, :id_carrera:, :fecha_registro:, :estado:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Controllers\AuthController.php(130): CodeIgniter\Model->insert([...])
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->procesar_registro()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-05-07 19:29:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:29:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:30:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:31:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:31:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:31:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:33:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:33:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:34:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:37:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:37:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:37:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:37:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:37:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:38:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:41:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:41:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:41:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:42:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:42:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:42:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-07 19:42:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
