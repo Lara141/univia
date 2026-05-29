@@ -246,32 +246,32 @@ class PublicacionController extends BaseController
      * @return \CodeIgniter\HTTP\Response
      */
     public function explorar()
-{
-    if (!$this->usuarioLogueado()) {
-        return redirect()->to('/');
+    {
+        if (!$this->usuarioLogueado()) {
+            return redirect()->to('/');
+        }
+
+        $busqueda = $this->request->getGet('q');
+
+        $publicacionModel = new PublicacionModel();
+
+        $publicaciones = [];
+
+        if (!empty($busqueda)) {
+
+            $publicaciones = $publicacionModel
+                ->select('publicacion.*, materia.nombre_materia')
+                ->join('materia', 'materia.id_materia = publicacion.id_materia')
+                ->like('titulo', $busqueda)
+                ->orLike('descripcion', $busqueda)
+                ->findAll();
+        }
+
+        return view('explorar_materiales', [
+            'usuario' => session()->get('usuario'),
+            'publicaciones' => $publicaciones,
+            'busqueda' => $busqueda
+        ]);
     }
-
-    $busqueda = $this->request->getGet('q');
-
-    $publicacionModel = new PublicacionModel();
-
-    $publicaciones = [];
-
-    if (!empty($busqueda)) {
-
-        $publicaciones = $publicacionModel
-            ->select('publicacion.*, materia.nombre_materia')
-            ->join('materia', 'materia.id_materia = publicacion.id_materia')
-            ->like('titulo', $busqueda)
-            ->orLike('descripcion', $busqueda)
-            ->findAll();
-    }
-
-    return view('explorar_materiales', [
-        'usuario' => session()->get('usuario'),
-        'publicaciones' => $publicaciones,
-        'busqueda' => $busqueda
-    ]);
-}
 
 }

@@ -255,6 +255,30 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         transition: background .15s, border-color .15s, color .15s;
         font-family: 'DM Sans', sans-serif;
     }
+    .filtros-card{
+    position: sticky;
+    top: 100px;
+}
+
+.filtro-titulo{
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    margin-bottom: .9rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+}
+
+.filtro-divider{
+    border-color: var(--border);
+    opacity: 1;
+    margin: 0;
+}
+.w-48{
+    width: 48%;
+    text-align: center;
+}
     .filter-pill:hover, .filter-pill.active { background: rgba(91,127,255,.1); border-color: var(--accent); color: var(--accent); }
 
     /* tarjetas de publicaciones */
@@ -367,14 +391,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     .file-name-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 7px; padding: 4px 11px; font-size: .8rem; color: var(--text-soft); font-family: 'DM Mono', monospace; word-break: break-all; }
 
     /* botones */
-     /* Editar */
-    .btn-editar { background: var(--gradient); border: none; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .9rem; padding: 10px 22px; border-radius: 10px; box-shadow: 0 4px 16px rgba(91,127,255,.3); display: inline-flex; align-items: center; gap: 7px; transition: filter .15s, box-shadow .15s; }
-    .btn-editar:hover { filter: brightness(1.08); box-shadow: 0 6px 22px rgba(91,127,255,.45); color: #fff; }
-    /* Eliminar */
-    .btn-eliminar { background: transparent; border: 1px solid rgba(239,68,68,.28); color: var(--danger); font-size: .88rem; padding: 9px 18px; border-radius: 10px; display: inline-flex; align-items: center; gap: 7px; transition: background .15s, border-color .15s; }
-    .btn-eliminar:hover { background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.5); color: var(--danger); }
-    .btn-cerrar-modal { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 9px 16px; border-radius: 10px; font-size: .88rem; transition: background .15s, color .15s; }
-    .btn-cerrar-modal:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    
     /* Descargar */
     .btn-descargar { background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.22); color: var(--success); font-size: .86rem; padding: 8px 16px; border-radius: 9px; display: inline-flex; align-items: center; gap: 7px; transition: background .15s; }
     .btn-descargar:hover { background: rgba(52,211,153,.16); color: var(--success); }
@@ -516,9 +533,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-            <h1>Explora materiales de la comunidad</h1>
+            <h1>Explora los materiales de la comunidad</h1>
                 <p class="subtitle mb-0">
-                    Encuentra apuntes, resúmenes, libros, examenes y más!
+                    Todo lo que necesitás para tu carrera, compartido por estudiantes.
                 </p>
             </div>
 
@@ -559,7 +576,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 type="text"
                 name="q"
                 class="form-control search-big-input"
-                placeholder="Buscar apuntes, resúmenes, materias..."
+                placeholder="¿Qué estás buscando hoy? (ej. Álgebra, Resumen...)"
             >
 
             <button class="btn btn-buscar" type="submit">
@@ -582,35 +599,98 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     <!-- FILTROS -->
     <div class="col-lg-3">
 
-        <div class="pub-card p-3">
+            <div class="pub-card filtros-card p-3">
 
-            <h5 class="mb-3">Filtros</h5>
+            <h5 class="mb-4">Filtros</h5>
 
-            <div class="d-flex flex-column gap-2">
+            <!-- TIPO DE RECURSO -->
+            <div class="mb-4">
 
-                <button class="filter-pill active" data-filter="todos">
-                    Todos
-                </button>
+                <h6 class="filtro-titulo">
+                    Tipo de recurso
+                </h6>
 
-                <button class="filter-pill" data-filter="resumen">
-                    Resúmenes
-                </button>
+                <div class="d-flex flex-wrap gap-2">
 
-                <button class="filter-pill" data-filter="apunte">
-                    Apuntes
-                </button>
+                    <button class="filter-pill w-48 active" data-filter="todos">
+                        Todos
+                    </button>
 
-                <button class="filter-pill" data-filter="examen">
-                    Exámenes
-                </button>
+                    <button class="filter-pill w-48"  data-filter="resumen">
+                        Resúmenes
+                    </button>
 
-                <button class="filter-pill" data-filter="libro">
-                    Libros
-                </button>
+                    <button class="filter-pill w-48"  data-filter="apunte">
+                        Apuntes
+                    </button>
 
-                <button class="filter-pill" data-filter="guia">
-                    Guías
-                </button>
+                    <button class="filter-pill w-48" data-filter="examen">
+                        Exámenes
+                    </button>
+
+                    <button class="filter-pill w-48"  data-filter="libro">
+                        Libros
+                    </button>
+
+                    <button class="filter-pill w-48" data-filter="guia">
+                        Guías
+                    </button>
+
+                </div>
+
+            </div>
+
+            <hr class="filtro-divider">
+
+            <!-- DISPONIBILIDAD -->
+            <div class="my-4">
+
+                <h6 class="filtro-titulo">
+                    Disponibilidad
+                </h6>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <button class="filter-pill w-48">
+                        Gratis
+                    </button>
+
+                    <button class="filter-pill w-48">
+                        Todos
+                    </button>
+
+                    <button class="filter-pill w-48">
+                        De pago
+                    </button>
+
+                </div>
+
+            </div>
+
+            <hr class="filtro-divider">
+
+            <!-- FORMATO -->
+            <div class="mt-4">
+
+                <h6 class="filtro-titulo">
+                    Formato
+                </h6>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <button class="filter-pill w-48" >
+                        PDF
+                    </button>
+
+                    <button class="filter-pill w-48" >
+                        Word
+                    </button>
+
+                    <button class="filter-pill w-48" >
+                        PNG / JPG
+                    </button>
+
+                </div>
 
             </div>
 
@@ -626,7 +706,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 <?php if (!empty($busqueda)): ?>
                     Resultados para "<?= esc($busqueda) ?>"
                 <?php else: ?>
-                    Explora materiales
+                    Explorá todos los materiales disponibles
                 <?php endif; ?>
             </h2>
         </div>
@@ -727,9 +807,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <?php else: ?>
     <div class="col-12 empty-state">
         <i class="bi bi-folder-x empty-icon"></i>
-        <h4>No se encontraron materiales</h4>
+        <h4>No hay resultados para esta búsqueda</h4>
         <p>
-            Intentá buscar con otras palabras clave.
+            Probá modificando los filtros o usando palabras clave más generales.
         </p>
     </div>
 <?php endif; ?>
