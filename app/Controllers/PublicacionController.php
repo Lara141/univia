@@ -236,5 +236,23 @@ class PublicacionController extends BaseController
         ]);
     }
 
-   
+    /**
+     * Muestra la vista principal para explorar materiales
+     *
+     * La pantalla se carga inicialmente sin resultados.
+     * Los materiales aparecerán luego de realizar una búsqueda.
+     *
+     * @return \CodeIgniter\HTTP\Response
+     */
+    public function explorar()
+    {
+        if (!$this->usuarioLogueado()) {
+            return redirect()->to('/');
+        }
+
+        return view('explorar_materiales', [
+            'usuario' => session()->get('usuario'),
+        ]);
+    }
+
 }
