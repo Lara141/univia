@@ -50,7 +50,8 @@ $routes->post('inicio/procesar_registro', 'AuthController::procesar_registro');
 
 
 $routes->get('materiales/buscar', 'PublicacionController::buscar');
-$routes->get('materiales/explorar', 'PublicacionController::explorar');
 
+$routes->get('materiales/explorar', 'PublicacionController::explorar');
+$routes->get('publicaciones/explorar', 'PublicacionController::explorar');
 
 
