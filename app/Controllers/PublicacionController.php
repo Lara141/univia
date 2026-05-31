@@ -251,26 +251,21 @@ class PublicacionController extends BaseController
             return redirect()->to('/');
         }
 
-        $busqueda = $this->request->getGet('q');
+        $filtros = [
+            'palabra_clave' => $this->request->getGet('q'),
+            'materia'       => $this->request->getGet('materia'),
+            'tipo'          => $this->request->getGet('tipo'),
+            'acuerdo'       => $this->request->getGet('acuerdo'),
+            'formato'       => $this->request->getGet('formato')
+        ];
 
-        $publicacionModel = new PublicacionModel();
-
-        $publicaciones = [];
-
-        if (!empty($busqueda)) {
-
-            $publicaciones = $publicacionModel
-                ->select('publicacion.*, materia.nombre_materia')
-                ->join('materia', 'materia.id_materia = publicacion.id_materia')
-                ->like('titulo', $busqueda)
-                ->orLike('descripcion', $busqueda)
-                ->findAll();
-        }
+        $publicaciones = $this->publicacionService
+            ->buscarPublicaciones($filtros);
 
         return view('explorar_materiales', [
             'usuario' => session()->get('usuario'),
             'publicaciones' => $publicaciones,
-            'busqueda' => $busqueda
+            'filtros' => $filtros
         ]);
     }
 

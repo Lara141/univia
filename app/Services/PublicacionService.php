@@ -284,37 +284,43 @@ class PublicacionService
      * @return array Array de publicaciones que cumplen los criterios
      */
     public function buscarPublicaciones(array $filtros): array
-{
-    $builder = $this->publicacionModel->builder();
+    {
+        $builder = $this->publicacionModel->builder();
 
-    $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
-    $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-    $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
-    // filtros dinamicos
-    if (!empty($filtros['palabra_clave'])) {
-        $builder->groupStart()
-            ->like('publicacion.titulo', $filtros['palabra_clave'])
-            ->orLike('publicacion.descripcion', $filtros['palabra_clave'])
-        ->groupEnd();
+        // filtros dinamicos
+        if (!empty($filtros['palabra_clave'])) {
+            $builder->groupStart()
+                ->like('publicacion.titulo', $filtros['palabra_clave'])
+                ->orLike('publicacion.descripcion', $filtros['palabra_clave'])
+            ->groupEnd();
+        }
+
+        if (!empty($filtros['materia'])) {
+            $builder->where('publicacion.id_materia', $filtros['materia']);
+        }
+
+        if (!empty($filtros['tipo'])) {
+            $builder->where('publicacion.tipo_recurso', $filtros['tipo']);
+        }
+        if (!empty($filtros['acuerdo'])) {
+            $builder->where('publicacion.tipo_acuerdo', $filtros['acuerdo']);
+        }
+        if (!empty($filtros['formato'])) {
+            $builder->where('a.formato', $filtros['formato']);
+        }
+
+        // solo activos
+        $builder->where('publicacion.estado', 1);
+
+        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+
+        return $builder->get()->getResultArray();
     }
-
-    if (!empty($filtros['materia'])) {
-        $builder->where('publicacion.id_materia', $filtros['materia']);
-    }
-
-    if (!empty($filtros['tipo'])) {
-        $builder->where('publicacion.tipo_recurso', $filtros['tipo']);
-    }
-
-    // solo activos
-    $builder->where('publicacion.estado', 1);
-
-    $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
-
-    return $builder->get()->getResultArray();
-}
 
 
 
