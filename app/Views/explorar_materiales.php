@@ -427,6 +427,12 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     font-weight: 600;
     padding: 0 1.5rem;
 }
+.filter-pill{
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
     @media (max-width:576px) {
         .page-hero h1 { font-size: 1.45rem; }
         .btn-nueva-lbl { display: none; }
@@ -543,8 +549,10 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <main class="container-lg py-4">
 
     <div class="search-box-big mb-4">
-    <form action="<?= site_url('publicaciones/explorar') ?>" method="GET">
+    <form id="formFiltros" action="<?= site_url('publicaciones/explorar') ?>"method="GET">
+
         <div class="input-group search-group">
+
             <span class="input-group-text">
                 <i class="bi bi-search"></i>
             </span>
@@ -554,12 +562,15 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 name="q"
                 class="form-control search-big-input"
                 placeholder="¿Qué estás buscando hoy? (ej. Álgebra, Resumen...)"
+                value="<?= esc($filtros['palabra_clave'] ?? '') ?>"
             >
 
             <button class="btn btn-buscar" type="submit">
                 Buscar
             </button>
+
         </div>
+
     </form>
 </div>
 
@@ -571,115 +582,128 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         </div>
     </form>
 
-    <div class="row g-4">
+    <?php
+    $currentFilters = $_GET;
+
+    function filtroUrl($campo, $valor, $currentFilters)
+    {
+        $params = $currentFilters;
+
+        if (empty($valor)) {
+            unset($params[$campo]);
+        } else {
+            $params[$campo] = $valor;
+        }
+
+        return site_url('publicaciones/explorar?' . http_build_query($params));
+    }
+    ?>
 
     <!-- FILTROS -->
-    <div class="col-lg-3">
+    <div class="row">
+        <div class="col-lg-3">
 
             <div class="pub-card filtros-card p-3">
 
-            <h5 class="mb-4">Filtros</h5>
+                <h5 class="mb-4">Filtros</h5>
 
-            <!-- TIPO DE RECURSO -->
-            <div class="mb-4">
+                <!-- TIPO DE RECURSO -->
+                <div class="mb-4">
 
-                <h6 class="filtro-titulo">
-                    Tipo de recurso
-                </h6>
+                    <h6 class="filtro-titulo">
+                        Tipo de recurso
+                    </h6>
 
-                <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-wrap gap-2">
 
-                    <button class="filter-pill w-48 active" data-filter="todos">
-                        Todos
-                    </button>
+                        <a href="<?= site_url('publicaciones/explorar') ?>"
+                        class="filter-pill w-48 <?= empty($filtros['tipo']) ? 'active' : '' ?>">
+                            Todos
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=resumen') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'resumen' ? 'active' : '' ?>">
+                            Resúmenes
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=apunte') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'apunte' ? 'active' : '' ?>">
+                            Apuntes
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=examen') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'examen' ? 'active' : '' ?>">
+                            Exámenes
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=libro') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'libro' ? 'active' : '' ?>">
+                            Libros
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=guia') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'guia' ? 'active' : '' ?>">
+                            Guías
+                        </a>
 
-                    <button class="filter-pill w-48"  data-filter="resumen">
-                        Resúmenes
-                    </button>
-
-                    <button class="filter-pill w-48"  data-filter="apunte">
-                        Apuntes
-                    </button>
-
-                    <button class="filter-pill w-48" data-filter="examen">
-                        Exámenes
-                    </button>
-
-                    <button class="filter-pill w-48"  data-filter="libro">
-                        Libros
-                    </button>
-
-                    <button class="filter-pill w-48" data-filter="guia">
-                        Guías
-                    </button>
-
-                </div>
-
-            </div>
-
-            <hr class="filtro-divider">
-
-            <!-- DISPONIBILIDAD -->
-            <div class="my-4">
-
-                <h6 class="filtro-titulo">
-                    Disponibilidad
-                </h6>
-
-                <div class="d-flex flex-wrap gap-2">
-
-                    <button class="filter-pill w-48"
-                            data-acuerdo="gratis">
-                        Gratis
-                    </button>
-
-                    <button class="filter-pill w-48"
-                            data-acuerdo="todos">
-                        Todos
-                    </button>
-
-                    <button class="filter-pill w-48"
-                            data-acuerdo="pago">
-                        De pago
-                    </button>
+                    </div>
 
                 </div>
 
-            </div>
+                <hr class="filtro-divider">
 
-            <hr class="filtro-divider">
+                <!-- DISPONIBILIDAD -->
+                <div class="my-4">
 
-            <!-- FORMATO -->
-            <div class="mt-4">
+                    <h6 class="filtro-titulo">
+                        Disponibilidad
+                    </h6>
 
-                <h6 class="filtro-titulo">
-                    Formato
-                </h6>
+                    <div class="d-flex flex-wrap gap-2">
 
-                <div class="d-flex flex-wrap gap-2">
+                        <a href="<?= filtroUrl('acuerdo', 'gratis', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['acuerdo'] ?? '') == 'gratis' ? 'active' : '' ?>">
+                            Gratis
+                        </a>
+                    <a href="<?= filtroUrl('acuerdo', '', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= empty($filtros['acuerdo']) ? 'active' : '' ?>">
+                            Todos
+                        </a>
+                        <a href="<?= filtroUrl('acuerdo', 'pago', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['acuerdo'] ?? '') == 'pago' ? 'active' : '' ?>">
+                            De pago
+                        </a>
 
-                    <button class="filter-pill w-48"
-                            data-formato="pdf">
-                        PDF
-                    </button>
+                    </div>
 
-                    <button class="filter-pill w-48"
-                            data-formato="docx">
-                        Word
-                    </button>
+                </div>
 
-                    <button class="filter-pill w-48"
-                            data-formato="jpeg">
-                        PNG / JPG
-                    </button>
-                                    </div>
+                <hr class="filtro-divider">
 
-            </div>
+                <!-- FORMATO -->
+                <div class="mt-4">
 
+                    <h6 class="filtro-titulo">
+                        Formato
+                    </h6>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <a href="<?= filtroUrl('formato', 'pdf', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'pdf' ? 'active' : '' ?>">
+                            PDF
+                        </a>
+                        <a href="<?= filtroUrl('formato', 'docx', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'docx' ? 'active' : '' ?>">
+                            Word
+                        </a>
+                    <a href="<?= filtroUrl('formato', 'jpeg', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'jpeg' ? 'active' : '' ?>">
+                            PNG / JPG
+                        </a>
+                    </div>
+
+                </div>
+           
         </div>
 
     </div>
-
+  
     <!-- RESULTADOS -->
     <div class="col-lg-9">
 
@@ -1079,14 +1103,46 @@ modalEl.addEventListener('show.bs.modal', function (e) {
 });
 
 
-document.querySelectorAll('.filter-pill').forEach(pill => {
-    pill.addEventListener('click', function () {
-        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+const inputTipo = document.getElementById('filtro-tipo');
+const inputAcuerdo = document.getElementById('filtro-acuerdo');
+const inputFormato = document.getElementById('filtro-formato');
+
+document.querySelectorAll('[data-tipo]').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        document.querySelectorAll('[data-tipo]')
+            .forEach(b => b.classList.remove('active'));
+
         this.classList.add('active');
-        const f = this.dataset.filter;
-        document.querySelectorAll('#pub-grid > [data-tipo]').forEach(col => {
-            col.style.display = (f === 'todos' || col.dataset.tipo === f) ? '' : 'none';
-        });
+
+        inputTipo.value =
+            this.dataset.tipo === 'todos'
+                ? ''
+                : this.dataset.tipo;
+    });
+});
+
+document.querySelectorAll('[data-acuerdo]').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        document.querySelectorAll('[data-acuerdo]')
+            .forEach(b => b.classList.remove('active'));
+
+        this.classList.add('active');
+
+        inputAcuerdo.value = this.dataset.acuerdo;
+    });
+});
+
+document.querySelectorAll('[data-formato]').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        document.querySelectorAll('[data-formato]')
+            .forEach(b => b.classList.remove('active'));
+
+        this.classList.add('active');
+
+        inputFormato.value = this.dataset.formato;
     });
 });
 
