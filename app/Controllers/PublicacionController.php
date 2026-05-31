@@ -260,8 +260,8 @@ class PublicacionController extends BaseController
         ];
 
         $publicaciones = $this->publicacionService
-            ->buscarPublicaciones($filtros);
-
+           /**  ->buscarPublicaciones($filtros);*/
+            ->consultarPublicaciones($filtros, 'DESC');
         return view('explorar_materiales', [
             'usuario' => session()->get('usuario'),
             'publicaciones' => $publicaciones,

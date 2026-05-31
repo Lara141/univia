@@ -322,7 +322,19 @@ class PublicacionService
         return $builder->get()->getResultArray();
     }
 
+    public function consultarPublicaciones(array $criterios = [], string $orden = 'DESC'): array
+    {
+        return $this->buscarPublicaciones($criterios, $orden);
+    }
 
+    public function filtrarPublicaciones(array $criterios): array
+    {
+        return $this->buscarPublicaciones($criterios);
+    }
 
+    public function obtenerMaterial(int $id)
+    {
+        return $this->obtenerPublicacionPorId($id);
+    }
 }
 
