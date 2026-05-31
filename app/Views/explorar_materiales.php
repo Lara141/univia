@@ -124,29 +124,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         background-clip: text;
     }
 
-    /* buscador */
-    .search-wrap { position: relative; max-width: 380px; width: 100%; }
-    .search-wrap .bi-search {
-        position: absolute; left: 12px; top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted); font-size: .85rem; pointer-events: none;
-    }
-    .search-input {
-        background: var(--bg-input) !important;
-        border: 1px solid var(--border) !important;
-        color: var(--text) !important;
-        border-radius: 10px !important;
-        padding-left: 2rem !important;
-        font-family: 'DM Sans', sans-serif; font-size: .88rem;
-    }
-
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-input:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 3px rgba(91,127,255,.15) !important;
-        outline: none;
-    }
-
     /* avatar del usuario*/
     .user-avatar {
         width: 36px; height: 36px; border-radius: 50%;
@@ -651,15 +628,18 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
                 <div class="d-flex flex-wrap gap-2">
 
-                    <button class="filter-pill w-48">
+                    <button class="filter-pill w-48"
+                            data-acuerdo="gratis">
                         Gratis
                     </button>
 
-                    <button class="filter-pill w-48">
+                    <button class="filter-pill w-48"
+                            data-acuerdo="todos">
                         Todos
                     </button>
 
-                    <button class="filter-pill w-48">
+                    <button class="filter-pill w-48"
+                            data-acuerdo="pago">
                         De pago
                     </button>
 
@@ -678,19 +658,21 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
                 <div class="d-flex flex-wrap gap-2">
 
-                    <button class="filter-pill w-48" >
+                    <button class="filter-pill w-48"
+                            data-formato="pdf">
                         PDF
                     </button>
 
-                    <button class="filter-pill w-48" >
+                    <button class="filter-pill w-48"
+                            data-formato="docx">
                         Word
                     </button>
 
-                    <button class="filter-pill w-48" >
+                    <button class="filter-pill w-48"
+                            data-formato="jpeg">
                         PNG / JPG
                     </button>
-
-                </div>
+                                    </div>
 
             </div>
 
@@ -749,7 +731,10 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             }
         ?>
 
-        <div class="col-12 col-sm-6 col-lg-4" data-tipo="<?= $tipo_recurso ?>">
+        <div class="col-12 col-sm-6 col-lg-4"
+        data-tipo="<?= strtolower($tipo_recurso) ?>"
+        data-acuerdo="<?= strtolower($tipo_acuerdo) ?>"
+        data-formato="<?= strtolower($formato) ?>">
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
                  data-id="<?= $id_publicacion ?>"

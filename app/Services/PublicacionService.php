@@ -98,18 +98,18 @@ class PublicacionService
     {
         $builder = $this->publicacionModel->builder();
 
-$builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
-$builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
-$builder->where('publicacion.dni_usuario', $dni);
+        $builder->where('publicacion.dni_usuario', $dni);
 
-if ($soloActivas) {
-    $builder->where('publicacion.estado', 1);
-}
+        if ($soloActivas) {
+            $builder->where('publicacion.estado', 1);
+        }
 
-$builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 
         return $builder->get()->getResultArray();
     }
@@ -126,11 +126,11 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     {
        $builder = $this->publicacionModel->builder();
 
-$builder->select('publicacion.*, a.nombre_archivo as file_name, a.ruta');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
-$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
-$builder->where('publicacion.id_publicacion', $id);
+        $builder->where('publicacion.id_publicacion', $id);
         return $builder->get()->getRowArray();
     }
 
@@ -144,15 +144,15 @@ $builder->where('publicacion.id_publicacion', $id);
     {
        $builder = $this->publicacionModel->builder();
 
-$builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
-$builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-$builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
-$builder->where('publicacion.id_materia', $idMateria);
-$builder->where('publicacion.estado', 1);
+        $builder->where('publicacion.id_materia', $idMateria);
+        $builder->where('publicacion.estado', 1);
 
-$builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 
         return $builder->get()->getResultArray();
     }
@@ -287,7 +287,7 @@ $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
 {
     $builder = $this->publicacionModel->builder();
 
-    $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+    $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
     $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
     $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
