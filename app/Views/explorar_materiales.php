@@ -921,6 +921,14 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 </div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
+/*
+|--------------------------------------------------------------------------
+| GESTIÓN DE TEMA (MODO CLARO / OSCURO)
+|--------------------------------------------------------------------------
+| Permite cambiar entre modo nocturno y diurno.
+| La preferencia seleccionada se almacena en localStorage para que
+| permanezca activa al recargar la página.
+*/
 (function () {
     const ROOT     = document.documentElement;
     const KEY      = 'univia_theme';
@@ -933,7 +941,17 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         dark:  { icon: 'bi-moon-stars-fill', label: 'Modo nocturno', checked: true  },
         light: { icon: 'bi-sun-fill',         label: 'Modo diurno',   checked: false },
     };
-
+/*
+|--------------------------------------------------------------------------
+| Aplicar tema seleccionado
+|--------------------------------------------------------------------------
+| Actualiza:
+| - Tema visual de la página
+| - Estado del checkbox
+| - Ícono correspondiente
+| - Texto descriptivo
+| - Preferencia almacenada en localStorage
+*/
     function apply(theme, animate) {
         ROOT.dataset.theme  = theme;
         const c             = CFG[theme];
@@ -1124,19 +1142,44 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     document.getElementById('modal-btn-eliminar').href = site_url + 'publicaciones/eliminar/' + d.id;
 });
 
+/**
+ * Gestión de filtros de búsqueda.
+ *
+ * Permite seleccionar filtros de:
+ * - Tipo de recurso
+ * - Tipo de acuerdo
+ * - Formato de archivo
+ *
+ * Al hacer clic sobre un filtro:
+ * 1. Se desactiva la selección anterior.
+ * 2. Se marca visualmente el filtro seleccionado.
+ * 3. Se actualiza el campo oculto correspondiente.
+ *
+ * Los valores almacenados son enviados posteriormente
+ * al controlador mediante el formulario de búsqueda.
+ */
 
+// Campos ocultos utilizados para enviar los filtros seleccionados
 const inputTipo = document.getElementById('filtro-tipo');
 const inputAcuerdo = document.getElementById('filtro-acuerdo');
 const inputFormato = document.getElementById('filtro-formato');
 
+
+/**
+ * Filtro por tipo de recurso.
+ * Ejemplos: resumen, apunte, examen, libro, guía.
+ */
 document.querySelectorAll('[data-tipo]').forEach(btn => {
     btn.addEventListener('click', function () {
 
+        // Quita la selección anterior
         document.querySelectorAll('[data-tipo]')
             .forEach(b => b.classList.remove('active'));
 
+        // Marca el filtro seleccionado
         this.classList.add('active');
 
+        // Actualiza el valor del filtro
         inputTipo.value =
             this.dataset.tipo === 'todos'
                 ? ''
@@ -1144,6 +1187,10 @@ document.querySelectorAll('[data-tipo]').forEach(btn => {
     });
 });
 
+/**
+ * Filtro por disponibilidad.
+ * Valores posibles: gratis o pago.
+ */
 document.querySelectorAll('[data-acuerdo]').forEach(btn => {
     btn.addEventListener('click', function () {
 
@@ -1156,6 +1203,10 @@ document.querySelectorAll('[data-acuerdo]').forEach(btn => {
     });
 });
 
+/**
+ * Filtro por formato de archivo.
+ * Ejemplos: pdf, docx, jpeg.
+ */
 document.querySelectorAll('[data-formato]').forEach(btn => {
     btn.addEventListener('click', function () {
 
