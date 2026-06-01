@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Vista: Explorar Materiales
+ *
+ * Permite a los estudiantes:
+ * - Buscar publicaciones mediante palabras clave.
+ * - Filtrar por materia.
+ * - Filtrar por tipo de recurso.
+ * - Filtrar por disponibilidad.
+ * - Filtrar por formato.
+ * - Visualizar el detalle de una publicación.
+ * - Descargar archivos cuando corresponda.
+ */
 
 // Extraer datos del usuario para evitar errores de analisis estatico
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
@@ -601,7 +613,8 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
     <!-- FILTROS -->
     <div class="row">
-        <div class="col-lg-3">
+        <!--<div class="col-lg-3"-->
+            <div class="col-lg-3 align-self-start">
 
             <div class="pub-card filtros-card p-3">
 
@@ -624,10 +637,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'resumen' ? 'active' : '' ?>">
                             Resúmenes
                         </a>
-                        <a href="<?= site_url('publicaciones/explorar?tipo=apunte') ?>"
-                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'apunte' ? 'active' : '' ?>">
-                            Apuntes
-                        </a>
                         <a href="<?= site_url('publicaciones/explorar?tipo=examen') ?>"
                         class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'examen' ? 'active' : '' ?>">
                             Exámenes
@@ -639,6 +648,10 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         <a href="<?= site_url('publicaciones/explorar?tipo=guia') ?>"
                         class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'guia' ? 'active' : '' ?>">
                             Guías
+                        </a>
+                        <a href="<?= site_url('publicaciones/explorar?tipo=otro') ?>"
+                        class="filter-pill w-48 <?= ($filtros['tipo'] ?? '') == 'otro' ? 'active' : '' ?>">
+                            Otros
                         </a>
 
                     </div>
@@ -684,6 +697,10 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
                     <div class="d-flex flex-wrap gap-2">
 
+                        <a href="<?= filtroUrl('formato', '', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= empty($filtros['formato']) ? 'active' : '' ?>">
+                            Todos
+                        </a>
                         <a href="<?= filtroUrl('formato', 'pdf', $currentFilters) ?>"
                         class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'pdf' ? 'active' : '' ?>">
                             PDF
@@ -696,6 +713,11 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'jpeg' ? 'active' : '' ?>">
                             PNG / JPG
                         </a>
+                        <a href="<?= filtroUrl('formato', 'pptx', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'pptx' ? 'active' : '' ?>">
+                            pptx
+                        </a>
+
                     </div>
 
                 </div>

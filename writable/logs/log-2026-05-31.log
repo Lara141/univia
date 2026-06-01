@@ -60,3 +60,91 @@ DEBUG - 2026-05-31 07:01:12 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-05-31 07:01:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-05-31 07:02:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-05-31 07:02:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:52:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:53:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:53:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:53:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:55:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:55:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:56:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:56:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:56:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:57:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:57:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:57:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:57:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 20:58:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:18:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:19:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-05-31 21:19:50 --> Cannot add or update a child row: a foreign key constraint fails (`univia_db`.`publicacion`, CONSTRAINT `fk_publicacion_materia` FOREIGN KEY (`id_materia`) REFERENCES `materia` (`id_materia`) ON DELETE CASCADE ON UPDATE CASCADE)
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Comunicacion global y estrategia\', \'En este libro se encuentran todos los temas/uniudades abordados a lo largo de la materia, y bien más temas por si queres profundizar\', 6, \'libro\', \'pago\', 11999.99, \'90800700\', 20, \'2026-05-31\', 1)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Comunicacion global y estrategia\', \'En este libro se encuentran todos los temas/uniudades abordados a lo largo de la materia, y bien más temas por si queres profundizar\', 6, \'libro\', \'pago\', 11999.99, \'90800700\', 20, \'2026-05-31\', 1)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Comunicacion global y estrategia\', \'En este libro se encuentran todos los temas/uniudades abordados a lo largo de la materia, y bien más temas por si queres profundizar\', 6, \'libro\', \'pago\', 11999.99, \'90800700\', 20, \'2026-05-31\', 1)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (:titulo:, :descripcion:, :id_materia:, :tipo_recurso:, :tipo_acuerdo:, :precio:, :dni_usuario:, :id_archivo:, :fecha_publicacion:, :estado:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Services\PublicacionService.php(222): CodeIgniter\Model->insert([...])
+ 9 APPPATH\Services\PublicacionService.php(71): App\Services\PublicacionService->guardarPublicacion([...])
+10 APPPATH\Controllers\PublicacionController.php(104): App\Services\PublicacionService->procesarPublicacion([...], Object(CodeIgniter\HTTP\Files\UploadedFile))
+11 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->guardar()
+12 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+13 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-05-31 21:19:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:21:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-05-31 21:21:13 --> Cannot add or update a child row: a foreign key constraint fails (`univia_db`.`publicacion`, CONSTRAINT `fk_publicacion_materia` FOREIGN KEY (`id_materia`) REFERENCES `materia` (`id_materia`) ON DELETE CASCADE ON UPDATE CASCADE)
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Examenes de negocios y marketing internacional\', \'en este pdf se encuentran adjuntadas imagenes de los parciales de la materia.\', 7, \'examen\', \'pago\', 4999.98, \'90800700\', 21, \'2026-05-31\', 1)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Examenes de negocios y marketing internacional\', \'en este pdf se encuentran adjuntadas imagenes de los parciales de la materia.\', 7, \'examen\', \'pago\', 4999.98, \'90800700\', 21, \'2026-05-31\', 1)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Examenes de negocios y marketing internacional\', \'en este pdf se encuentran adjuntadas imagenes de los parciales de la materia.\', 7, \'examen\', \'pago\', 4999.98, \'90800700\', 21, \'2026-05-31\', 1)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (:titulo:, :descripcion:, :id_materia:, :tipo_recurso:, :tipo_acuerdo:, :precio:, :dni_usuario:, :id_archivo:, :fecha_publicacion:, :estado:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Services\PublicacionService.php(222): CodeIgniter\Model->insert([...])
+ 9 APPPATH\Services\PublicacionService.php(71): App\Services\PublicacionService->guardarPublicacion([...])
+10 APPPATH\Controllers\PublicacionController.php(104): App\Services\PublicacionService->procesarPublicacion([...], Object(CodeIgniter\HTTP\Files\UploadedFile))
+11 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->guardar()
+12 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+13 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-05-31 21:21:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:22:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-05-31 21:22:33 --> Cannot add or update a child row: a foreign key constraint fails (`univia_db`.`publicacion`, CONSTRAINT `fk_publicacion_materia` FOREIGN KEY (`id_materia`) REFERENCES `materia` (`id_materia`) ON DELETE CASCADE ON UPDATE CASCADE)
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Trabajos integrador de negocios y marketing\', \'en este pdf sed encuentran trabajos ya echos que podrias tener cm referencia para realizar el tuyo.\', 7, \'guia\', \'gratis\', 0, \'90800700\', 22, \'2026-05-31\', 1)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Trabajos integrador de negocios y marketing\', \'en este pdf sed encuentran trabajos ya echos que podrias tener cm referencia para realizar el tuyo.\', 7, \'guia\', \'gratis\', 0, \'90800700\', 22, \'2026-05-31\', 1)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (\'Trabajos integrador de negocios y marketing\', \'en este pdf sed encuentran trabajos ya echos que podrias tener cm referencia para realizar el tuyo.\', 7, \'guia\', \'gratis\', 0, \'90800700\', 22, \'2026-05-31\', 1)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `publicacion` (`titulo`, `descripcion`, `id_materia`, `tipo_recurso`, `tipo_acuerdo`, `precio`, `dni_usuario`, `id_archivo`, `fecha_publicacion`, `estado`) VALUES (:titulo:, :descripcion:, :id_materia:, :tipo_recurso:, :tipo_acuerdo:, :precio:, :dni_usuario:, :id_archivo:, :fecha_publicacion:, :estado:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Services\PublicacionService.php(222): CodeIgniter\Model->insert([...])
+ 9 APPPATH\Services\PublicacionService.php(71): App\Services\PublicacionService->guardarPublicacion([...])
+10 APPPATH\Controllers\PublicacionController.php(104): App\Services\PublicacionService->procesarPublicacion([...], Object(CodeIgniter\HTTP\Files\UploadedFile))
+11 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->guardar()
+12 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+13 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-05-31 21:22:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:22:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:22:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:22:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-05-31 21:23:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

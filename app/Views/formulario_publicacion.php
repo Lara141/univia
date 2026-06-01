@@ -684,6 +684,10 @@ function fsel($pub, $key, $value, $default = '') {
     <option value="3">Álgebra y Geometría</option>
     <option value="4">Ingeniería de software 2</option>
     <option value="5">Economia aplicada</option>
+    <option value="6">Comunicacion global y estrategica</option>
+    <option value="7">Negocios y marketing internacional</option>
+    <option value="8">Neurociencias</option>
+    <option value="9">Psicologia general</option>
 </select>
                         
                     <div class="field-error" id="err-materia">Por favor ingresá el nombre de la materia.</div>
@@ -707,7 +711,7 @@ function fsel($pub, $key, $value, $default = '') {
                     <option value="" disabled <?= empty($pub['tipo_recurso']) ? 'selected' : '' ?>>— Seleccioná un tipo —</option>
                      <!-- Opciones -->    
                         <option value="resumen"    <?= fsel($pub,'tipo_recurso','resumen') ?>>📄 Resumen</option>
-                        <option value="apunte"     <?= fsel($pub,'tipo_recurso','apunte') ?>>📝 Apunte de clase</option>
+                        <!--option value="apunte"     <?= fsel($pub,'tipo_recurso','apunte') ?>>📝 Apunte de clase</option-->
                         <option value="libro"      <?= fsel($pub,'tipo_recurso','libro') ?>>📚 Libro</option>
                         <option value="examen"     <?= fsel($pub,'tipo_recurso','examen') ?>>📋 Examen / Parcial</option>
                         <option value="guia"       <?= fsel($pub,'tipo_recurso','guia') ?>>📘 Guía de ejercicios</option>

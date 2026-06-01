@@ -238,12 +238,13 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Muestra la vista principal para explorar materiales
+     * Muestra la pantalla de exploración de materiales.
      *
-     * La pantalla se carga inicialmente sin resultados.
-     * Los materiales aparecerán luego de realizar una búsqueda.
+     * Obtiene los filtros enviados por el usuario,
+     * consulta las publicaciones que cumplen dichos criterios
+     * y envía los resultados a la vista explorar_materiales.
      *
-     * @return \CodeIgniter\HTTP\Response
+     * @return mixed
      */
     public function explorar()
     {
@@ -260,9 +261,8 @@ class PublicacionController extends BaseController
         ];
 
         $publicaciones = $this->publicacionService
-           /**  ->buscarPublicaciones($filtros);*/
-            ->consultarPublicaciones($filtros, 'DESC');
-        return view('explorar_materiales', [
+             ->buscarPublicaciones($filtros);           
+             return view('explorar_materiales', [
             'usuario' => session()->get('usuario'),
             'publicaciones' => $publicaciones,
             'filtros' => $filtros
