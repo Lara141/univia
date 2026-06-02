@@ -287,11 +287,12 @@ class PublicacionService
     {
         $builder = $this->publicacionModel->builder();
 
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato, u.Nombre_usuario,, u.Apellido_usuario');
 
         $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
-
+        $builder->join('usuario u', 'u.dni_usuario = publicacion.dni_usuario', 'left');
+        
         // filtros dinamicos
         if (!empty($filtros['palabra_clave'])) {
             $builder->groupStart()
@@ -314,7 +315,7 @@ class PublicacionService
             $builder->where('a.formato', $filtros['formato']);
         }
 
-        // solo activos
+        // solo activos 
         $builder->where('publicacion.estado', 1);
 
         $builder->orderBy('publicacion.fecha_publicacion', 'DESC');

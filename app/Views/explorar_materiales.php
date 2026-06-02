@@ -764,6 +764,11 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             $nombre_materia = (string) esc($pub['nombre_materia'] ?? 'Sin materia');
             $fecha_publicacion = (string) esc($pub['fecha_publicacion'] ?? '');
             
+            // Esto es para que me salten los datos del autorrr
+$autor_nombre = (string) esc($pub['Nombre_usuario'] ?? 'Estudiante');
+$autor_apellido = (string) esc($pub['Apellido_usuario'] ?? 'Anónimo');
+$autor_completo = $autor_nombre . ' ' . $autor_apellido;
+
             $preview_icon = 'bi-file-earmark';
             $preview_color = 'var(--text-muted)';
             $preview_text = 'Archivo';
@@ -785,6 +790,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
                  data-id="<?= $id_publicacion ?>"
                  data-titulo="<?= $titulo ?>"
+                 data-autor="<?= $autor_completo ?>"
                  data-descripcion="<?= $descripcion ?>"
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
@@ -805,12 +811,18 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 </div>
 
                 <div class="card-body-inner">
+                                   <!-- PAra los datos del autorrrr -->
+                    <div class="pub-card-materia" style="margin-top: -2px; margin-bottom: .6rem;">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Subido por: <?= $autor_completo ?></span>
+                    </div>
                     <div class="d-flex flex-wrap gap-1 mb-2">
                         <span class="badge-tipo badge-<?= $tipo_recurso ?>"><?= ucfirst($tipo_recurso) ?></span>
                         <span class="badge-acuerdo badge-<?= $tipo_acuerdo ?>">
                             <i class="bi <?= $tipo_acuerdo == 'gratis' ? 'bi-gift' : 'bi-currency-dollar' ?>"></i><?= ucfirst($tipo_acuerdo) ?>
                         </span>
                     </div>
+     
 
                     <h3 class="pub-card-title"><?= $titulo ?></h3>
                     
@@ -870,6 +882,11 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 <div id="modal-preview-wrap" class="modal-preview-wrap mb-4" style="display:none;"></div>
 
                 <div class="detail-grid mb-4">
+<!-- Datos del autor -->
+                    <div>
+                        <div class="detail-label">Autor</div>
+                        <p class="detail-value" id="modal-autor">—</p>
+                    </div>
                     <div>
                         <div class="detail-label">Tipo de recurso</div>
                         <p class="detail-value" id="modal-tipo-recurso">—</p>
@@ -908,7 +925,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         <i class="bi bi-download"></i> Descargar archivo
                     </a>
                 </div>
-            </div>
+
 
             <div class="modal-footer gap-2 justify-content-between flex-wrap">
                 <div class="d-flex gap-2">
@@ -1031,6 +1048,8 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     /* —— Título y materia —— */
     document.getElementById('modal-titulo').textContent  = d.titulo   || '—';
     document.getElementById('modal-materia').textContent = d.materia  || '—';
+    //Agregamos autor al modal
+    document.getElementById('modal-autor').textContent = d.autor || '—';
 
     const trBC = TIPO_RECURSO_BADGE_CLASS[d.tipoRecurso] || 'badge-otro';
     const taBC = TIPO_ACUERDO_BADGE_CLASS[d.tipoAcuerdo] || '';
