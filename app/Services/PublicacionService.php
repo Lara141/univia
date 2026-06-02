@@ -315,14 +315,33 @@ class PublicacionService
             $builder->where('a.formato', $filtros['formato']);
         }
 
-        // solo activos 
-        $builder->where('publicacion.estado', 1);
-
-        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+        // ═══ ¡LLAMADAS a las funciones filtrar y ordenar ═══
+        $this->filtrarResultados($builder, $filtros);
+        $this->ordenarResultados($builder);
 
         return $builder->get()->getResultArray();
     }
 
-    
+        /**
+     * Aplica los filtros por estado activo y formato de archivo.
+     */
+    private function filtrarResultados($builder, array $filtros): void
+    {
+        // Solo publicaciones activas (estado = 1)
+        $builder->where('publicacion.estado', 1);
+
+        // Filtro por formato si fue seleccionado (PDF, Word, etc.)
+        if (!empty($filtros['formato'])) {
+            $builder->where('a.formato', $filtros['formato']);
+        }
+    }
+
+    /**
+     * Establece el criterio de ordenamiento de la consulta (Más recientes primero).
+     */
+    private function ordenarResultados($builder): void
+    {
+        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
+    }
 }
 
