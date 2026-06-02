@@ -7,3 +7,98 @@ DEBUG - 2026-06-02 14:07:31 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-06-02 14:09:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-06-02 14:19:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-06-02 14:34:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-02 14:45:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-02 14:45:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-02 14:45:33 --> Unknown column 'm.nombre_materia' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = :publicacion.id_publicacion:', [...], false)
+ 5 APPPATH\Services\PublicacionService.php(134): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Controllers\PublicacionController.php(191): App\Services\PublicacionService->obtenerPublicacionPorId(20)
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->eliminar('20')
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-06-02 14:45:33 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'm.nombre_materia' in 'field list'
+[Method: GET, Route: publicaciones/eliminar/20]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = :publicacion.id_publicacion:', [...], false)
+ 2 APPPATH\Services\PublicacionService.php(134): CodeIgniter\Database\BaseBuilder->get()
+ 3 APPPATH\Controllers\PublicacionController.php(191): App\Services\PublicacionService->obtenerPublicacionPorId(20)
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->eliminar('20')
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-06-02 14:45:33 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'm.nombre_materia' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = :publicacion.id_publicacion:', [...], false)
+ 4 APPPATH\Services\PublicacionService.php(134): CodeIgniter\Database\BaseBuilder->get()
+ 5 APPPATH\Controllers\PublicacionController.php(191): App\Services\PublicacionService->obtenerPublicacionPorId(20)
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->eliminar('20')
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-06-02 14:45:33 --> [Caused by] mysqli_sql_exception: Unknown column 'm.nombre_materia' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = 20')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `publicacion`.*, `m`.`nombre_materia`, `a`.`nombre_archivo` as `file_name`, `a`.`ruta`, `a`.`formato`
+FROM `publicacion`
+LEFT JOIN `archivo` `a` ON `a`.`id_archivo` = `publicacion`.`id_archivo`
+WHERE `publicacion`.`id_publicacion` = :publicacion.id_publicacion:', [...], false)
+ 5 APPPATH\Services\PublicacionService.php(134): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Controllers\PublicacionController.php(191): App\Services\PublicacionService->obtenerPublicacionPorId(20)
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\PublicacionController->eliminar('20')
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\PublicacionController))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-06-02 14:45:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-02 14:48:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-02 14:49:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-02 14:49:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

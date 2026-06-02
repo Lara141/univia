@@ -128,6 +128,8 @@ class PublicacionService
 
         $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
 
+        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+        
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
 
         $builder->where('publicacion.id_publicacion', $id);
