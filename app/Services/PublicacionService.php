@@ -345,5 +345,37 @@ class PublicacionService
     {
         $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
     }
+
+    /**
+     * Verifica si un estudiante ya pagó por una publicación específica.
+     */
+    public function verificarPagoExistente(string $dni, int $idPublicacion): bool
+    {
+        $db = \Config\Database::connect();
+        $resultado = $db->table('pago')
+                        ->where('dni_usuario', $dni)
+                        ->where('id_publicacion', $idPublicacion)
+                        ->get()
+                        ->getRow();
+                        
+        return $resultado !== null;
+    }
+
+    /**
+     * Inserta de forma física la transacción del pago simulado.
+     */
+    public function registrarNuevoPago(string $dni, int $idPublicacion, float $monto): bool
+    {
+        $db = \Config\Database::connect();
+        return $db->table('pago')->insert([
+            'dni_usuario'    => $dni,
+            'id_publicacion' => $idPublicacion,
+            'fecha_pago'     => date('Y-m-d'),
+            'monto'          => $monto
+        ]);
+    }
+
+    
+
 }
 

@@ -248,7 +248,7 @@ class PublicacionController extends BaseController
      */
     public function explorar()
     {
-        if (!$this->usuarioLogueado()) {
+        if (!session()->get('isLoggedIn')) {
             return redirect()->to('/');
         }
 
@@ -260,13 +260,86 @@ class PublicacionController extends BaseController
             'formato'       => $this->request->getGet('formato')
         ];
 
-        $publicaciones = $this->publicacionService
-             ->buscarPublicaciones($filtros);           
-             return view('explorar_materiales', [
-            'usuario' => session()->get('usuario'),
+        $publicaciones = $this->publicacionService->buscarPublicaciones($filtros);
+        $dni = session()->get('usuario')['dni_usuario'];
+
+        // REGLA DE TRAZABILIDAD: Verificamos de forma histórica contra la tabla 'pago'
+        foreach ($publicaciones as &$pub) {
+            $pub['ya_pagado'] = $this->publicacionService->verificarPagoExistente($dni, (int)$pub['id_publicacion']);
+        }
+
+        return view('explorar_materiales', [
+            'usuario'       => session()->get('usuario'),
             'publicaciones' => $publicaciones,
-            'filtros' => $filtros
+            'filtros'       => $filtros
         ]);
+    }
+
+   /**
+ * POST /publicaciones/pagar/:id
+ * Procesa la transacción simulada de pago y mantiene la persistencia de los filtros.
+ */
+    public function procesarPago($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/');
+        }
+
+        $dni = session()->get('usuario')['dni_usuario'];
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId((int)$id);
+
+        if (!$publicacion) {
+            return redirect()->back()->with('error', 'El material académico no existe.');
+        }
+
+        $monto = (float)($publicacion['precio'] ?? 0);
+        
+        // Insertamos el registro físico permanente en la tabla 'pago'
+        $this->publicacionService->registrarNuevoPago($dni, (int)$id, $monto);
+
+        // Redireccionamos manteniendo EXACTAMENTE los mismos filtros GET que tenía el estudiante en la URL
+        $query_string = $_SERVER['QUERY_STRING'] ?? '';
+        $ruta_retorno = 'publicaciones/explorar' . (!empty($query_string) ? '?' . $query_string : '');
+
+        return redirect()->to($ruta_retorno)
+                        ->with('mensaje', '¡Pago registrado con éxito! El archivo ya se encuentra desbloqueado para su descarga.');
+    }
+
+    /**
+     * Endpoint de descarga segura (Diagrama 1 y 2).
+     * Abre el PDF directamente en el navegador.
+     */
+    public function descargar($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/');
+        }
+
+        $dni = session()->get('usuario')['dni_usuario'];
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId((int)$id);
+
+        if (!$publicacion || empty($publicacion['ruta'])) {
+            return redirect()->back()->with('error', 'El archivo solicitado no está disponible.');
+        }
+
+        // Regla de Negocio Crítica: Si es pago, verificar que exista el registro en la tabla pago
+        if ($publicacion['tipo_acuerdo'] === 'pago') {
+            $yaPagado = $this->publicacionService->verificarPagoExistente($dni, (int)$id);
+            if (!$yaPagado) {
+                return redirect()->back()->with('error', 'Acceso denegado. Requiere completar el formulario de pago.');
+            }
+        }
+
+        $rutaFisica = FCPATH . $publicacion['ruta'];
+        
+        if (file_exists($rutaFisica)) {
+            // Al retornar inline con el MIME type correcto, el navegador lo abre en otra pestaña de forma nativa
+            return $this->response->setHeader('Content-Type', 'application/pdf')
+                                ->setHeader('Content-Disposition', 'inline; filename="' . $publicacion['file_name'] . '"')
+                                ->setBody(file_get_contents($rutaFisica));
+        }
+
+        return redirect()->back()->with('error', 'El archivo no se encuentra físicamente en el servidor.');
     }
 
 }

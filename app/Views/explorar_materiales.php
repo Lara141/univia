@@ -794,6 +794,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                  data-descripcion="<?= $descripcion ?>"
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
+                 data-pagado="<?= ($pub['ya_pagado'] ?? false) ? '1' : '0' ?>"
                 data-precio="<?= $precio ?>"
                  data-estado="<?= $estado_texto ?>"
                  data-materia="<?= $nombre_materia ?>"
@@ -878,11 +879,9 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
             </div>
 
             <div class="modal-body">
-                
                 <div id="modal-preview-wrap" class="modal-preview-wrap mb-4" style="display:none;"></div>
 
                 <div class="detail-grid mb-4">
-<!-- Datos del autor -->
                     <div>
                         <div class="detail-label">Autor</div>
                         <p class="detail-value" id="modal-autor">—</p>
@@ -919,22 +918,68 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                 
                 <div class="detail-label mb-2">Descripción completa</div>
                 <div class="detail-desc-box" id="modal-descripcion">—</div>
-
-                <div class="mt-3" id="modal-descarga-wrap" style="display:none;">
-                    <a href="#" id="modal-btn-descargar" class="btn-descargar" target="_blank">
-                        <i class="bi bi-download"></i> Descargar archivo
-                    </a>
-                </div>
-
+            </div>
 
             <div class="modal-footer gap-2 justify-content-between flex-wrap">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-cerrar-modal" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="border-radius:9px; padding: 8px 16px;">Cerrar</button>
+                </div>
+                
+                <div class="d-flex gap-2" id="modal-acciones-wrap">
+                    <div id="modal-descarga-wrap" style="display:none;">
+                        <a href="#" id="modal-btn-descargar" class="btn-descargar" target="_blank">
+                            <i class="bi bi-download"></i> Descargar archivo
+                        </a>
+                    </div>
+                    
+                    <button type="button" id="modal-btn-pagar" class="btn btn-warning btn-sm fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalPagoSimulado" style="display:none; border-radius:9px; padding: 8px 16px;">
+                        <i class="bi bi-credit-card-2-front-fill me-1"></i> Realizar Pago Simulado
+                    </button>
                 </div>
             </div>
 
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="modalPagoSimulado" tabindex="-1" aria-labelledby="modalPagoSimuladoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-warning" style="background: var(--bg-card); box-shadow: 0 10px 40px rgba(251,191,36,.1);">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title text-warning" id="modalPagoSimuladoLabel" style="font-family: 'Syne', sans-serif;">
+                    <i class="bi bi-shield-lock-fill me-2"></i>Pasarela de Pago Simulada
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="form-pago-simulado" method="POST" action="">
+                <div class="modal-body text-start">
+                    <p class="small text-muted mb-3">Entorno académico controlado para verificación de trazabilidad (Requerimiento de Cátedra).</p>
+                    
+                    <div class="mb-3">
+                        <label class="field-label mb-2">Nombre del Titular</label>
+                        <input type="text" class="form-control" placeholder="Ej: Tomas Andres Bolo" required>
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-8">
+                            <label class="field-label mb-2">Número de Tarjeta Simulado</label>
+                            <input type="text" class="form-control" placeholder="4517 0000 0000 0000" maxlength="19" required>
+                        </div>
+                        <div class="col-4">
+                            <label class="field-label mb-2">CVV</label>
+                            <input type="password" class="form-control" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDetail" style="border-radius:9px;">Volver</button>
+                    <button type="submit" class="btn btn-warning btn-sm fw-bold text-dark" style="border-radius:9px;"><i class="bi bi-check-circle-fill me-1"></i>Confirmar Pago Simulado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 </div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
@@ -1128,54 +1173,55 @@ modalEl.addEventListener('show.bs.modal', function (e) {
                 <span style="font-size:.75rem; color:var(--text-muted);">${d.nombreArchivo}</span>
              </div>`;
     }
+/* —— Lógica Transaccional de Descarga y Pago (Estructura en Modales) —— */
+const descWrap = document.getElementById('modal-descarga-wrap');
+const btnPagar = document.getElementById('modal-btn-pagar');
+const formPago = document.getElementById('form-pago-simulado');
+let btnDesc   = document.getElementById('modal-btn-descargar');
 
-    /* —— Botón descarga —— */
-    const descWrap = document.getElementById('modal-descarga-wrap');
-    let btnDesc  = document.getElementById('modal-btn-descargar');
-    
-    
-    const newBtnDesc = btnDesc.cloneNode(true);
-    btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
+const esPago   = d.tipoAcuerdo === 'pago';
+const yaPagado = d.pagado === '1';
 
-    // Solo muestra la descarga si hay URL de archivo y no es libro físico
-    if (urlArchivo && !esLibroFisico) {
-        descWrap.style.display = '';
+// ═══ ¡ESTA LÍNEA CAMBIÓ! ═══
+// Agregamos window.location.search para arrastrar los filtros GET (?q=...&materia=...) al enviar el formulario
+formPago.action = site_url + 'publicaciones/pagar/' + d.id + window.location.search;
+
+if (urlArchivo && !esLibroFisico) {
+    // Variante 1: Es gratuito o ya fue pagado previamente (Diagrama 1 o Éxito del Diagrama 2)
+    if (!esPago || yaPagado) {
+        descWrap.style.display = 'block'; // Mostramos el botón de descarga
+        btnPagar.style.display = 'none';   // Ocultamos el botón de pago
         
-        if (d.tipoAcuerdo === 'pago') {
-            newBtnDesc.href = '#';
-            newBtnDesc.removeAttribute('target');
-            newBtnDesc.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Debe realizar el pago antes de poder realizar la descarga');
-            });
-        } else {
-            newBtnDesc.href = urlArchivo;
-            newBtnDesc.setAttribute('target', '_blank');
-        }
-    } else {
-        descWrap.style.display = 'none';
+        // Reconfiguramos de forma limpia el enlace binario seguro
+        const newBtnDesc = btnDesc.cloneNode(true);
+        btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
+        newBtnDesc.href = site_url + 'publicaciones/descargar/' + d.id;
+        newBtnDesc.setAttribute('target', '_blank');
+    } 
+    // Variante 2: Requiere pago (Diagrama 2 - Inicio)
+    else {
+        descWrap.style.display = 'none';  // Bloqueamos el acceso físico al archivo
+        btnPagar.style.display = 'block'; // Mostramos el botón para disparar el modal de pago
     }
+} else {
+    descWrap.style.display = 'none';
+    btnPagar.style.display = 'none';
+}
 
-    /* —— Rutas de acción —— */
-    document.getElementById('modal-btn-editar').href   = site_url + 'publicaciones/editar/'   + d.id;
-    document.getElementById('modal-btn-eliminar').href = site_url + 'publicaciones/eliminar/' + d.id;
+/* —— Rutas de acción —— */
+document.getElementById('modal-btn-editar').href   = site_url + 'publicaciones/editar/'   + d.id;
+document.getElementById('modal-btn-eliminar').href = site_url + 'publicaciones/eliminar/' + d.id;
 });
 
 /**
  * Gestión de filtros de búsqueda.
  *
- * Permite seleccionar filtros de:
- * - Tipo de recurso
- * - Tipo de acuerdo
- * - Formato de archivo
+ * Permite seleccionar filtros de: Tipo de recurso, Tipo de acuerdo, formato de archivo
  *
- * Al hacer clic sobre un filtro:
- * 1. Se desactiva la selección anterior.
- * 2. Se marca visualmente el filtro seleccionado.
+ * Al hacer clic sobre un filtro: 1. Se desactiva la selección anterior. 2. Se marca visualmente el filtro seleccionado.
  * 3. Se actualiza el campo oculto correspondiente.
  *
- * Los valores almacenados son enviados posteriormente
- * al controlador mediante el formulario de búsqueda.
+ * Los valores almacenados son enviados posteriormente al controlador mediante el formulario de búsqueda.
  */
 
 // Campos ocultos utilizados para enviar los filtros seleccionados
