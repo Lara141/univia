@@ -85,6 +85,28 @@ class PublicacionService
         return $this->archivoService->guardar($archivo);
     }
 
+        /**
+     * Obtiene una publicación específica por su ID
+     * 
+     * Incluye información del archivo adjunto
+     *
+     * @param int $id ID de la publicación
+     * @return array|null Array con datos completos o null si no existe
+     */
+    public function obtenerPublicacionPorId(int $id): ?array
+    {
+       $builder = $this->publicacionModel->builder();
+
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
+
+        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
+        
+        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+
+        $builder->where('publicacion.id_publicacion', $id);
+        return $builder->get()->getRowArray();
+    }
+
     /**
      * Obtiene todas las publicaciones de un usuario específico
      * 
@@ -114,50 +136,6 @@ class PublicacionService
         return $builder->get()->getResultArray();
     }
 
-    /**
-     * Obtiene una publicación específica por su ID
-     * 
-     * Incluye información del archivo adjunto
-     *
-     * @param int $id ID de la publicación
-     * @return array|null Array con datos completos o null si no existe
-     */
-    public function obtenerPublicacionPorId(int $id): ?array
-    {
-       $builder = $this->publicacionModel->builder();
-
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
-
-        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-        
-        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
-
-        $builder->where('publicacion.id_publicacion', $id);
-        return $builder->get()->getRowArray();
-    }
-
-    /**
-     * Obtiene todas las publicaciones activas de una materia específica
-     *
-     * @param int $idMateria ID de la materia
-     * @return array Array de publicaciones ordenadas por fecha descendente
-     */
-    public function obtenerPublicacionesPorMateria(int $idMateria): array
-    {
-       $builder = $this->publicacionModel->builder();
-
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
-
-        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
-
-        $builder->where('publicacion.id_materia', $idMateria);
-        $builder->where('publicacion.estado', 1);
-
-        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
-
-        return $builder->get()->getResultArray();
-    }
 
     /**
      * Valida todos los campos requeridos de una publicación
@@ -344,68 +322,6 @@ class PublicacionService
     private function ordenarResultados($builder): void
     {
         $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
-    }
-
-    /**
-     * Verifica si un estudiante ya pagó por una publicación específica.
-     */
-    public function verificarPagoExistente(string $dni, int $idPublicacion): bool
-    {
-        $db = \Config\Database::connect();
-        $resultado = $db->table('pago')
-                        ->where('dni_usuario', $dni)
-                        ->where('id_publicacion', $idPublicacion)
-                        ->get()
-                        ->getRow();
-                        
-        return $resultado !== null;
-    }
-
-    /**
-     * Inserta de forma física la transacción del pago simulado.
-     */
-    public function registrarNuevoPago(string $dni, int $idPublicacion, float $monto): bool
-    {
-        $db = \Config\Database::connect();
-        return $db->table('pago')->insert([
-            'dni_usuario'    => $dni,
-            'id_publicacion' => $idPublicacion,
-            'fecha_pago'     => date('Y-m-d'),
-            'monto'          => $monto
-        ]);
-    }
-
-    public function validarDatosPago(string $titular, string $tarjeta, string $vencimiento, string $cvv, string $metodoPago): bool
-    {
-        // Titular obligatorio
-        if (empty(trim($titular))) {
-            return false;
-        }
-
-        // Método de pago obligatorio
-        if (empty(trim($metodoPago))) {
-            return false;
-        }
-
-        // Quitamos espacios de la tarjeta
-        $tarjeta = str_replace(' ', '', $tarjeta);
-
-        // Tarjeta: exactamente 16 dígitos
-        if (!preg_match('/^[0-9]{16}$/', $tarjeta)) {
-            return false;
-        }
-
-        // Vencimiento MM/AA
-        if (!preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $vencimiento)) {
-            return false;
-        }
-
-        // CVV: 3 dígitos
-        if (!preg_match('/^[0-9]{3}$/', $cvv)) {
-            return false;
-        }
-
-        return true;
     }
 
 }
