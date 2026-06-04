@@ -399,13 +399,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
            <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
 
-            <form class="flex-grow-1 search-wrap d-none d-md-block"
-                  action="<?= site_url('materiales/buscar') ?>" method="GET">
-                <i class="bi bi-search"></i>
-                <input type="search" name="q" class="form-control search-input"
-                       placeholder="Buscar materiales, materias, carreras…" autocomplete="off">
-            </form>
-
             <div class="ms-auto d-flex align-items-center gap-2">
 
                 <div class="dropdown">
@@ -419,8 +412,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             <?= esc($nombre_usuario) . ' ' . esc($apellido_usuario) ?>
         </span>
     </li>
-                   
-
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
@@ -470,18 +461,26 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <section class="page-hero">
     <div class="container-lg">
 
-        <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+       <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
             <div>
-            <h1>Hola, <?= esc($nombre_usuario) ?> </h1>
+                <h1>Hola, <?= esc($nombre_usuario) ?></h1>
                 <p class="subtitle mb-0">
                     Gestioná tus materiales y compartí conocimiento con la comunidad universitaria.
                 </p>
             </div>
 
-   <a href="<?= site_url('publicaciones/crear') ?>" class="btn btn-nueva">
-                <i class="bi bi-plus-lg"></i>
-                <span class="btn-nueva-lbl">Nueva Publicación</span>
-            </a>
+            <div class="d-flex flex-column gap-2">
+
+                <a href="<?= site_url('publicaciones/crear') ?>" class="btn btn-nueva">
+                    <i class="bi bi-plus-lg"></i>
+                    <span class="btn-nueva-lbl">Nueva Publicación</span>
+                </a>
+
+                <a href="<?= site_url('publicaciones/explorar') ?>" class="btn btn-nueva">
+                    <i class="bi bi-search"></i>
+                    <span class="btn-nueva-lbl">Buscar Publicaciones</span>
+                </a>
+            </div>
         </div>
 
         <div class="row g-3 mt-3">
