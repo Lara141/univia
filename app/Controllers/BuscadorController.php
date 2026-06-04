@@ -5,11 +5,22 @@ namespace App\Controllers;
 use App\Services\BuscadorService;
 use App\Services\PagoService;
 
+/**
+ * Controlador de búsqueda y exploración de materiales.
+ *
+ * Responsable de recibir filtros desde la interfaz, buscar publicaciones
+ * activas y determinar si el usuario ya pagó por recursos de pago.
+ *
+ * @package App\Controllers
+ */
 class BuscadorController extends BaseController
 {
     protected BuscadorService $buscadorService;
     protected PagoService $pagoService;
 
+    /**
+     * Inicializa los servicios de búsqueda y pago necesarios.
+     */
     public function __construct()
     {
         $this->buscadorService = new BuscadorService();

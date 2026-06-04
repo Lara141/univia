@@ -7,11 +7,22 @@ use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 use App\Services\PagoService;
 
+/**
+ * Controlador de pago simulado para publicaciones de tipo pago.
+ *
+ * Valida los datos ingresados por el usuario y registra la transacción
+ * en la tabla de pagos para habilitar descargas posteriores.
+ *
+ * @package App\Controllers
+ */
 class PagoController extends BaseController
 {
     protected PagoService $pagoService;
     protected PublicacionService $publicacionService;
 
+    /**
+     * Inicializa los servicios de pago y de publicación.
+     */
     public function __construct()
     {
         $this->pagoService = new PagoService();
@@ -19,10 +30,16 @@ class PagoController extends BaseController
         $this->publicacionService = new PublicacionService($archivoService);
     }
     
-   /**
- * POST /publicaciones/pagar/:id
- * Procesa la transacción simulada de pago y mantiene la persistencia de los filtros.
- */
+    /**
+     * POST /publicaciones/pagar/:id
+     *
+     * Procesa el pago simulado de una publicación de pago.
+     * Valida los datos del formulario, guarda el registro de pago
+     * y redirige a explorar conservando los filtros GET.
+     *
+     * @param int|string $id Identificador de la publicación a pagar
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
     public function procesarPago($id)
     {
         if (!session()->get('isLoggedIn')) {

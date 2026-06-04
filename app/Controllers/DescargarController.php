@@ -7,11 +7,23 @@ use App\Services\ArchivoService;
 use App\Services\PagoService;
 use App\Services\PublicacionService;
 
+/**
+ * Controlador de descarga de archivos seguros.
+ *
+ * Valida acceso a recursos gratuitos y de pago, y entrega el archivo
+ * inline para que el navegador lo abra directamente.
+ *
+ * @package App\Controllers
+ */
 class DescargarController extends BaseController
 {
     protected PagoService $pagoService;
     protected PublicacionService $publicacionService;
 
+    /**
+     * Inicializa los servicios necesarios para validar pagos y obtener
+     * información de publicaciones y archivos.
+     */
     public function __construct()
     {
         $this->pagoService = new PagoService();
