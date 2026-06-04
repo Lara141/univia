@@ -375,7 +375,38 @@ class PublicacionService
         ]);
     }
 
-    
+    public function validarDatosPago(string $titular, string $tarjeta, string $vencimiento, string $cvv, string $metodoPago): bool
+    {
+        // Titular obligatorio
+        if (empty(trim($titular))) {
+            return false;
+        }
+
+        // Método de pago obligatorio
+        if (empty(trim($metodoPago))) {
+            return false;
+        }
+
+        // Quitamos espacios de la tarjeta
+        $tarjeta = str_replace(' ', '', $tarjeta);
+
+        // Tarjeta: exactamente 16 dígitos
+        if (!preg_match('/^[0-9]{16}$/', $tarjeta)) {
+            return false;
+        }
+
+        // Vencimiento MM/AA
+        if (!preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $vencimiento)) {
+            return false;
+        }
+
+        // CVV: 3 dígitos
+        if (!preg_match('/^[0-9]{3}$/', $cvv)) {
+            return false;
+        }
+
+        return true;
+    }
 
 }
 
