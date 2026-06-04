@@ -6,6 +6,7 @@ use App\Models\ArchivoModel;
 use App\Services\MateriaService;
 use App\Services\ArchivoService;
 use App\Services\PublicacionService;
+use App\Services\BuscadorService;
 
 /**
  * Controlador de APIs REST
@@ -15,6 +16,7 @@ class ApiController extends BaseController
 {
     private MateriaService $materiaService;
     private PublicacionService $publicacionService;
+    private BuscadorService $BuscadorService;
 
     public function __construct()
     {
@@ -122,7 +124,7 @@ class ApiController extends BaseController
      */
     public function porMateria($idMateria)
     {
-        $publicaciones = $this->publicacionService->obtenerPublicacionesPorMateria((int) $idMateria);
+        $publicaciones = $this->BuscadorService->obtenerPublicacionesPorMateria((int) $idMateria);
 
         return $this->response->setJSON([
             'success' => true,
