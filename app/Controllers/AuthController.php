@@ -5,9 +5,7 @@ namespace App\Controllers;
 use App\Models\UsuarioModel;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * CONTROLADOR DE AUTENTICACIÓN
- * ═══════════════════════════════════════════════════════════════
+ * Controlador de autenticacion
  * 
  * Responsable de:
  *   - Mostrar formularios de login y registro
@@ -15,16 +13,11 @@ use App\Models\UsuarioModel;
  *   - Gestionar sesiones (login/logout)
  *   - Validar credenciales y datos de registro
  * 
- * @author Sistema Univia
- * @package App\Controllers
  */
 class AuthController extends BaseController
 {
-    /**
-     * Muestra la vista del formulario de inicio de sesión
-     * 
-     * @return \CodeIgniter\HTTP\Response Vista de login
-     */
+    //Vista de login
+    
     public function index()
     {
         return view('login');
@@ -40,8 +33,6 @@ class AuthController extends BaseController
      * 
      * Si son incorrectas:
      *   - Retorna al formulario con mensaje de error
-     * 
-     * @return \CodeIgniter\HTTP\RedirectResponse Redirección a panel o login
      */
     public function login()
     {
@@ -53,7 +44,7 @@ class AuthController extends BaseController
 
         // Verificar que el usuario existe y la contraseña es correcta
         if ($usuario && password_verify($password, $usuario['contrasena'])) {
-            // Crear sesión autenticada
+            // Crear sesion autenticada
             session()->set([
                 'isLoggedIn' => true,
                 'usuario' => $usuario,
@@ -67,8 +58,6 @@ class AuthController extends BaseController
 
     /**
      * Muestra la vista del formulario de registro de nuevos usuarios
-     * 
-     * @return \CodeIgniter\HTTP\Response Vista de formulario de registro
      */
     public function registro_vista()
     {
@@ -84,13 +73,11 @@ class AuthController extends BaseController
      *   - Contraseña se encripta con PASSWORD_DEFAULT
      * 
      * Campos insertados:
-     *   - dni_usuario, correo, contrasena (encriptada)
+     *   - dni_usuario, correo, contraseña (encriptada)
      *   - Nombre_usuario, Apellido_usuario
-     *   - id_carrera (por defecto 1)
+     *   - id_carrera 
      *   - fecha_registro (fecha actual)
      *   - estado (activo por defecto)
-     * 
-     * @return \CodeIgniter\HTTP\RedirectResponse Redirección con mensaje de éxito o errores
      */
    public function procesar_registro()
     {
@@ -140,14 +127,14 @@ class AuthController extends BaseController
             );
         }
 
-        // Si todo está correcto, armamos el array para guardar
+        // Si todo esta correcto, armamos el array para guardar
         $data = [
             'dni_usuario'      => $this->request->getPost('dni'),
             'Nombre_usuario'   => $this->request->getPost('nombre'),
             'Apellido_usuario' => $this->request->getPost('apellido'),
             'correo'           => $this->request->getPost('correo'),
             'contrasena'       => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'id_carrera'       => 1, // Por ahora fijo en 1
+            'id_carrera'       => 1, 
             'fecha_registro'   => date('Y-m-d'),
             'estado'           => 1,
         ];
@@ -155,16 +142,12 @@ class AuthController extends BaseController
         // Insertamos en la base de datos
         $usuarioModel->insert($data);
 
-        // Redirigimos con mensaje de éxito
+        // Redirigimos con mensaje de exito
         return redirect()->to('/')->with('mensaje', '¡Registro exitoso! Ya podés iniciar sesión.');
     }
 
     /**
-     * Cierra la sesión del usuario actual
-     * 
-     * Destruye todos los datos de sesión y redirige al login
-     * 
-     * @return \CodeIgniter\HTTP\RedirectResponse Redirección a página de login
+     * Cierra la sesión del usuario actual y redirige al inicio
      */
     public function logout()
     {

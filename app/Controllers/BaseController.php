@@ -8,26 +8,21 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * CONTROLADOR BASE
- * ═══════════════════════════════════════════════════════════════
+ *Controlador base
  * 
  * Clase abstracta que heredan todos los controladores de la aplicación.
  * 
  * Responsabilidades:
  *   - Cargar helpers comunes (form, url, session)
- *   - Centralizar configuraciones y métodos reutilizables
+ *   - Centralizar configuraciones y metodos reutilizables
  *   - Inicializar request, response y logger
- * 
- * @author Sistema Univia
- * @package App\Controllers
  */
 abstract class BaseController extends Controller
 {
     /**
-     * Helpers cargados automáticamente en todos los controladores
+     * Helpers cargados automaticamente en todos los controladores
      * 
-     * - form: facilita creación de formularios
+     * - form: facilita creacion de formularios
      * - url: manejo de rutas (site_url, base_url)
      * - session: acceso a datos de sesión
      * 
@@ -38,7 +33,7 @@ abstract class BaseController extends Controller
     /**
      * Inicializa el controlador con request, response y logger
      * 
-     * Se ejecuta automáticamente al instanciar cualquier controlador
+     * Se ejecuta automaticamente al instanciar cualquier controlador
      * que herede de esta clase.
      * 
      * @param RequestInterface $request Objeto de request HTTP

@@ -7,9 +7,7 @@ use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * CONTROLADOR DE PUBLICACIONES
- * ═══════════════════════════════════════════════════════════════
+ * Controlador de publicaciones
  * 
  * Responsable de:
  *   - CRUD completo de publicaciones (crear, leer, actualizar, eliminar)
@@ -26,8 +24,6 @@ use App\Services\PublicacionService;
  *   - eliminar(): Marca como inactiva
  *   - buscar(): Búsqueda con filtros (materia, tipo, palabra clave)
  * 
- * @author Sistema Univia
- * @package App\Controllers
  */
 class PublicacionController extends BaseController
 {

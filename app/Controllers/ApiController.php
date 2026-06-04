@@ -76,7 +76,7 @@ class ApiController extends BaseController
 
     /**
      * GET /api/publicaciones/:id
-     * Obtiene una publicación específica
+     * Obtiene una publicacion especifica
      */
     public function publicacion($id)
     {
@@ -120,7 +120,7 @@ class ApiController extends BaseController
 
     /**
      * GET /api/publicaciones/materia/:idMateria
-     * Obtiene publicaciones de una materia específica
+     * Obtiene publicaciones de una materia especifica
      */
     public function porMateria($idMateria)
     {

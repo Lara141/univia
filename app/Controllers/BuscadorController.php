@@ -80,7 +80,7 @@ class BuscadorController extends BaseController
         $publicaciones = $this->buscadorService->buscarPublicaciones($filtros);
         $dni = session()->get('usuario')['dni_usuario'];
 
-        //Verificamos de forma histórica contra la tabla 'pago'
+        //Verificamos de forma historica contra la tabla 'pago'
         foreach ($publicaciones as &$pub) {
             $pub['ya_pagado'] = $this->pagoService->verificarPagoExistente($dni, (int)$pub['id_publicacion']);
         }
