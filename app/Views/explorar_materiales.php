@@ -942,38 +942,157 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
     </div>
 </div>
 
-<div class="modal fade" id="modalPagoSimulado" tabindex="-1" aria-labelledby="modalPagoSimuladoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border border-warning" style="background: var(--bg-card); box-shadow: 0 10px 40px rgba(251,191,36,.1);">
+<div class="modal fade" id="modalPagoSimulado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg"
+             style="background: var(--bg-card);">
+
             <div class="modal-header border-bottom border-secondary">
-                <h5 class="modal-title text-warning" id="modalPagoSimuladoLabel" style="font-family: 'Syne', sans-serif;">
-                    <i class="bi bi-shield-lock-fill me-2"></i>Pasarela de Pago Simulada
+                <h5 class="modal-title text-warning fw-bold">
+                    <i class="bi bi-credit-card-fill me-2"></i>
+                    Confirmar Compra
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
             </div>
+
             <form id="form-pago-simulado" method="POST" action="">
-                <div class="modal-body text-start">
-                    <p class="small text-muted mb-3">Entorno académico controlado para verificación de trazabilidad (Requerimiento de Cátedra).</p>
-                    
+
+                <div class="modal-body">
+
+                    <!-- RESUMEN DE COMPRA -->
+
+                    <div class="card mb-4 border-warning">
+                        <div class="card-body">
+
+                            <h6 class="fw-bold text-warning mb-3">
+                                Resumen de la Compra
+                            </h6>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Material:</span>
+                                <span id="pago-titulo-material">
+                                    Apunte UML
+                                </span>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Autor:</span>
+                                <span id="pago-autor-material">
+                                    Juan Pérez
+                                </span>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+                                <strong>Total</strong>
+                                <strong class="text-success"
+                                        id="pago-precio-material">
+                                    $1500
+                                </strong>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- MÉTODO DE PAGO -->
+
                     <div class="mb-3">
-                        <label class="field-label mb-2">Nombre del Titular</label>
-                        <input type="text" class="form-control" placeholder="Ej: Tomas Andres Bolo" required>
+                        <label class="form-label fw-semibold">
+                            Método de Pago
+                        </label>
+
+                        <select name="metodo_pago"
+                                class="form-select"
+                                required>
+
+                            <option value="">Seleccionar...</option>
+                            <option value="Visa">Visa</option>
+                            <option value="Mastercard">Mastercard</option>
+                            <option value="American Express">American Express</option>
+
+                        </select>
                     </div>
-                    
-                    <div class="row g-2 mb-3">
-                        <div class="col-8">
-                            <label class="field-label mb-2">Número de Tarjeta Simulado</label>
-                            <input type="text" class="form-control" placeholder="4517 0000 0000 0000" maxlength="19" required>
-                        </div>
-                        <div class="col-4">
-                            <label class="field-label mb-2">CVV</label>
-                            <input type="password" class="form-control" placeholder="123" maxlength="3" required>
-                        </div>
+
+                    <!-- TITULAR -->
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Titular de la Tarjeta
+                        </label>
+
+                        <input type="text"
+                               name="titular"
+                               class="form-control"
+                               placeholder="Nombre y Apellido"
+                               required>
                     </div>
+
+                    <!-- TARJETA -->
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Número de Tarjeta
+                        </label>
+
+                        <input type="text"
+                               name="tarjeta"
+                               class="form-control"
+                               maxlength="19"
+                               placeholder="1234 5678 9012 3456"
+                               required>
+                    </div>
+
+                    <!-- VENCIMIENTO + CVV -->
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Vencimiento
+                            </label>
+
+                            <input type="text"
+                                   name="vencimiento"
+                                   class="form-control"
+                                   maxlength="5"
+                                   placeholder="MM/AA"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                CVV
+                            </label>
+
+                            <input type="password"
+                                   name="cvv"
+                                   class="form-control"
+                                   maxlength="3"
+                                   placeholder="123"
+                                   required>
+                        </div>
+
+                    </div>
+
                 </div>
+
                 <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDetail" style="border-radius:9px;">Volver</button>
-                    <button type="submit" class="btn btn-warning btn-sm fw-bold text-dark" style="border-radius:9px;"><i class="bi bi-check-circle-fill me-1"></i>Confirmar Pago Simulado</button>
+
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalDetail">
+                        Volver
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-warning fw-bold text-dark">
+
+                        <i class="bi bi-lock-fill me-1"></i>
+                        Confirmar Transacción
+                    </button>
                 </div>
             </form>
         </div>
@@ -1179,8 +1298,19 @@ const btnPagar = document.getElementById('modal-btn-pagar');
 const formPago = document.getElementById('form-pago-simulado');
 let btnDesc   = document.getElementById('modal-btn-descargar');
 
+// Completar datos del resumen de compra
+
+document.getElementById('pago-titulo-material').textContent =
+    d.titulo;
+
+document.getElementById('pago-precio-material').textContent =
+    '$' + d.precio;
+    document.getElementById('pago-autor-material').textContent =
+    d.autor;
+
 const esPago   = d.tipoAcuerdo === 'pago';
 const yaPagado = d.pagado === '1';
+
 
 // ═══ ¡ESTA LÍNEA CAMBIÓ! ═══
 // Agregamos window.location.search para arrastrar los filtros GET (?q=...&materia=...) al enviar el formulario
