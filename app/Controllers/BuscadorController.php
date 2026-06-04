@@ -2,13 +2,20 @@
 
 namespace App\Controllers;
 
-
 use App\Services\BuscadorService;
-
+use App\Services\PagoService;
 
 class BuscadorController extends BaseController
 {
     protected BuscadorService $buscadorService;
+    protected PagoService $pagoService;
+
+    public function __construct()
+    {
+        $this->buscadorService = new BuscadorService();
+        $this->pagoService = new PagoService();
+    }
+
     /**
      * Busca publicaciones según filtros proporcionados
      * 
@@ -29,7 +36,7 @@ class BuscadorController extends BaseController
             'tipo' => $this->request->getGet('tipo'),
         ];
 
-        $resultados = $this->publicacionService->buscarPublicaciones($filtros);
+        $resultados = $this->buscadorService->buscarPublicaciones($filtros);
 
         return view('resultados_busqueda', [
             'usuario' => session()->get('usuario'),
@@ -59,12 +66,12 @@ class BuscadorController extends BaseController
             'formato'       => $this->request->getGet('formato')
         ];
 
-        $publicaciones = $this->publicacionService->buscarPublicaciones($filtros);
+        $publicaciones = $this->buscadorService->buscarPublicaciones($filtros);
         $dni = session()->get('usuario')['dni_usuario'];
 
-        // REGLA DE TRAZABILIDAD: Verificamos de forma histórica contra la tabla 'pago'
+        //Verificamos de forma histórica contra la tabla 'pago'
         foreach ($publicaciones as &$pub) {
-            $pub['ya_pagado'] = $this->publicacionService->verificarPagoExistente($dni, (int)$pub['id_publicacion']);
+            $pub['ya_pagado'] = $this->pagoService->verificarPagoExistente($dni, (int)$pub['id_publicacion']);
         }
 
         return view('explorar_materiales', [

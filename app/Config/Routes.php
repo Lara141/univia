@@ -44,19 +44,19 @@ $routes->get('api/publicaciones/materia/(:num)', 'ApiController::porMateria/$1')
 // COMPATIBILIDAD HACIA ATRÁS (rutas antiguas)
 // ═══════════════════════════════════════════════════════════════
 $routes->get('auth/cerrar_sesion', 'AuthController::logout');
-$routes->get('publicaciones/nueva', 'PublicacionController::crear');
+$routes->get('publicaciones/nueva', 'PublicacionController::mostrarFormulario');
 $routes->get('inicio/registro', 'AuthController::registro_vista');
 $routes->post('inicio/procesar_registro', 'AuthController::procesar_registro');
 
 
-$routes->get('materiales/buscar', 'PublicacionController::buscar');
+$routes->get('materiales/buscar', 'BuscadorController::buscar');
 
-$routes->get('materiales/explorar', 'PublicacionController::explorar');
-$routes->get('publicaciones/explorar', 'PublicacionController::explorar');
+$routes->get('materiales/explorar', 'BuscadorController::explorar');
+$routes->get('publicaciones/explorar', 'BuscadorController::explorar');
 
 
-// Ruta para abrir/descargar el PDF en otra pestaña (Diagramas 1 y 2)
-$routes->get('publicaciones/descargar/(:num)', 'PublicacionController::descargar/$1');
+// Ruta para abrir/descargar el PDF en otra pestaña
+$routes->get('publicaciones/descargar/(:num)', 'DescargarController::descargar/$1');
 
-// Ruta para procesar el formulario de pago simulado (Diagrama 2)
-$routes->post('publicaciones/pagar/(:num)', 'PublicacionController::procesarPago/$1');
+// Ruta para procesar el formulario de pago simulado 
+$routes->post('publicaciones/pagar/(:num)', 'PagoController::procesarPago/$1');

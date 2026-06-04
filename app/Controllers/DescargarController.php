@@ -4,13 +4,20 @@ namespace App\Controllers;
 
 use App\Models\ArchivoModel;
 use App\Services\ArchivoService;
-use App\Services\AccesoService;
-
+use App\Services\PagoService;
+use App\Services\PublicacionService;
 
 class DescargarController extends BaseController
 {
-    protected AccesoService $accesoService;
+    protected PagoService $pagoService;
+    protected PublicacionService $publicacionService;
 
+    public function __construct()
+    {
+        $this->pagoService = new PagoService();
+        $archivoService = new ArchivoService(new ArchivoModel());
+        $this->publicacionService = new PublicacionService($archivoService);
+    }
 
     /**
      * Endpoint de descarga segura (Diagrama 1 y 2).
@@ -31,7 +38,7 @@ class DescargarController extends BaseController
 
         // Regla de Negocio Crítica: Si es pago, verificar que exista el registro en la tabla pago
         if ($publicacion['tipo_acuerdo'] === 'pago') {
-            $yaPagado = $this->publicacionService->verificarPagoExistente($dni, (int)$id);
+            $yaPagado = $this->pagoService->verificarPagoExistente($dni, (int)$id);
             if (!$yaPagado) {
                 return redirect()->back()->with('error', 'Acceso denegado. Requiere completar el formulario de pago.');
             }

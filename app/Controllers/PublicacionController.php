@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Models\ArchivoModel;
 use App\Services\ArchivoService;
 use App\Services\PublicacionService;
-use App\Models\PublicacionModel;
 
 /**
  * ═══════════════════════════════════════════════════════════════

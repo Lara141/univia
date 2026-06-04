@@ -2,14 +2,22 @@
 
 namespace App\Controllers;
 
-
+use App\Models\ArchivoModel;
+use App\Services\ArchivoService;
+use App\Services\PublicacionService;
 use App\Services\PagoService;
-
 
 class PagoController extends BaseController
 {
     protected PagoService $pagoService;
+    protected PublicacionService $publicacionService;
 
+    public function __construct()
+    {
+        $this->pagoService = new PagoService();
+        $archivoService = new ArchivoService(new ArchivoModel());
+        $this->publicacionService = new PublicacionService($archivoService);
+    }
     
    /**
  * POST /publicaciones/pagar/:id
@@ -36,13 +44,13 @@ class PagoController extends BaseController
         $cvv          = $this->request->getPost('cvv');
         $metodoPago   = $this->request->getPost('metodo_pago');
         
-        if (!$this->publicacionService->validarDatosPago($titular, $tarjeta, $vencimiento, $cvv, $metodoPago)) {
+        if (!$this->pagoService->validarDatosPago($titular, $tarjeta, $vencimiento, $cvv, $metodoPago)) {
             return redirect()->back()
                 ->with('error', 'Los datos de pago ingresados son inválidos.');
         }
 
         // Insertamos el registro físico permanente en la tabla 'pago'
-        $this->publicacionService->registrarNuevoPago($dni, (int)$id, $monto);
+        $this->pagoService->registrarNuevoPago($dni, (int)$id, $monto);
 
         // Redireccionamos manteniendo EXACTAMENTE los mismos filtros GET que tenía el estudiante en la URL
         $query_string = $_SERVER['QUERY_STRING'] ?? '';
