@@ -1043,6 +1043,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                                name="tarjeta"
                                class="form-control"
                                maxlength="19"
+                               pattern="[0-9 ]{19}"
                                placeholder="1234 5678 9012 3456"
                                required>
                     </div>
@@ -1060,6 +1061,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                                    name="vencimiento"
                                    class="form-control"
                                    maxlength="5"
+                                   pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
                                    placeholder="MM/AA"
                                    required>
                         </div>
@@ -1073,6 +1075,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                                    name="cvv"
                                    class="form-control"
                                    maxlength="3"
+                                   pattern="[0-9]{3}"
                                    placeholder="123"
                                    required>
                         </div>
