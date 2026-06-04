@@ -1348,12 +1348,9 @@ document.getElementById('modal-btn-eliminar').href = site_url + 'publicaciones/e
 
 /**
  * Gestión de filtros de búsqueda.
- *
  * Permite seleccionar filtros de: Tipo de recurso, Tipo de acuerdo, formato de archivo
- *
  * Al hacer clic sobre un filtro: 1. Se desactiva la selección anterior. 2. Se marca visualmente el filtro seleccionado.
  * 3. Se actualiza el campo oculto correspondiente.
- *
  * Los valores almacenados son enviados posteriormente al controlador mediante el formulario de búsqueda.
  */
 
@@ -1386,8 +1383,7 @@ document.querySelectorAll('[data-tipo]').forEach(btn => {
 });
 
 /**
- * Filtro por disponibilidad.
- * Valores posibles: gratis o pago.
+ * Filtro por disponibilidad. Valores posibles: gratis o pago.
  */
 document.querySelectorAll('[data-acuerdo]').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -1402,8 +1398,7 @@ document.querySelectorAll('[data-acuerdo]').forEach(btn => {
 });
 
 /**
- * Filtro por formato de archivo.
- * Ejemplos: pdf, docx, jpeg.
+ * Filtro por formato de archivo. Ejemplos: pdf, docx, jpeg.
  */
 document.querySelectorAll('[data-formato]').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -1416,9 +1411,6 @@ document.querySelectorAll('[data-formato]').forEach(btn => {
         inputFormato.value = this.dataset.formato;
     });
 });
-
-
 </script>
-
 </body>
 </html>
