@@ -5,11 +5,22 @@ namespace App\Services;
 use App\Models\PublicacionModel;
 
 /**
+ * Servicio encargado de buscar y filtrar publicaciones.
+ *
+ * Mantiene la lógica de consulta de publicaciones activas, aplica filtros
+ * dinámicos y prepara resultados para las vistas de búsqueda y exploración.
+ *
+ * @package App\Services
  */
 class BuscadorService
 {
     private PublicacionModel $publicacionModel;
 
+    /**
+     * Constructor.
+     *
+     * @param PublicacionModel|null $publicacionModel Modelo de publicación inyectable (pruebas o extensión)
+     */
     public function __construct(PublicacionModel $publicacionModel = null)
     {
         $this->publicacionModel = $publicacionModel ?? new PublicacionModel();

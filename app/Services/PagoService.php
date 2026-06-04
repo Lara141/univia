@@ -4,12 +4,22 @@ namespace App\Services;
 
 use Config\Database;
 
-
+/**
+ * Servicio de pago simulado.
+ *
+ * Administra la persistencia de pagos, la verificación de pagos realizados
+ * y la validación básica de los datos de la transacción.
+ *
+ * @package App\Services
+ */
 class PagoService
 {
-   
     /**
      * Verifica si un estudiante ya pagó por una publicación específica.
+     *
+     * @param string $dni DNI del usuario
+     * @param int $idPublicacion ID de la publicación
+     * @return bool True si existe el registro de pago, false en caso contrario
      */
     public function verificarPagoExistente(string $dni, int $idPublicacion): bool
     {
@@ -26,6 +36,14 @@ class PagoService
     /**
      * Inserta de forma física la transacción del pago simulado.
      */
+    /**
+     * Inserta de forma física la transacción del pago simulado.
+     *
+     * @param string $dni DNI del usuario
+     * @param int $idPublicacion ID de la publicación pagada
+     * @param float $monto Monto de la transacción
+     * @return bool True si la inserción se realizó con éxito
+     */
     public function registrarNuevoPago(string $dni, int $idPublicacion, float $monto): bool
     {
         $db = \Config\Database::connect();
@@ -37,6 +55,16 @@ class PagoService
         ]);
     }
 
+    /**
+     * Valida los datos de pago enviados por el estudiante.
+     *
+     * @param string $titular Nombre del titular de la tarjeta
+     * @param string $tarjeta Número de tarjeta (sin espacios)
+     * @param string $vencimiento Fecha de vencimiento MM/AA
+     * @param string $cvv Código CVV de 3 dígitos
+     * @param string $metodoPago Método de pago seleccionado
+     * @return bool True si todos los datos tienen formato válido
+     */
     public function validarDatosPago(string $titular, string $tarjeta, string $vencimiento, string $cvv, string $metodoPago): bool
     {
         // Titular obligatorio
