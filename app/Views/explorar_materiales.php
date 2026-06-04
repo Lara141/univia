@@ -933,7 +933,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                     </div>
                     
                     <button type="button" id="modal-btn-pagar" class="btn btn-warning btn-sm fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalPagoSimulado" style="display:none; border-radius:9px; padding: 8px 16px;">
-                        <i class="bi bi-credit-card-2-front-fill me-1"></i> Realizar Pago Simulado
+                        <i class="bi bi-credit-card-2-front-fill me-1"></i> Realizar Pago
                     </button>
                 </div>
             </div>
@@ -975,14 +975,14 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Material:</span>
                                 <span id="pago-titulo-material">
-                                    Apunte UML
+                                    
                                 </span>
                             </div>
 
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Autor:</span>
                                 <span id="pago-autor-material">
-                                    Juan Pérez
+                                
                                 </span>
                             </div>
 
@@ -992,7 +992,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                                 <strong>Total</strong>
                                 <strong class="text-success"
                                         id="pago-precio-material">
-                                    $1500
+                                    
                                 </strong>
                             </div>
 
