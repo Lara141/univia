@@ -334,9 +334,15 @@ class PublicacionController extends BaseController
         
         if (file_exists($rutaFisica)) {
             // Al retornar inline con el MIME type correcto, el navegador lo abre en otra pestaña de forma nativa
-            return $this->response->setHeader('Content-Type', 'application/pdf')
-                                ->setHeader('Content-Disposition', 'inline; filename="' . $publicacion['file_name'] . '"')
-                                ->setBody(file_get_contents($rutaFisica));
+            $mime = mime_content_type($rutaFisica);
+
+            return $this->response
+                ->setHeader('Content-Type', $mime)
+                ->setHeader(
+                    'Content-Disposition',
+                    'inline; filename="' . basename($rutaFisica) . '"'
+                )
+                ->setBody(file_get_contents($rutaFisica));
         }
 
         return redirect()->back()->with('error', 'El archivo no se encuentra físicamente en el servidor.');
