@@ -11,7 +11,7 @@ use CodeIgniter\Model;
  * 
  * Tabla: archivo
  * Clave primaria: id_archivo
- * 
+ *   
  * @author Sistema Univia
  * @package App\Models
  */

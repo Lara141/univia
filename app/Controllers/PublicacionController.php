@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ArchivoModel;
+use App\Services\AuthService;
 use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 
@@ -28,6 +29,7 @@ use App\Services\PublicacionService;
 class PublicacionController extends BaseController
 {
     protected PublicacionService $publicacionService;
+    protected AuthService $authService;
 
     /**
      * Constructor del controlador
@@ -39,51 +41,96 @@ class PublicacionController extends BaseController
     public function __construct()
     {
         $archivoService = new ArchivoService(new ArchivoModel());
+        $this->authService = new AuthService();
         $this->publicacionService = new PublicacionService($archivoService);
     }
 
     /**
      * Muestra las publicaciones del usuario autenticado
+     * @param string $dni El DNI del usuario cuyas publicaciones se quieren ver.
      */
-    public function propias()
+    public function propias($dni)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
-        $dni = session()->get('usuario')['dni_usuario'];
+        // 1. Obtener el usuario autenticado desde la fuente de confianza (la sesión)
+        $usuario_autenticado = $this->authService->getUsuarioAutenticado();
+
+        if (!$usuario_autenticado) {
+            return redirect()->to('/');
+        }
+
+        // 2. ¡Verificación de seguridad CRÍTICA!
+        // Comparamos el DNI de la URL con el DNI de la sesión.
+        if ($usuario_autenticado['dni_usuario'] != $dni) {
+            // Si no coinciden, es un intento de acceso no autorizado. Redirigimos a su propia página.
+            return redirect()->to('publicaciones/propias/' . $usuario_autenticado['dni_usuario'])
+                             ->with('error', 'No tienes permiso para ver esta página.');
+        }
+
         $mis_publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni, false);
 
         return view('mis_publicaciones', [
-            'usuario' => session()->get('usuario'),
+            'usuario' => $usuario_autenticado,
             'publicaciones' => $mis_publicaciones,
         ]);
     }
 
     /**
-     * Muestra el formulario para crear una nueva publicación
+     * Muestra el formulario para crear una nueva publicación.
+     * Si no se provee un DNI en la URL, redirige a la URL correcta del usuario logueado.
+     * @param string|null $dni El DNI del usuario. Opcional para redirigir.
      */
-    public function mostrarFormulario()
+    public function crear($dni = null)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
+        $usuario_autenticado = $this->authService->getUsuarioAutenticado();
+        if (!$usuario_autenticado) {
+            return redirect()->to('/');
+        }
+
+        // Si no se pasa DNI en la URL, redirigimos a la URL correcta para este usuario.
+        if ($dni === null) {
+            return redirect()->to('publicaciones/crear/' . $usuario_autenticado['dni_usuario']);
+        }
+
+        // Verificación de seguridad: el DNI de la URL debe coincidir con el de la sesión.
+        if ($usuario_autenticado['dni_usuario'] != $dni) {
+            return redirect()->to('publicaciones/crear/' . $usuario_autenticado['dni_usuario'])
+                             ->with('error', 'Acción no permitida.');
+        }
+
         return view('formulario_publicacion', [
-            'usuario' => session()->get('usuario'),
+            'usuario' => $usuario_autenticado,
         ]);
     }
 
     /**
-     * Procesa el envío del formulario y crea una nueva publicación
+     * Procesa el envío del formulario y crea una nueva publicación.
+     * @param string $dni El DNI del usuario que está creando la publicación, para verificación.
      */
-    public function guardar()
+    public function guardar($dni)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
         try {
+            $usuario = $this->authService->getUsuarioAutenticado();
+            if (!$usuario) {
+                throw new \Exception('Sesión inválida. Por favor, inicie sesión de nuevo.');
+            }
+
+            // Verificación de seguridad CRÍTICA: el DNI de la URL debe coincidir con el de la sesión.
+            if ($usuario['dni_usuario'] != $dni) {
+                throw new \Exception('No tienes permiso para realizar esta acción.');
+            }
+
             $datos = [
                 'titulo' => $this->request->getPost('titulo'),
                 'descripcion' => $this->request->getPost('descripcion'),
@@ -91,14 +138,14 @@ class PublicacionController extends BaseController
                 'tipo' => $this->request->getPost('tipo_recurso'),
                 'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
                 'precio' => $this->request->getPost('precio'),
-                'dni' => session()->get('usuario')['dni_usuario'],
+                'dni' => $usuario['dni_usuario'], // Usar siempre el DNI de la sesión por seguridad
             ];
 
             $archivo = $this->request->getFile('archivo');
 
             $this->publicacionService->procesarPublicacion($datos, $archivo);
 
-            return redirect()->to('publicaciones/propias')
+            return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario'])
                 ->with('mensaje', 'Publicación subida con éxito');
 
         } catch (\Exception $e) {
@@ -113,19 +160,17 @@ class PublicacionController extends BaseController
      */
     public function editar($id)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
-        $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
-
-        if (!$publicacion || $publicacion['dni_usuario'] != session()->get('usuario')['dni_usuario']) {
-            return redirect()->to('publicaciones/propias');
+        if (!($datos = $this->_verificarPropietario($id))) {
+            return redirect()->to('publicaciones/propias/' . $this->authService->getUsuarioAutenticado()['dni_usuario'])->with('error', 'Acción no permitida.');
         }
 
         return view('formulario_publicacion', [
-            'usuario' => session()->get('usuario'),
-            'publicacion' => $publicacion,
+            'usuario' => $datos['usuario'],
+            'publicacion' => $datos['publicacion'],
             'modo' => 'editar',
         ]);
     }
@@ -135,15 +180,13 @@ class PublicacionController extends BaseController
      */
     public function actualizar($id)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
         try {
-            $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
-
-            if (!$publicacion || $publicacion['dni_usuario'] != session()->get('usuario')['dni_usuario']) {
-                throw new \Exception('No tienes permisos para editar esta publicación');
+            if (!($datos_verificacion = $this->_verificarPropietario($id))) {
+                throw new \Exception('No tienes permisos para editar esta publicación o la publicación no existe.');
             }
 
             $datos = [
@@ -164,7 +207,7 @@ class PublicacionController extends BaseController
 
             $this->publicacionService->actualizarPublicacion($id, $datos);
 
-            return redirect()->to('publicaciones/propias')
+            return redirect()->to('publicaciones/propias/' . $datos_verificacion['usuario']['dni_usuario'])
                 ->with('mensaje', 'Publicación actualizada con éxito');
 
         } catch (\Exception $e) {
@@ -176,32 +219,45 @@ class PublicacionController extends BaseController
 
     /**
      * Elimina una publicación (marca como inactiva)
-     */
+     */  
     public function eliminar($id)
     {
-        if (!$this->usuarioLogueado()) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
-        $publicacion = $this->publicacionService->obtenerPublicacionPorId($id);
+        $usuario = $this->authService->getUsuarioAutenticado();
+        if (!$usuario) {
+            return redirect()->to('/');
+        }
 
-        if ($publicacion && $publicacion['dni_usuario'] == session()->get('usuario')['dni_usuario']) {
+        if ($this->_verificarPropietario($id)) {
             $this->publicacionService->marcarPublicacionInactiva($id);
         }
 
-        return redirect()->to('publicaciones/propias');
+        return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario']);
     }
 
     /**
-     * Verifica si el usuario actual está autenticado
-     * 
-     * Comprueba si existe la flag 'isLoggedIn' en la sesión
-     * 
-     * @return bool True si está logueado, false en caso contrario
+     * Verifica si el usuario logueado es el propietario de la publicación.
+     * Centraliza la lógica de seguridad para editar, actualizar y eliminar.
+     *
+     * @param int $idPublicacion El ID de la publicación a verificar.
+     * @return array|null Un array con 'usuario' y 'publicacion' si es válido, o null si no.
      */
-    private function usuarioLogueado()
+    private function _verificarPropietario($idPublicacion): ?array
     {
-        return session()->get('isLoggedIn');
-    }
+        $usuario = $this->authService->getUsuarioAutenticado();
+        if (!$usuario) {
+            return null; // No hay sesión activa
+        }
 
+        $publicacion = $this->publicacionService->obtenerPublicacionPorId((int)$idPublicacion);
+
+        if (!$publicacion || $publicacion['dni_usuario'] != $usuario['dni_usuario']) {
+            return null; // La publicación no existe o no pertenece al usuario
+        }
+
+        return ['usuario' => $usuario, 'publicacion' => $publicacion];
+    }
 }

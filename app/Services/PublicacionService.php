@@ -249,6 +249,6 @@ class PublicacionService
     {
         return $this->publicacionModel->update($id, ['estado' => 0]);
     }
-
+  
 }
 

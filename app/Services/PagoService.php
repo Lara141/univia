@@ -38,7 +38,7 @@ class PagoService
      */
     /**
      * Inserta de forma física la transacción del pago simulado.
-     *
+     *  
      * @param string $dni DNI del usuario
      * @param int $idPublicacion ID de la publicación pagada
      * @param float $monto Monto de la transacción

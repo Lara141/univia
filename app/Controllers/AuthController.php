@@ -16,11 +16,28 @@ use App\Models\UsuarioModel;
  */
 class AuthController extends BaseController
 {
-    //Vista de login
-    
-    public function index()
+    /**
+     * Muestra la vista del formulario de inicio de sesión.
+     * Puede recibir un mensaje informativo para mostrar al usuario.
+     * @param string|null $info Código del mensaje a mostrar (e.g., 'registro_exitoso').
+     */
+    public function index($info = null)
     {
-        return view('login');
+        $data = [];
+        if ($info) {
+            switch ($info) {
+                case 'registro_exitoso':
+                    $data['mensaje'] = '¡Registro exitoso! Ya podés iniciar sesión.';
+                    break;
+                case 'logout_exitoso':
+                    $data['mensaje'] = 'Has cerrado sesión correctamente.';
+                    break;
+                case 'acceso_denegado':
+                    $data['error'] = 'Necesitas iniciar sesión para acceder a esa página.';
+                    break;
+            }
+        }
+        return view('login', $data);
     }
 
     /**
@@ -34,8 +51,11 @@ class AuthController extends BaseController
      * Si son incorrectas:
      *   - Retorna al formulario con mensaje de error
      */
-    public function login()
+    public function login($source = 'web')
     {
+        // El parámetro $source se utiliza para registrar el origen del intento de login.
+        log_message('info', 'Intento de login desde la fuente: ' . $source);
+
         $dni = $this->request->getPost('dni');
         $password = $this->request->getPost('password');
 
@@ -50,7 +70,7 @@ class AuthController extends BaseController
                 'usuario' => $usuario,
             ]);
 
-            return redirect()->to('publicaciones/propias');
+            return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario']);
         }
 
         return redirect()->back()->with('error', 'DNI o contraseña incorrectos');
@@ -59,9 +79,15 @@ class AuthController extends BaseController
     /**
      * Muestra la vista del formulario de registro de nuevos usuarios
      */
-    public function registro_vista()
+    public function registro_vista($invitation_code = null)
     {
-        return view('formulario_registro');
+        $data = [];
+        if ($invitation_code) {
+            // Lógica para usar un código de invitación, por ahora solo lo logueamos y pasamos a la vista.
+            log_message('info', "Acceso al registro con código de invitación: {$invitation_code}");
+            $data['invitation_code'] = $invitation_code;
+        }
+        return view('formulario_registro', $data);
     }
 
     /**
@@ -79,14 +105,17 @@ class AuthController extends BaseController
      *   - fecha_registro (fecha actual)
      *   - estado (activo por defecto)
      */
-   public function procesar_registro()
+   public function procesar_registro($source = 'web')
     {
+        // El parámetro $source se utiliza para registrar el origen del intento de registro.
+        log_message('info', 'Intento de registro desde la fuente: ' . $source);
+
         $usuarioModel = new \App\Models\UsuarioModel(); 
         
         $reglas = [
             'nombre' => [
                 'rules'  => 'required',
-                'errors' => [
+                'errors' => [ 
                     'required' => 'El nombre es obligatorio.'
                 ]
             ],
@@ -137,21 +166,27 @@ class AuthController extends BaseController
             'id_carrera'       => 1, 
             'fecha_registro'   => date('Y-m-d'),
             'estado'           => 1,
-        ];
+        ]; 
 
         // Insertamos en la base de datos
         $usuarioModel->insert($data);
 
         // Redirigimos con mensaje de exito
-        return redirect()->to('/')->with('mensaje', '¡Registro exitoso! Ya podés iniciar sesión.');
+        return redirect()->to('/index/registro_exitoso');
     }
 
     /**
      * Cierra la sesión del usuario actual y redirige al inicio
      */
-    public function logout()
+    public function logout($dni = null)
     {
+        // Usamos el DNI para registrar quién está cerrando sesión.
+        if ($dni) {
+            log_message('info', "El usuario con DNI {$dni} ha cerrado sesión.");
+        } else {
+            log_message('info', 'Un usuario ha cerrado sesión.');
+        }
         session()->destroy();
-        return redirect()->to('/');
+        return redirect()->to('/index/logout_exitoso');
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Controllers;
+use App\Services\AuthService;
 
 use App\Models\ArchivoModel;
 use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 use App\Services\PagoService;
 
-/**
+/**  
  * Controlador de pago simulado para publicaciones de tipo pago.
  *
  * Valida los datos ingresados por el usuario y registra la transacción
@@ -19,6 +20,7 @@ class PagoController extends BaseController
 {
     protected PagoService $pagoService;
     protected PublicacionService $publicacionService;
+    protected AuthService $authService;
 
     /**
      * Inicializa los servicios de pago y de publicación.
@@ -28,6 +30,7 @@ class PagoController extends BaseController
         $this->pagoService = new PagoService();
         $archivoService = new ArchivoService(new ArchivoModel());
         $this->publicacionService = new PublicacionService($archivoService);
+        $this->authService = new AuthService();
     }
     
     /**
@@ -42,11 +45,12 @@ class PagoController extends BaseController
      */
     public function procesarPago($id)
     {
-        if (!session()->get('isLoggedIn')) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
-        $dni = session()->get('usuario')['dni_usuario'];
+        $usuario = $this->authService->getUsuarioAutenticado();
+        $dni = $usuario['dni_usuario'];
         $publicacion = $this->publicacionService->obtenerPublicacionPorId((int)$id);
 
         if (!$publicacion) {
@@ -72,7 +76,7 @@ class PagoController extends BaseController
         // Redireccionamos manteniendo EXACTAMENTE los mismos filtros GET que tenía el estudiante en la URL
         $query_string = $_SERVER['QUERY_STRING'] ?? '';
         $ruta_retorno = 'publicaciones/explorar' . (!empty($query_string) ? '?' . $query_string : '');
-    
+     
         return redirect()->to($ruta_retorno)
                         ->with('mensaje', '¡Pago registrado con éxito! El archivo ya se encuentra desbloqueado para su descarga.');
     }

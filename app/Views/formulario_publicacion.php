@@ -537,8 +537,8 @@ function fsel($pub, $key, $value, $default = '') {
 <nav class="univia-navbar">
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
-        <!-- Logo / nombre de la app -->    
-        <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
+        <!-- Logo / nombre de la app -->
+        <a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="brand-name">Univia</a>
          <!-- Sección derecha -->    
         <div class="ms-auto d-flex align-items-center gap-2">
          <!-- Dropdown del usuario -->       
@@ -567,8 +567,8 @@ function fsel($pub, $key, $value, $default = '') {
                         </li>
                         <li><hr class="dropdown-divider"></li>
                          <!-- Links del usuario -->
-                        <li><a class="dropdown-item" href="<?= site_url('perfil') ?>"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
-                        <li><a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>"><i class="bi bi-speedometer2"></i> Mis publicaciones</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>"><i class="bi bi-speedometer2"></i> Mis publicaciones</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <!-- Cerrar sesión -->
                         <li><a class="dropdown-item danger" href="<?= site_url('') ?>" style="color:var(--danger);"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
@@ -587,7 +587,7 @@ function fsel($pub, $key, $value, $default = '') {
     <!-- Breadcrumb (navegación) -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="<?= site_url('dashboard') ?>">Mi Panel</a></li>
+                <li class="breadcrumb-item"><a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>">Mi Panel</a></li>
                  <!-- Texto dinámico -->
                 <li class="breadcrumb-item active"><?= $modoEdicion ? 'Editar Publicación' : 'Nueva Publicación' ?></li>
             </ol>
@@ -936,7 +936,7 @@ function fsel($pub, $key, $value, $default = '') {
                     <?= $modoEdicion ? 'Guardar cambios' : 'Publicar material' ?>
                 </button>
                 <!-- Cancelar -->
-<a href="<?= site_url('publicaciones/propias') ?>" class="btn-cancel">
+<a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="btn-cancel">
     <i class="bi bi-arrow-left"></i> Cancelar
 </a>
             </div>

@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Services\AuthService;
 use App\Services\BuscadorService;
 use App\Services\PagoService;
 
-/**
+/**  
  * Controlador de búsqueda y exploración de materiales.
  *
  * Responsable de recibir filtros desde la interfaz, buscar publicaciones
@@ -17,6 +18,7 @@ class BuscadorController extends BaseController
 {
     protected BuscadorService $buscadorService;
     protected PagoService $pagoService;
+    protected AuthService $authService;
 
     /**
      * Inicializa los servicios de búsqueda y pago necesarios.
@@ -25,6 +27,7 @@ class BuscadorController extends BaseController
     {
         $this->buscadorService = new BuscadorService();
         $this->pagoService = new PagoService();
+        $this->authService = new AuthService();
     }
 
     /**
@@ -39,19 +42,29 @@ class BuscadorController extends BaseController
      * 
      * @return \CodeIgniter\HTTP\Response Vista con resultados de búsqueda
      */
-    public function buscar()
+    public function buscar($palabra_clave_url = null)
     {
+        if (!$this->authService->estaLogueado()) {
+            return redirect()->to('/');
+        }
+
+        $usuario_autenticado = $this->authService->getUsuarioAutenticado();
+
+        // Lógica de filtro: Prioriza el parámetro GET 'q', pero si no existe, usa el de la URL.
+        $palabra_clave = $this->request->getGet('q') ?? $palabra_clave_url;
+
         $filtros = [
-            'palabra_clave' => $this->request->getGet('q'),
+            'palabra_clave' => $palabra_clave,
             'materia' => $this->request->getGet('materia'),
             'tipo' => $this->request->getGet('tipo'),
         ];
-
+ 
         $resultados = $this->buscadorService->buscarPublicaciones($filtros);
 
         return view('resultados_busqueda', [
-            'usuario' => session()->get('usuario'),
+            'usuario' => $usuario_autenticado,
             'resultados' => $resultados,
+            'filtros' => $filtros // Pasamos los filtros a la vista para que sepa qué se buscó
         ]);
     }
 
@@ -63,30 +76,35 @@ class BuscadorController extends BaseController
      *
      * @return mixed
      */
-    public function explorar()
+    public function explorar($tipo_recurso_url = null)
     {
-        if (!session()->get('isLoggedIn')) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
+        $usuario_autenticado = $this->authService->getUsuarioAutenticado();
+
+        // Lógica de filtro: Prioriza el parámetro GET 'tipo', pero si no existe, usa el de la URL.
+        $tipo_recurso = $this->request->getGet('tipo') ?? $tipo_recurso_url;
+ 
         $filtros = [
             'palabra_clave' => $this->request->getGet('q'),
             'materia'       => $this->request->getGet('materia'),
-            'tipo'          => $this->request->getGet('tipo'),
+            'tipo'          => $tipo_recurso,
             'acuerdo'       => $this->request->getGet('acuerdo'),
             'formato'       => $this->request->getGet('formato')
-        ];
+        ]; 
 
         $publicaciones = $this->buscadorService->buscarPublicaciones($filtros);
-        $dni = session()->get('usuario')['dni_usuario'];
 
-        //Verificamos de forma historica contra la tabla 'pago'
+        $dni = $usuario_autenticado['dni_usuario'];
+        // Verificamos de forma histórica contra la tabla 'pago' usando el DNI ya validado.
         foreach ($publicaciones as &$pub) {
-            $pub['ya_pagado'] = $this->pagoService->verificarPagoExistente($dni, (int)$pub['id_publicacion']);
+            $pub['ya_pagado'] = $this->pagoService->verificarPagoExistente($dni, (int) $pub['id_publicacion']);
         }
 
         return view('explorar_materiales', [
-            'usuario'       => session()->get('usuario'),
+            'usuario'       => $usuario_autenticado,
             'publicaciones' => $publicaciones,
             'filtros'       => $filtros
         ]);

@@ -57,7 +57,7 @@ class PublicacionModel extends Model {
 
         if ($soloActivas) {
             $builder->where('p.estado', 1);
-        }
+        }  
 
         $builder->orderBy('p.fecha_publicacion', 'DESC');
 

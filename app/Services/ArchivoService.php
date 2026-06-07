@@ -23,7 +23,7 @@ use App\Models\ArchivoModel;
  * @package App\Services
  */
 class ArchivoService
-{
+{  
     private const RUTA_UPLOADS = './uploads/archivos';
     private const MAX_TAMANIO = 20480000; // 20MB en bytes
     private const EXTENSIONES_PERMITIDAS = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'jpg', 'png', 'jpeg'];

@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Controllers;
+use App\Services\AuthService;
 
-use App\Models\ArchivoModel;
+use App\Models\ArchivoModel;  
 use App\Services\ArchivoService;
 use App\Services\PagoService;
 use App\Services\PublicacionService;
 
-/**
+/**  
  * Controlador de descarga de archivos seguros.
  *
  * Valida acceso a recursos gratuitos y de pago, y entrega el archivo
@@ -16,9 +17,10 @@ use App\Services\PublicacionService;
  * @package App\Controllers
  */
 class DescargarController extends BaseController
-{
+{ 
     protected PagoService $pagoService;
     protected PublicacionService $publicacionService;
+    protected AuthService $authService;
 
     /**
      * Inicializa los servicios necesarios para validar pagos y obtener
@@ -29,6 +31,7 @@ class DescargarController extends BaseController
         $this->pagoService = new PagoService();
         $archivoService = new ArchivoService(new ArchivoModel());
         $this->publicacionService = new PublicacionService($archivoService);
+        $this->authService = new AuthService();
     }
 
     /**
@@ -37,11 +40,12 @@ class DescargarController extends BaseController
      */
     public function descargar($id)
     {
-        if (!session()->get('isLoggedIn')) {
+        if (!$this->authService->estaLogueado()) {
             return redirect()->to('/');
         }
 
-        $dni = session()->get('usuario')['dni_usuario'];
+        $usuario = $this->authService->getUsuarioAutenticado();
+        $dni = $usuario['dni_usuario'];
         $publicacion = $this->publicacionService->obtenerPublicacionPorId((int)$id);
 
         if (!$publicacion || empty($publicacion['ruta'])) {

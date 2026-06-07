@@ -72,8 +72,22 @@ class BuscadorService
         $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
         $builder->join('usuario u', 'u.dni_usuario = publicacion.dni_usuario', 'left');
-        
-        // filtros dinamicos
+
+        // ═══ ¡LLAMADAS a las funciones filtrar y ordenar ═══
+        $this->filtrarResultados($builder, $filtros);
+        $this->ordenarResultados($builder);
+
+        return $builder->get()->getResultArray();
+    }
+
+    /**
+     * Aplica todos los filtros dinámicos a la consulta.
+     */
+    private function filtrarResultados($builder, array $filtros): void
+    {
+        // Solo publicaciones activas (estado = 1)
+        $builder->where('publicacion.estado', 1);
+
         if (!empty($filtros['palabra_clave'])) {
             $builder->groupStart()
                 ->like('publicacion.titulo', $filtros['palabra_clave'])
@@ -88,29 +102,11 @@ class BuscadorService
         if (!empty($filtros['tipo'])) {
             $builder->where('publicacion.tipo_recurso', $filtros['tipo']);
         }
+
         if (!empty($filtros['acuerdo'])) {
             $builder->where('publicacion.tipo_acuerdo', $filtros['acuerdo']);
         }
-        if (!empty($filtros['formato'])) {
-            $builder->where('a.formato', $filtros['formato']);
-        }
 
-        // ═══ ¡LLAMADAS a las funciones filtrar y ordenar ═══
-        $this->filtrarResultados($builder, $filtros);
-        $this->ordenarResultados($builder);
-
-        return $builder->get()->getResultArray();
-    }
-
-        /**
-     * Aplica los filtros por estado activo y formato de archivo.
-     */
-    private function filtrarResultados($builder, array $filtros): void
-    {
-        // Solo publicaciones activas (estado = 1)
-        $builder->where('publicacion.estado', 1);
-
-        // Filtro por formato si fue seleccionado (PDF, Word, etc.)
         if (!empty($filtros['formato'])) {
             $builder->where('a.formato', $filtros['formato']);
         }

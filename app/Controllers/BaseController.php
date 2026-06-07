@@ -6,8 +6,8 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-
-/**
+ 
+/**  
  *Controlador base
  * 
  * Clase abstracta que heredan todos los controladores de la aplicación.

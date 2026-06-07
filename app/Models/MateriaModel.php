@@ -15,7 +15,7 @@ use CodeIgniter\Model;
  * 
  * @author Sistema Univia
  * @package App\Models
- */
+ */  
 class MateriaModel extends Model {
     /** @var string Tabla de la base de datos */
     protected $table = 'materia';

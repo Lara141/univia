@@ -447,7 +447,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
                         <li><hr class="dropdown-divider"></li>
                          <li>
-                            <a class="dropdown-item danger" href="<?= site_url('auth/logout') ?>" style="color:var(--danger);">
+                            <a href="<?= site_url('auth/logout/' . $usuario['dni_usuario']) ?>"> style="color:var(--danger);">
                                 <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                             </a>
                         </li>
