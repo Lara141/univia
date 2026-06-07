@@ -29,6 +29,7 @@ class PublicacionService
 {
     private ArchivoService $archivoService;
     private PublicacionModel $publicacionModel;
+    private \CodeIgniter\Database\BaseConnection $db;
 
     /**
      * Constructor del servicio
@@ -40,6 +41,7 @@ class PublicacionService
     {
         $this->archivoService = $archivoService;
         $this->publicacionModel = $publicacionModel ?? new PublicacionModel();
+        $this->db = \Config\Database::connect(); // Obtenemos la conexión a la BD
     }
 
     /**
@@ -118,22 +120,13 @@ class PublicacionService
      */
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
     {
-        $builder = $this->publicacionModel->builder();
+        // Llamamos al procedimiento almacenado en lugar de usar el Query Builder.
+        // Pasamos los parámetros en el orden correcto: DNI y el booleano convertido a 1 o 0.
+        $sql = "CALL obtener_publicaciones_usuario(?, ?)";
+        
+        $query = $this->db->query($sql, [$dni, (int)$soloActivas]);
 
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
-
-        $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
-        $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
-
-        $builder->where('publicacion.dni_usuario', $dni);
-
-        if ($soloActivas) {
-            $builder->where('publicacion.estado', 1);
-        }
-
-        $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
-
-        return $builder->get()->getResultArray();
+        return $query->getResultArray();
     }
 
 
@@ -247,8 +240,10 @@ class PublicacionService
      */
     public function marcarPublicacionInactiva(int $id): bool
     {
-        return $this->publicacionModel->update($id, ['estado' => 0]);
+        // Llamamos al procedimiento almacenado para actualizar el estado.
+        $sql = "CALL actualizar_estado_publicacion(?, ?)";
+        
+        return $this->db->query($sql, [$id, 0]);
     }
   
 }
-
