@@ -222,7 +222,7 @@ if (urlArchivo && !esLibroFisico) {
         btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
         newBtnDesc.href = `${site_url}/publicaciones/descargar/${d.id}`;
         newBtnDesc.setAttribute('target', '_blank');
-    } 
+    }  
     // Variante 2: Requiere pago (Diagrama 2 - Inicio)
     else {
         descWrap.style.display = 'none';  // Bloqueamos el acceso físico al archivo

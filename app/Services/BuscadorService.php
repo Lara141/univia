@@ -106,7 +106,7 @@ class BuscadorService
 
         if (!empty($filtros['tipo'])) {
             $builder->where('tr.slug', $filtros['tipo']);
-        }
+        } 
 
         if (!empty($filtros['acuerdo'])) {
             $builder->where('publicacion.tipo_acuerdo', $filtros['acuerdo']);

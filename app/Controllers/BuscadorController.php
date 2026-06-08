@@ -36,7 +36,7 @@ class BuscadorController extends BaseController
      * Filtros disponibles (vía GET):
      *   - q: palabra clave para buscar en título y descripción
      *   - materia: ID de materia
-     *   - tipo: tipo de recurso 
+     *   - tipo: tipo de recurso  
      * 
      * Solo retorna publicaciones activas (estado = 1)
      * 

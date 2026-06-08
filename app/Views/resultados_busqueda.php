@@ -42,7 +42,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
 <div class="container mt-4">
     <h2 class="mb-3">Resultados de búsqueda</h2>
-
+ 
 <!-- resultados -->
 <div class="row g-3">
 

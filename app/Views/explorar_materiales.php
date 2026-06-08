@@ -367,7 +367,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                  data-id="<?= $id_publicacion ?>"
                  data-titulo="<?= $titulo ?>"
                  data-autor="<?= $autor_completo ?>"
-                 data-descripcion="<?= $descripcion ?>"
+                 data-descripcion="<?= $descripcion ?>" 
                  data-tipo-recurso="<?= $tipo_recurso ?>"
                  data-tipo-acuerdo="<?= $tipo_acuerdo ?>"
                  data-pagado="<?= ($pub['ya_pagado'] ?? false) ? '1' : '0' ?>"

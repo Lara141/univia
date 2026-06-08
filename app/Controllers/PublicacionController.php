@@ -228,14 +228,21 @@ class PublicacionController extends BaseController
 
         $usuario = $this->authService->getUsuarioAutenticado();
         if (!$usuario) {
-            return redirect()->to('/');
+            return redirect()->to('/')->with('error', 'Sesión no válida.');
         }
 
-        if ($this->_verificarPropietario($id)) {
+        $redirectUrl = 'publicaciones/propias/' . $usuario['dni_usuario'];
+
+        try {
+            if (!$this->_verificarPropietario($id)) {
+                return redirect()->to($redirectUrl)->with('error', 'No tienes permiso para eliminar esta publicación o no existe.');
+            }
             $this->publicacionService->marcarPublicacionInactiva($id);
+            return redirect()->to($redirectUrl)->with('mensaje', 'Publicación eliminada con éxito.');
+        } catch (\Throwable $e) { // Usamos Throwable para capturar tanto Errores como Excepciones en PHP 7+
+            log_message('error', "Error al eliminar la publicación {$id}: " . $e->getMessage());
+            return redirect()->to($redirectUrl)->with('error', 'Ocurrió un error al eliminar la publicación.');
         }
-
-        return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario']);
     }
 
     /**
