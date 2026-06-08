@@ -64,6 +64,9 @@ class PublicacionService
         $datos['dni_usuario'] = $dniUsuario;
         $this->validarDatos($datos, true); // true indica que es una creación
 
+        // NUEVA VALIDACIÓN: Coherencia entre formato y archivo
+        $this->validarCoherenciaFormatoArchivo($datos, $archivo);
+
         $idArchivo = null;
 
         // Un archivo solo es requerido si no es un libro físico
@@ -139,6 +142,40 @@ class PublicacionService
         return $query->getResultArray();
     }
 
+    /**
+     * Valida que la extensión del archivo subido sea coherente con el formato seleccionado.
+     * Esta es una validación de seguridad en el backend.
+     *
+     * @param array $datos Los datos del formulario, incluyendo 'formato_archivo'.
+     * @param \CodeIgniter\HTTP\Files\UploadedFile|null $archivo El archivo subido.
+     * @throws \Exception Si el formato y el archivo no son coherentes.
+     */
+    private function validarCoherenciaFormatoArchivo(array $datos, $archivo)
+    {
+        $formatoSlug = $datos['formato_archivo'] ?? null;
+
+        // Si el formato es 'fisico', no debe haber un archivo principal.
+        if ($formatoSlug === 'fisico') {
+            if ($archivo && $archivo->isValid()) {
+                throw new \Exception("No se puede subir un archivo principal para un material de formato físico.");
+            }
+            return; // Validación correcta para 'fisico'.
+        }
+
+        // Para otros formatos, si hay un archivo, debe ser coherente.
+        if ($archivo && $archivo->isValid()) {
+            $extensionArchivo = strtolower($archivo->getExtension());
+            
+            $mapaExtensiones = [
+                'pdf' => ['pdf'], 'word' => ['doc', 'docx'], 'excel' => ['xls', 'xlsx'],
+                'powerpoint' => ['ppt', 'pptx'], 'imagen' => ['jpg', 'jpeg', 'png', 'webp'], 'comprimido' => ['zip', 'rar']
+            ];
+
+            if (isset($mapaExtensiones[$formatoSlug]) && !in_array($extensionArchivo, $mapaExtensiones[$formatoSlug])) {
+                throw new \Exception("El tipo de archivo ({$extensionArchivo}) no coincide con el formato seleccionado ({$formatoSlug}).");
+            }
+        }
+    }
 
     /**
      * Valida todos los campos requeridos de una publicación
@@ -232,21 +269,36 @@ class PublicacionService
      */
     public function actualizarPublicacion(int $id, array $datos): bool
     {
-        if (array_key_exists('estado', $datos)) {
-            $datos['estado'] = $this->normalizarEstado($datos['estado']);
-        }
-
         // Si se está actualizando el tipo de recurso, convertir el slug a ID
         if (!empty($datos['tipo_recurso'])) {
             $tipoRecursoSlug = $datos['tipo_recurso'];
             $tipoRecursoRow = $this->db->table('tipo_recurso')->where('slug', $tipoRecursoSlug)->get()->getRow();
             if ($tipoRecursoRow) {
-                $datos['id_tipo_recurso'] = (int)$tipoRecursoRow->id_tipo_recurso;
+                $datos['id_tipo_recurso'] = (int) $tipoRecursoRow->id_tipo_recurso;
             }
             unset($datos['tipo_recurso']); // Eliminar la clave slug para no intentar guardarla en la BD
         }
-
-        return $this->publicacionModel->update($id, $datos);
+    
+        // Preparamos los parámetros para el procedimiento almacenado.
+        // El procedimiento espera todos los parámetros, así que enviamos NULL para los que no se actualizan.
+        $params = [
+            'in_id_publicacion' => $id,
+            'in_titulo'         => $datos['titulo'] ?? null,
+            'in_descripcion'    => $datos['descripcion'] ?? null,
+            'in_id_materia'     => isset($datos['id_materia']) ? (int) $datos['id_materia'] : null,
+            'in_id_tipo_recurso'=> isset($datos['id_tipo_recurso']) ? (int) $datos['id_tipo_recurso'] : null,
+            'in_tipo_acuerdo'   => $datos['tipo_acuerdo'] ?? null,
+            'in_precio'         => isset($datos['precio']) ? (float) $datos['precio'] : null,
+            'in_estado'         => isset($datos['estado']) ? $this->normalizarEstado($datos['estado']) : null,
+            'in_id_archivo'     => isset($datos['id_archivo']) ? (int) $datos['id_archivo'] : null,
+        ];
+    
+        // Construimos la llamada al procedimiento almacenado
+        $sql = "CALL actualizar_publicacion(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+        // Ejecutamos la consulta y devolvemos true/false
+        $resultado = $this->db->query($sql, array_values($params));
+        return (bool) $resultado;
     }
 
     /**
@@ -269,13 +321,14 @@ class PublicacionService
      *
      * @param int $id ID de la publicación
      * @return bool true si se actualizó correctamente
-     */
+     */ 
     public function marcarPublicacionInactiva(int $id): bool
     {
         // Llamamos al procedimiento almacenado para actualizar el estado.
         $sql = "CALL actualizar_estado_publicacion(?, ?)";
         
-        return $this->db->query($sql, [$id, 0]);
+        $resultado = $this->db->query($sql, [$id, 0]);
+        return (bool) $resultado;
     }
   
 }

@@ -12,7 +12,7 @@ use CodeIgniter\Model;
  * 
  * Tabla: materia
  * Clave primaria: id_materia
- *  
+ *   
  * @author Sistema Univia
  * @package App\Models
  */  

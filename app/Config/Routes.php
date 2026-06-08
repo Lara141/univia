@@ -80,4 +80,4 @@ $routes->get('publicaciones/explorar/(:segment)', 'BuscadorController::explorar/
 $routes->get('publicaciones/descargar/(:num)', 'DescargarController::descargar/$1');
 
 // Ruta para procesar el formulario de pago simulado 
-$routes->post('publicaciones/pagar/(:num)', 'PagoController::procesarPago/$1');
+$routes->post('publicaciones/pagar/(:num)', 'PagoController::procesarPago/$1'); 

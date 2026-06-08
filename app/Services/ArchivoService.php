@@ -105,8 +105,7 @@ class ArchivoService
 
         if (!$file->move(self::RUTA_UPLOADS, $nombre)) {
             throw new \Exception('Error al guardar el archivo en el servidor');
-        }
-
+        } 
         $db = \Config\Database::connect();
         $formatoRow = $db->table('formato')->where('slug', $extension)->get()->getRow();
         $idFormato = $formatoRow ? (int)$formatoRow->id_formato : null;

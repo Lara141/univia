@@ -35,6 +35,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_estado_publicacion` (IN 
         id_publicacion = in_id_publicacion;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_publicacion` (IN `in_id_publicacion` INT, IN `in_titulo` VARCHAR(80), IN `in_descripcion` VARCHAR(500), IN `in_id_materia` INT, IN `in_id_tipo_recurso` INT, IN `in_tipo_acuerdo` VARCHAR(13), IN `in_precio` DECIMAL(10,2), IN `in_estado` TINYINT, IN `in_id_archivo` INT)   BEGIN
+    -- Actualiza los campos de una publicación.
+    -- Utiliza COALESCE para actualizar solo los campos que no son NULL.
+    -- Si un parámetro de entrada es NULL, el valor actual del campo se mantiene.
+    UPDATE
+        publicacion
+    SET
+        titulo = COALESCE(in_titulo, titulo),
+        descripcion = COALESCE(in_descripcion, descripcion),
+        id_materia = COALESCE(in_id_materia, id_materia),
+        id_tipo_recurso = COALESCE(in_id_tipo_recurso, id_tipo_recurso),
+        tipo_acuerdo = COALESCE(in_tipo_acuerdo, tipo_acuerdo),
+        precio = COALESCE(in_precio, precio),
+        estado = COALESCE(in_estado, estado),
+        id_archivo = COALESCE(in_id_archivo, id_archivo)
+    WHERE
+        id_publicacion = in_id_publicacion;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_publicaciones_usuario` (IN `in_dni_usuario` INT, IN `in_solo_activas` BOOLEAN)   BEGIN
     -- Selecciona las publicaciones de un usuario específico.
     -- Realiza un JOIN con las tablas 'materia', 'archivo' y 'formato' para obtener datos completos.

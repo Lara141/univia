@@ -57,7 +57,7 @@ class PublicacionModel extends Model {
         $builder->join('formato f', 'f.id_formato = a.id_formato', 'left');
         $builder->join('tipo_recurso tr', 'tr.id_tipo_recurso = p.id_tipo_recurso', 'left');
         $builder->where('p.dni_usuario', $dni);
- 
+  
         if ($soloActivas) {
             $builder->where('p.estado', 1);
         }  

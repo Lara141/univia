@@ -219,7 +219,7 @@ class PublicacionController extends BaseController
 
     /**
      * Elimina una publicación (marca como inactiva)
-     */  
+     */   
     public function eliminar($id)
     {
         if (!$this->authService->estaLogueado()) {

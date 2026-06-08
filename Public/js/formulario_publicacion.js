@@ -14,7 +14,7 @@
         dark:  { icon:'bi-moon-stars-fill', label:'Modo nocturno', checked:true  },
         light: { icon:'bi-sun-fill',        label:'Modo diurno',   checked:false },
     };
-    function apply(theme, anim) {
+    function apply(theme, anim) { 
         ROOT.dataset.theme = theme;
         const c = CFG[theme];
         cb.checked = c.checked; lbl.textContent = c.label;
@@ -75,9 +75,16 @@ function resetFileChip() {
 }
 
 archivoInp.addEventListener('change', function() {
-    if (this.files[0]) showFileChip(this.files[0].name);
+    if (this.files[0]) {
+        showFileChip(this.files[0].name);
+    }
+    // Siempre validar, incluso si se quita el archivo
+    validarCoherenciaArchivoFormato();
 });
-removeFile && removeFile.addEventListener('click', resetFileChip);
+removeFile && removeFile.addEventListener('click', () => {
+    resetFileChip();
+    validarCoherenciaArchivoFormato(); // Validar al quitar
+});
 
 // Drag & drop visual
 ['dragover','dragenter'].forEach(ev => dropZone.addEventListener(ev, e => {
@@ -92,6 +99,7 @@ dropZone.addEventListener('drop', e => {
         const dt = new DataTransfer();
         dt.items.add(file);
         archivoInp.files = dt.files;
+        archivoInp.dispatchEvent(new Event('change')); // Disparamos el evento change para que se valide
         showFileChip(file.name);
     }
 });
@@ -166,10 +174,67 @@ document.getElementById('tipo_recurso').addEventListener('change', updatePreview
 document.querySelectorAll('[name="tipo_acuerdo"]').forEach(r => r.addEventListener('change', updatePreview));
 
 
+/* LÓGICA DE VALIDACIÓN DE FORMATO */
+
+// Asocia el 'slug' del formato con las extensiones de archivo permitidas.
+const MAPA_FORMATO_EXTENSION = {
+    'pdf': ['pdf'],
+    'word': ['doc', 'docx'],
+    'excel': ['xls', 'xlsx'],
+    'powerpoint': ['ppt', 'pptx'],
+    'imagen': ['jpg', 'jpeg', 'png', 'webp'],
+    'comprimido': ['zip', 'rar'],
+    'fisico': [] // 'fisico' no tiene extensiones, es un caso especial.
+};
+
+/**
+ * Valida si la extensión del archivo seleccionado corresponde al formato elegido.
+ * Muestra u oculta el mensaje de error correspondiente.
+ * @returns {boolean} - true si es válido, false si no.
+ */
+function validarCoherenciaArchivoFormato() {
+    const formatoSelect = document.getElementById('formato_archivo');
+    const archivoInput = document.getElementById('archivo');
+    const errArchivo = document.getElementById('err-archivo');
+    const dropZone = document.getElementById('drop-zone');
+
+    const formatoSeleccionado = formatoSelect.value;
+    const archivo = archivoInput.files[0];
+
+    // Si no hay formato, no hay archivo, o es físico, no hay nada que validar aquí.
+    // Ocultamos cualquier error previo de formato.
+    if (!formatoSeleccionado || !archivo || formatoSeleccionado === 'fisico') {
+        errArchivo.style.display = 'none';
+        errArchivo.classList.remove('visible'); // Para la validación de 'requerido'
+        dropZone.classList.remove('has-error');
+        return true;
+    }
+
+    const extensionArchivo = archivo.name.split('.').pop().toLowerCase();
+    const extensionesPermitidas = MAPA_FORMATO_EXTENSION[formatoSeleccionado];
+
+    if (extensionesPermitidas && !extensionesPermitidas.includes(extensionArchivo)) {
+        const nombreFormato = formatoSelect.options[formatoSelect.selectedIndex].text;
+        errArchivo.textContent = `El archivo no es un ${nombreFormato}. Por favor, subí un archivo con la extensión correcta (${extensionesPermitidas.join(', ')}).`;
+        errArchivo.style.display = 'block';
+        dropZone.classList.add('has-error');
+        return false;
+    }
+
+    errArchivo.style.display = 'none';
+    errArchivo.classList.remove('visible');
+    dropZone.classList.remove('has-error');
+    return true;
+};
+
 /* Validacion */
 const form      = document.getElementById('pub-form');
 const spinner   = document.getElementById('spinner');
 const btnSubmit = document.getElementById('btn-submit');
+const errorModalElement = document.getElementById('errorModal');
+const errorModal = errorModalElement ? new bootstrap.Modal(errorModalElement, {
+    keyboard: false // Opcional: previene que se cierre con ESC
+}) : null;
 
 /**
  * Populates a <select> element from an API endpoint.
@@ -262,21 +327,35 @@ form.addEventListener('submit', function(e) {
     if (!document.getElementById('formato_archivo').value) {
         showError('formato_archivo', 'err-formato'); valid = false;
     }
-    // Archivo — requerido solo si: nueva publicación, O si no hay archivo existente
+    // Archivo (Validación combinada)
     const archivoInp = document.getElementById('archivo');
     const existingFile = document.getElementById('existing-file');
     const esLibroFisico = document.getElementById('formato_archivo').value === 'fisico';
     const tieneArchivoExistente = !!existingFile;
+    const errArchivo = document.getElementById('err-archivo');
 
+    // 1. Validar si es requerido
     if (!esLibroFisico && !tieneArchivoExistente && archivoInp.files.length === 0) {
-        document.getElementById('err-archivo').classList.add('visible');
+        errArchivo.textContent = 'Por favor seleccioná un archivo.';
+        errArchivo.style.display = 'block';
+        valid = false;
+    } else if (!validarCoherenciaArchivoFormato()) {
+        // 2. Validar coherencia de formato (solo si el paso anterior es OK)
         valid = false;
     }
 
     if (!valid) {
-        // Scroll al primer error
-        const firstErr = document.querySelector('.field-error.visible');
+        // Scroll al primer error visible para guiar al usuario
+        const firstErr = document.querySelector('.field-error.visible, .field-error[style*="display: block"]');
         if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Reemplazamos la alerta nativa con nuestro modal de Bootstrap
+        if (errorModal) {
+            errorModal.show();
+        } else {
+            alert('Por favor, revisá y corregí los errores marcados en el formulario antes de continuar.');
+        }
+
         return;
     }
 
@@ -289,18 +368,20 @@ form.addEventListener('submit', function(e) {
 // Al cambiar formato, actualizar si archivo es requerido
 document.getElementById('formato_archivo').addEventListener('change', function() {
     const esLibroFisico = this.value === 'fisico';
-    const req  = document.getElementById('archivo-req');
     const wrap = document.getElementById('archivo-wrap');
-    // Para libro físico ocultamos el drop zone de archivo (no tiene archivo digital)
+    const archivoInp = document.getElementById('archivo');
+
     if (esLibroFisico) {
-        wrap.style.opacity = '.5';
-        wrap.style.pointerEvents = 'none';
-        if (req) req.style.display = 'none';
+        wrap.style.display = 'none';
+        // Limpiamos el archivo para que no se envíe por error y actualizamos la UI
+        if (archivoInp.value) {
+            resetFileChip();
+        }
     } else {
-        wrap.style.opacity = '1';
-        wrap.style.pointerEvents = 'auto';
-        if (req) req.style.display = '';
+        wrap.style.display = 'block';
     }
+    // Re-validamos por si el usuario cambia el formato después de elegir un archivo.
+    validarCoherenciaArchivoFormato();
 });
 // Trigger al cargar si ya hay valor (modo editar)
 document.getElementById('formato_archivo').dispatchEvent(new Event('change'));

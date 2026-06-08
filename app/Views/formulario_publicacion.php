@@ -279,12 +279,12 @@ function fsel($pub, $key, $value, $default = '') {
                         <span class="required-dot"></span> Archivo del material
                         <span class="req" id="archivo-req">*</span>
                     </label>
-                    <!-- Si está en modo edición, muestra archivo existente -->
-                    <?php if ($modoEdicion && !empty($pub['nombre_archivo'])): ?>
+                    <!-- Si está en modo edición y hay un archivo, lo muestra -->
+                    <?php if ($modoEdicion && !empty($pub['file_name'])): ?>
                     <!-- Archivo existente en modo editar -->
                     <div class="existing-file" id="existing-file">
                         <i class="bi bi-file-earmark"></i>
-                        <span><?= fv($pub, 'nombre_archivo') ?></span>
+                        <span><?= fv($pub, 'file_name') ?></span>
                         <small style="color:var(--text-muted); margin-left:auto;">Archivo actual</small>
                     </div>
                     <div class="field-hint mb-2">Si subís un nuevo archivo, reemplazará al actual.</div>
@@ -295,7 +295,7 @@ function fsel($pub, $key, $value, $default = '') {
                      <!-- Input oculto para subir archivo -->
                         <input type="file" id="archivo" name="archivo"
                                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.jpg,.jpeg,.png,.webp"
-                               <?= ($modoEdicion && !empty($pub['nombre_archivo'])) ? '' : 'required' ?>>
+                               <?= ($modoEdicion && !empty($pub['file_name'])) ? '' : 'required' ?>>
                         <div id="drop-content">
                          <!-- Icono -->
                             <div class="drop-icon"><i class="bi bi-cloud-upload"></i></div>
@@ -312,7 +312,7 @@ function fsel($pub, $key, $value, $default = '') {
                         <i class="bi bi-x-circle remove-file" id="remove-file" title="Quitar archivo"></i>
                     </div>
                     <!-- Error -->
-                    <div class="field-error" id="err-archivo">Por favor seleccioná un archivo.</div>
+                    <div class="field-error" id="err-archivo"></div>
                 </div>
 
                 <!-- Imagen de portada (opcional) -->
@@ -427,8 +427,8 @@ function fsel($pub, $key, $value, $default = '') {
     <i class="bi bi-arrow-left"></i> Cancelar
 </a>
             </div>
-        </div>
-
+        </div> 
+ 
         <!-- Tips para el usuario -->
         <div class="sidebar-card" style="margin-top:1rem;">
             <div class="card-section-title" style="margin-bottom:.8rem;">
@@ -484,6 +484,26 @@ function fsel($pub, $key, $value, $default = '') {
 
 </div><!-- /form-layout -->
 </div><!-- /container -->
+
+<!-- Modal de Error de Validación -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark" id="errorModalLabel">
+            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Univia
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-dark">Por favor, revisá y corregí los errores marcados en el formulario antes de continuar.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

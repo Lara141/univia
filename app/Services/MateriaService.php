@@ -25,7 +25,7 @@ class MateriaService
      * @return array Array de materias con sus datos completos
      */
     public function obtenerMaterias(string $orden = 'ASC'): array
-    {
+    { 
         $db = Database::connect();
  
         // Se asegura que el valor de orden sea solo ASC o DESC para evitar inyecciones.

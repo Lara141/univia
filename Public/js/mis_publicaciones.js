@@ -202,7 +202,7 @@ document.querySelectorAll('.filter-pill').forEach(pill => {
             col.style.display = (f === 'todos' || col.dataset.tipo === f) ? '' : 'none';
         });
     });
-});
+}); 
 
 
 
