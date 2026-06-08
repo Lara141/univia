@@ -21,6 +21,9 @@ $password_error = (string) ($errors['password'] ?? '');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('Public/css/login.css') ?>">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+
+   
+
 </head>
 <body>
 
