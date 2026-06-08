@@ -6,10 +6,10 @@
 // Extraer datos del usuario para evitar errores en el analisis estatico
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
 $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
-?>
+?> 
 
 <!DOCTYPE html>
-
+ 
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -19,19 +19,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
-<style>
-body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
-.navbar { background:#111422; border-bottom:1px solid rgba(255,255,255,.07); }
-.pub-card {
-    background:#181c30;
-    border:1px solid rgba(255,255,255,.07);
-    border-radius:14px;
-    padding:15px;
-    height:100%;
-}
-.pub-card:hover { border-color:#5b7fff; }
-</style>
+<link href="<?= base_url('Public/css/resultados_busqueda.css') ?>" rel="stylesheet">
 
 </head>
 
@@ -63,6 +51,7 @@ body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
     <?php foreach ($resultados as $r): ?>
 
         <?php
+        $id_publicacion = (int) ($r['id_publicacion'] ?? 0);
         $titulo = esc((string) ($r['titulo'] ?? ''));
         $descripcion = esc((string) ($r['descripcion'] ?? ''));
         $materia = esc((string) ($r['nombre_materia'] ?? 'Sin materia'));
@@ -88,8 +77,8 @@ body { background:#0c0e1a; color:#e2e8f0; font-family:'DM Sans',sans-serif; }
                         <?= ucfirst($tipo) ?>
                     </span>
 
-                    <?php if (!empty($archivo)): ?>
-                        <a href="<?= base_url('uploads/archivos/' . $archivo) ?>" 
+                    <?php if (!empty($archivo) && $id_publicacion > 0): ?>
+                        <a href="<?= site_url('descargar/' . $id_publicacion) ?>" 
                            class="btn btn-sm btn-success" target="_blank">
                             <i class="bi bi-download"></i>
                         </a>

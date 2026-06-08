@@ -189,4 +189,32 @@ class AuthController extends BaseController
         session()->destroy();
         return redirect()->to('/index/logout_exitoso');
     }
+
+    /**
+     * API: Devuelve todas las universidades en formato JSON.
+     */
+    public function api_universidades()
+    {
+        $db = \Config\Database::connect();
+        $universidades = $db->table('universidad')->orderBy('nombre_universidad', 'ASC')->get()->getResultArray();
+        return $this->response->setJSON($universidades);
+    }
+
+    /**
+     * API: Devuelve las carreras de una universidad específica.
+     * @param int $id_universidad El ID de la universidad.
+     */
+    public function api_carreras($id_universidad)
+    {
+        if (!is_numeric($id_universidad)) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'ID de universidad inválido']);
+        }
+
+        $db = \Config\Database::connect();
+        $carreras = $db->table('carrera')
+                       ->where('id_universidad', (int)$id_universidad)
+                       ->orderBy('nombre_carrera', 'ASC')
+                       ->get()->getResultArray();
+        return $this->response->setJSON($carreras);
+    }
 }

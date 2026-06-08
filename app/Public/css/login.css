@@ -1,0 +1,199 @@
+:root {
+    --navy:      #0f2244;
+    --blue:      #2563eb;
+    --blue-dark: #1e40af;
+    --blue-soft: #eff6ff;
+    --text-main: #0f2244;
+    --text-muted:#64748b;
+    --border:    #e2e8f0;
+    --bg-input:  #f8fafc;
+    --radius-card: 18px;
+    --radius-input: 10px; 
+}
+
+body {
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    background-color: var(--navy);
+    /* Rejilla geométrica sutil como textura de fondo */
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Cabecera con logo */
+.brand-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 4px 20px rgba(37,99,235,.4);
+}
+.brand-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: #fff;
+}
+.brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: .3px;
+}
+.brand-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,.5);
+    letter-spacing: .8px;
+}
+
+/* Tarjeta principal */
+.login-card {
+    background: #fff;
+    border-radius: var(--radius-card);
+    padding: 36px 32px 28px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+
+.login-card .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+.login-card .card-subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+}
+
+.form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-input);
+    background: var(--bg-input);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    color: var(--text-main);
+    padding: 11px 14px;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.form-control:focus {
+    border-color: var(--blue);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+.form-control::placeholder { color: #94a3b8; }
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { appearance: textfield; -moz-appearance: textfield; }
+
+.password-wrapper {
+    position: relative;
+}
+.password-wrapper .form-control {
+    padding-right: 44px;
+}
+.btn-toggle-pw {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color .2s;
+    line-height: 0;
+}
+.btn-toggle-pw:hover { color: var(--blue); }
+.btn-toggle-pw svg { width: 18px; height: 18px; display: block; }
+.icon-eye-closed { display: none; }
+
+.btn-login {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-input);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 4px 14px rgba(37,99,235,.35);
+}
+.btn-login:hover {
+    opacity: .91;
+    box-shadow: 0 6px 20px rgba(37,99,235,.45);
+}
+.btn-login:active { transform: scale(.98); }
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+    color: #cbd5e1;
+    font-size: 12px;
+}
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.btn-register {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: var(--blue);
+    border: 1.5px solid var(--blue);
+    border-radius: var(--radius-input);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.btn-register:hover {
+    background: var(--blue-soft);
+    color: var(--blue-dark);
+}
+
+
+.footer-note {
+    font-size: 12px;
+    color: rgba(255,255,255,.3);
+}

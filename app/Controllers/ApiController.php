@@ -192,4 +192,28 @@ class ApiController extends BaseController
             'count' => count($publicaciones),
         ]);
     }
+
+    /**
+     * GET /api/tipos_recurso
+     * Retorna todos los tipos de recurso disponibles.
+     */
+    public function tipos_recurso()
+    {
+        $db = \Config\Database::connect();
+        $data = $db->table('tipo_recurso')->orderBy('nombre_tipo', 'ASC')->get()->getResultArray();
+        return $this->response->setJSON(['success' => true, 'data' => $data]);
+    }
+
+    /**
+     * GET /api/formatos
+     * Retorna todos los formatos de archivo disponibles.
+     */
+    public function formatos()
+    {
+        $db = \Config\Database::connect();
+        $data = $db->table('formato')->orderBy('id_formato', 'ASC')->get()->getResultArray();
+        return $this->response->setJSON(['success' => true, 'data' => $data]);
+    }
+
+
 }

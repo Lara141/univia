@@ -53,6 +53,11 @@ $routes->get('api/publicaciones/(:num)', 'ApiController::publicacion/$1');
 $routes->get('api/publicaciones/materia/(:num)', 'ApiController::porMateria/$1');
 $routes->get('api/publicaciones/materia/(:num)/(:segment)', 'ApiController::porMateria/$1/$2');
 
+// APIs para datos de formularios
+$routes->get('api/tipos_recurso', 'ApiController::tipos_recurso');
+$routes->get('api/formatos', 'ApiController::formatos');
+
+
 // ═══════════════════════════════════════════════════════════════
 // COMPATIBILIDAD HACIA ATRÁS (rutas antiguas)
 // ═══════════════════════════════════════════════════════════════
