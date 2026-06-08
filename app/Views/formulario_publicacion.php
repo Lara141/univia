@@ -14,7 +14,7 @@ function fv($pub, $key, $default = '') {
 function fsel($pub, $key, $value, $default = '') {
     $actual = $pub[$key] ?? $default;
     return $actual === $value ? 'selected' : '';
-}
+} 
 ?>
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
@@ -135,7 +135,7 @@ function fsel($pub, $key, $value, $default = '') {
         <form id="pub-form"
               action="<?= $modoEdicion 
                   ? site_url('publicaciones/actualizar/' . (int)($pub['id_publicacion'] ?? 0))
-                  : site_url('publicaciones/guardar') ?>"
+                  : site_url('publicaciones/guardar/' . ($usuario['dni_usuario'] ?? '')) ?>"
               method="POST"
               enctype="multipart/form-data"
               novalidate>

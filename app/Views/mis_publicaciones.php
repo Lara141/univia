@@ -22,8 +22,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <nav class="univia-navbar">
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
-
-           <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
+           <a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="brand-name">Univia</a>
 
             <div class="ms-auto d-flex align-items-center gap-2">
 
@@ -61,7 +60,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                             </a>
                         </li>
                         <li>
-                         <a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>">
+                         <a class="dropdown-item" href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>">
                                 <i class="bi bi-folder2-open"></i> Mis Publicaciones
                             </a>
                         </li>
@@ -153,7 +152,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
 <main class="container-lg py-4">
 
-    <form class="d-md-none mb-3" action="<?= site_url('materiales/buscar') ?>" method="GET">
+    <form class="d-md-none mb-3" action="<?= site_url('publicaciones/explorar') ?>" method="GET">
         <div class="search-wrap" style="max-width:100%;">
             <i class="bi bi-search"></i>
             <input type="search" name="q" class="form-control search-input"

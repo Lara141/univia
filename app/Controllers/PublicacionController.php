@@ -69,7 +69,7 @@ class PublicacionController extends BaseController
             return redirect()->to('publicaciones/propias/' . $usuario_autenticado['dni_usuario'])
                              ->with('error', 'No tienes permiso para ver esta página.');
         }
-
+ 
         $mis_publicaciones = $this->publicacionService->obtenerPublicacionesUsuario($dni, false);
 
         return view('mis_publicaciones', [
@@ -134,16 +134,16 @@ class PublicacionController extends BaseController
             $datos = [
                 'titulo' => $this->request->getPost('titulo'),
                 'descripcion' => $this->request->getPost('descripcion'),
-                'materia' => $this->request->getPost('materia'),
-                'tipo' => $this->request->getPost('tipo_recurso'),
+                'materia'      => $this->request->getPost('materia'),
+                'tipo_recurso' => $this->request->getPost('tipo_recurso'),
                 'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
-                'precio' => $this->request->getPost('precio'),
-                'dni' => $usuario['dni_usuario'], // Usar siempre el DNI de la sesión por seguridad
+                'precio'       => $this->request->getPost('precio'),
+                'formato_archivo' => $this->request->getPost('formato_archivo'),
             ];
 
             $archivo = $this->request->getFile('archivo');
 
-            $this->publicacionService->procesarPublicacion($datos, $archivo);
+            $this->publicacionService->procesarPublicacion($datos, $archivo, $usuario['dni_usuario']);
 
             return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario'])
                 ->with('mensaje', 'Publicación subida con éxito');
@@ -193,7 +193,7 @@ class PublicacionController extends BaseController
                 'titulo' => $this->request->getPost('titulo'),
                 'descripcion' => $this->request->getPost('descripcion'),
                 'id_materia' => $this->request->getPost('materia'),
-                'tipo_recurso' => $this->request->getPost('tipo_recurso'),
+                'tipo_recurso' => $this->request->getPost('tipo_recurso'), // El valor es el 'slug'
                 'tipo_acuerdo' => $this->request->getPost('tipo_acuerdo'),
                 'precio' => $this->request->getPost('precio'),
                 'estado' => $this->request->getPost('estado'),

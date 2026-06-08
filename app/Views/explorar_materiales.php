@@ -36,7 +36,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 
-           <a href="<?= site_url('publicaciones/propias') ?>" class="brand-name">Univia</a>
+           <a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="brand-name">Univia</a>
 
             
 
@@ -78,7 +78,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                             </a>
                         </li>
                         <li>
-                         <a class="dropdown-item" href="<?= site_url('publicaciones/propias') ?>">
+                         <a class="dropdown-item" href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>">
                                 <i class="bi bi-folder2-open"></i> Mis Publicaciones
                             </a>
                         </li>
@@ -112,7 +112,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                 </p>
             </div>
 
-   <a href="<?= site_url('publicaciones/propias') ?>" class="btn btn-nueva">
+   <a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="btn btn-nueva">
                 <i class="bi bi-arrow-left"></i>
                 <span class="btn-nueva-lbl">Mis publicaciones</span>
             </a>
@@ -163,8 +163,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
     </form>
 </div>
-
-    <form class="d-md-none mb-3" action="<?= site_url('materiales/buscar') ?>" method="GET">
+    <form class="d-md-none mb-3" action="<?= site_url('publicaciones/explorar') ?>" method="GET">
         <div class="search-wrap" style="max-width:100%;">
             <i class="bi bi-search"></i>
             <input type="search" name="q" class="form-control search-input"
@@ -362,6 +361,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
         data-tipo="<?= strtolower($tipo_recurso) ?>"
         data-acuerdo="<?= strtolower($tipo_acuerdo) ?>"
         data-formato="<?= strtolower($formato) ?>">
+
             <div class="pub-card"
                  data-bs-toggle="modal" data-bs-target="#modalDetalle"
                  data-id="<?= $id_publicacion ?>"

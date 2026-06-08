@@ -181,7 +181,7 @@ modalEl.addEventListener('show.bs.modal', function (e) {
     if (urlArchivo && !esLibroFisico) {
         descWrap.style.display = '';
         // Usar siempre el endpoint de descarga segura.
-        newBtnDesc.href = `${site_url}/descargar/${d.id}`;
+        newBtnDesc.href = `${site_url}/publicaciones/descargar/${d.id}`;
         newBtnDesc.setAttribute('target', '_blank');
     } else {
         descWrap.style.display = 'none';

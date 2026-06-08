@@ -74,7 +74,7 @@ class DescargarController extends BaseController
                 )
                 ->setBody(file_get_contents($rutaFisica));
         }
-
+ 
         return redirect()->back()->with('error', 'El archivo no se encuentra físicamente en el servidor.');
     }
 }

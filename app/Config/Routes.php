@@ -33,7 +33,7 @@ $routes->group('publicaciones', static function ($routes) {
     $routes->get('editar/(:num)', 'PublicacionController::editar/$1');
     $routes->post('actualizar/(:num)', 'PublicacionController::actualizar/$1');
     $routes->get('eliminar/(:num)', 'PublicacionController::eliminar/$1');
-});
+}); 
 
 // ═══════════════════════════════════════════════════════════════
 // APIs REST (ApiController)

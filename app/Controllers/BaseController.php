@@ -29,7 +29,7 @@ abstract class BaseController extends Controller
      * @var array
      */
     protected $helpers = ['form', 'url', 'session'];
-
+ 
     /**
      * Inicializa el controlador con request, response y logger
      * 

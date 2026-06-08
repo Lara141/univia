@@ -28,9 +28,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 
 
 <nav class="navbar navbar-dark px-4">
-    <a href="<?= site_url('publicaciones/propias') ?>" class="navbar-brand">Univia</a>
+    <a href="<?= site_url('publicaciones/propias/' . ($usuario['dni_usuario'] ?? '')) ?>" class="navbar-brand">Univia</a>
 
-    <form action="<?= site_url('materiales/buscar') ?>" method="GET" class="d-flex w-50">
+    <form action="<?= site_url('publicaciones/explorar') ?>" method="GET" class="d-flex w-50">
         <input type="text" name="q" class="form-control me-2" placeholder="Buscar materiales...">
         <button class="btn btn-primary">Buscar</button>
     </form>
@@ -78,7 +78,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                     </span>
 
                     <?php if (!empty($archivo) && $id_publicacion > 0): ?>
-                        <a href="<?= site_url('descargar/' . $id_publicacion) ?>" 
+                        <a href="<?= site_url('publicaciones/descargar/' . $id_publicacion) ?>" 
                            class="btn btn-sm btn-success" target="_blank">
                             <i class="bi bi-download"></i>
                         </a>

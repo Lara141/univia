@@ -68,10 +68,10 @@ class AuthController extends BaseController
             session()->set([
                 'isLoggedIn' => true,
                 'usuario' => $usuario,
-            ]);
+            ]); 
 
             return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario']);
-        }
+        } 
 
         return redirect()->back()->with('error', 'DNI o contraseña incorrectos');
     }

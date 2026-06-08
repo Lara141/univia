@@ -24,7 +24,7 @@ class PagoController extends BaseController
 
     /**
      * Inicializa los servicios de pago y de publicación.
-     */
+     */ 
     public function __construct()
     {
         $this->pagoService = new PagoService();

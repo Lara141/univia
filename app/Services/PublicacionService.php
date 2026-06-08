@@ -14,7 +14,7 @@ use App\Models\PublicacionModel;
  *   - Procesamiento y validación de datos
  *   - Gestión de archivos adjuntos
  *   - Búsqueda y filtrado
- * 
+ *  
  * Funcionalidades principales:
  *   - procesarPublicacion(): Crea o actualiza publicación
  *   - obtenerPublicacionesUsuario(): Lista de usuario
@@ -58,15 +58,23 @@ class PublicacionService
      * @throws \Exception Si hay error en validación o guardado
      * @return void
      */
-    public function procesarPublicacion(array $datos, $archivo)
+    public function procesarPublicacion(array $datos, $archivo, string $dniUsuario)
     {
-        $this->validarDatos($datos);
+        // Agregamos el DNI del usuario a los datos para una validación centralizada
+        $datos['dni_usuario'] = $dniUsuario;
+        $this->validarDatos($datos, true); // true indica que es una creación
 
-        if (!$archivo || !$archivo->isValid()) {
-            throw new \Exception("El archivo es obligatorio para crear una publicación");
+        $idArchivo = null;
+
+        // Un archivo solo es requerido si no es un libro físico
+        $esLibroFisico = isset($datos['formato_archivo']) && $datos['formato_archivo'] === 'fisico';
+
+        if ($archivo && $archivo->isValid()) {
+            $idArchivo = $this->archivoService->guardar($archivo);
+        } elseif (!$esLibroFisico) {
+            // Si no es un libro físico y no se subió un archivo válido, es un error.
+            throw new \Exception("El archivo es obligatorio para publicaciones digitales.");
         }
-
-        $idArchivo = $this->archivoService->guardar($archivo);
 
         $publicacion = $this->construirPublicacion($datos, $idArchivo);
 
@@ -74,7 +82,7 @@ class PublicacionService
     }
 
     /**
-     * Procesa un archivo sin procesar publicación completa
+     * Procesa un archivo de forma aislada (usado en edición)
      * 
      * Utilizado en la edición de publicaciones
      * 
@@ -99,11 +107,13 @@ class PublicacionService
     {
        $builder = $this->publicacionModel->builder();
 
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
+        // CORREGIDO: Unir con la tabla 'formato' para obtener el nombre del formato
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, f.nombre_formato AS formato, f.slug AS formato_slug');
 
         $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
         
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('formato f', 'f.id_formato = a.id_formato', 'left'); // NUEVO JOIN
 
         $builder->where('publicacion.id_publicacion', $id);
         return $builder->get()->getRowArray();
@@ -136,26 +146,30 @@ class PublicacionService
      * @param array $datos Datos a validar
      * @throws \Exception Si falta algún campo obligatorio
      */
-    private function validarDatos(array $datos)
+    private function validarDatos(array $datos, bool $esCreacion = false)
     {
-        $camposObligatorios = ['titulo', 'descripcion', 'materia', 'tipo', 'tipo_acuerdo', 'dni'];
+        // Usamos los nombres de campo reales del formulario/modelo
+        $camposObligatorios = ['titulo', 'descripcion', 'materia', 'tipo_recurso', 'tipo_acuerdo'];
+        if ($esCreacion) {
+            $camposObligatorios[] = 'dni_usuario';
+        }
 
         foreach ($camposObligatorios as $campo) {
             if (empty($datos[$campo])) {
                 throw new \Exception("El campo '{$campo}' es obligatorio");
             }
         }
-
+        
         if ($datos['tipo_acuerdo'] === 'pago' && empty($datos['precio'])) {
             throw new \Exception("El precio es obligatorio para publicaciones de pago");
         }
-
+        
         // Validar que tipo_acuerdo sea válido
         $tiposAcuerdoValidos = ['gratis', 'pago'];
         if (!in_array($datos['tipo_acuerdo'], $tiposAcuerdoValidos)) {
             throw new \Exception("El tipo de acuerdo seleccionado no es válido");
         }
-
+        
         if (strlen($datos['titulo']) < 3) {
             throw new \Exception("El título debe tener al menos 3 caracteres");
         }
@@ -170,14 +184,22 @@ class PublicacionService
      */
     private function construirPublicacion(array $datos, $idArchivo)
     {
+        // Obtener el ID del tipo de recurso a partir de su slug
+        $tipoRecursoSlug = $datos['tipo_recurso'] ?? null;
+        $tipoRecursoRow = $this->db->table('tipo_recurso')->where('slug', $tipoRecursoSlug)->get()->getRow();
+        if (!$tipoRecursoRow) {
+            throw new \Exception("El tipo de recurso '{$tipoRecursoSlug}' no es válido.");
+        }
+        $idTipoRecurso = (int)$tipoRecursoRow->id_tipo_recurso;
+
         return [
             'titulo' => trim($datos['titulo']),
             'descripcion' => trim($datos['descripcion']),
-            'id_materia' => (int)$datos['materia'],
-            'tipo_recurso' => $datos['tipo'],
+            'id_materia' => (int) $datos['materia'],
+            'id_tipo_recurso' => $idTipoRecurso,
             'tipo_acuerdo' => $datos['tipo_acuerdo'],
-            'precio' => !empty($datos['precio']) ? (float)$datos['precio'] : 0,
-            'dni_usuario' => $datos['dni'],
+            'precio' => !empty($datos['precio']) ? (float) $datos['precio'] : 0,
+            'dni_usuario' => (int) $datos['dni_usuario'],
             'id_archivo' => $idArchivo,
             'fecha_publicacion' => date('Y-m-d'),
             'estado' => 1,
@@ -212,6 +234,16 @@ class PublicacionService
     {
         if (array_key_exists('estado', $datos)) {
             $datos['estado'] = $this->normalizarEstado($datos['estado']);
+        }
+
+        // Si se está actualizando el tipo de recurso, convertir el slug a ID
+        if (!empty($datos['tipo_recurso'])) {
+            $tipoRecursoSlug = $datos['tipo_recurso'];
+            $tipoRecursoRow = $this->db->table('tipo_recurso')->where('slug', $tipoRecursoSlug)->get()->getRow();
+            if ($tipoRecursoRow) {
+                $datos['id_tipo_recurso'] = (int)$tipoRecursoRow->id_tipo_recurso;
+            }
+            unset($datos['tipo_recurso']); // Eliminar la clave slug para no intentar guardarla en la BD
         }
 
         return $this->publicacionModel->update($id, $datos);

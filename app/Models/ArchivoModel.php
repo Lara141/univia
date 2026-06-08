@@ -8,7 +8,7 @@ use CodeIgniter\Model;
  * ═══════════════════════════════════════════════════════════════
  * 
  * Gestión de archivos adjuntos a las publicaciones
- * 
+ *  
  * Tabla: archivo
  * Clave primaria: id_archivo
  *   
@@ -29,6 +29,6 @@ class ArchivoModel extends Model {
     protected $allowedFields = [
         'nombre_archivo',  // Nombre original del archivo
         'ruta',           // Ruta del archivo en el servidor
-        'formato'         // Extensión del archivo (pdf, doc, etc)
+        'id_formato'         // Extensión del archivo (pdf, doc, etc)
     ];
 }

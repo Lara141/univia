@@ -220,7 +220,7 @@ if (urlArchivo && !esLibroFisico) {
         // Reconfiguramos de forma limpia el enlace binario seguro
         const newBtnDesc = btnDesc.cloneNode(true);
         btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
-        newBtnDesc.href = `${site_url}/descargar/${d.id}`;
+        newBtnDesc.href = `${site_url}/publicaciones/descargar/${d.id}`;
         newBtnDesc.setAttribute('target', '_blank');
     } 
     // Variante 2: Requiere pago (Diagrama 2 - Inicio)
@@ -233,7 +233,5 @@ if (urlArchivo && !esLibroFisico) {
     btnPagar.style.display = 'none';
 }
 
-/* —— Rutas de acción —— */
-document.getElementById('modal-btn-editar').href   = `${site_url}/publicaciones/editar/${d.id}`;
-document.getElementById('modal-btn-eliminar').href = `${site_url}/publicaciones/eliminar/${d.id}`;
+// Las acciones de editar/eliminar no están en esta vista.
 });

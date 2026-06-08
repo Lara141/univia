@@ -32,8 +32,8 @@ class PublicacionModel extends Model {
      * @var array
      */
     protected $allowedFields = [
-        'titulo', 'descripcion', 'tipo_recurso', 'tipo_acuerdo', 'precio', 
-        'fecha_publicacion', 'estado', 'dni_usuario', 'id_materia', 'id_archivo'
+        'titulo', 'descripcion', 'id_tipo_recurso', 'tipo_acuerdo', 'precio',
+        'fecha_publicacion', 'estado', 'dni_usuario', 'id_materia', 'id_archivo',
     ];
 
     /**
@@ -50,11 +50,14 @@ class PublicacionModel extends Model {
     {
         $builder = $this->builder();
         $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta');
+        $builder->select('p.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, tr.slug as tipo_recurso, f.slug as formato_slug');
         $builder->from('publicacion p');
         $builder->join('materia m', 'm.id_materia = p.id_materia', 'left');
         $builder->join('archivo a', 'a.id_archivo = p.id_archivo', 'left');
+        $builder->join('formato f', 'f.id_formato = a.id_formato', 'left');
+        $builder->join('tipo_recurso tr', 'tr.id_tipo_recurso = p.id_tipo_recurso', 'left');
         $builder->where('p.dni_usuario', $dni);
-
+ 
         if ($soloActivas) {
             $builder->where('p.estado', 1);
         }  

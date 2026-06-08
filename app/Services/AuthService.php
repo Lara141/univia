@@ -49,7 +49,7 @@ class AuthService
         // Usamos la verificación profunda para asegurar que tenemos datos de usuario para devolver.
         if (!$this->estaLogueado(true)) {
             return null;
-        }
+        } 
 
         $usuario = session()->get('usuario');
 

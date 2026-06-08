@@ -107,10 +107,14 @@ class ArchivoService
             throw new \Exception('Error al guardar el archivo en el servidor');
         }
 
+        $db = \Config\Database::connect();
+        $formatoRow = $db->table('formato')->where('slug', $extension)->get()->getRow();
+        $idFormato = $formatoRow ? (int)$formatoRow->id_formato : null;
+
         $idArchivo = $this->archivoModel->insert([
             'nombre_archivo' => $file->getClientName(),
-            'ruta' => self::RUTA_UPLOADS . '/' . $nombre,
-            'formato' => $extension,
+            'ruta'           => self::RUTA_UPLOADS . '/' . $nombre,
+            'id_formato'     => $idFormato,
         ]);
 
         if (!$idArchivo) {
@@ -144,7 +148,7 @@ class ArchivoService
 
         if (!$archivo) {
             throw new \Exception('Archivo no encontrado');
-        }
+        } 
 
         if (file_exists($archivo['ruta'])) {
             unlink($archivo['ruta']);

@@ -23,7 +23,7 @@ class UsuarioModel extends Model
     /** @var string Clave primaria de la tabla */
     protected $primaryKey = 'dni_usuario';
   
-    /**
+    /** 
      * Campos permitidos para insertar/actualizar
      * @var array
      */

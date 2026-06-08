@@ -27,7 +27,7 @@ class MateriaService
     public function obtenerMaterias(string $orden = 'ASC'): array
     {
         $db = Database::connect();
-
+ 
         // Se asegura que el valor de orden sea solo ASC o DESC para evitar inyecciones.
         $direccionOrden = (strtoupper($orden) === 'DESC') ? 'DESC' : 'ASC';
 

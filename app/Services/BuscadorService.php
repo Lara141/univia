@@ -36,10 +36,13 @@ class BuscadorService
     {
        $builder = $this->publicacionModel->builder();
 
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, f.slug as formato');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, f.slug as formato, tr.slug as tipo_recurso');
 
         $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('formato f', 'f.id_formato = a.id_formato', 'left');
+        $builder->join('tipo_recurso tr', 'tr.id_tipo_recurso = publicacion.id_tipo_recurso', 'left');
 
         $builder->where('publicacion.id_materia', $idMateria);
         $builder->where('publicacion.estado', 1);
@@ -67,11 +70,13 @@ class BuscadorService
     {
         $builder = $this->publicacionModel->builder();
 
-        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, a.formato, u.Nombre_usuario, u.Apellido_usuario');
+        $builder->select('publicacion.*, m.nombre_materia, a.nombre_archivo as file_name, a.ruta, f.slug as formato, u.Nombre_usuario, u.Apellido_usuario, tr.slug as tipo_recurso');
 
         $builder->join('materia m', 'm.id_materia = publicacion.id_materia', 'left');
         $builder->join('archivo a', 'a.id_archivo = publicacion.id_archivo', 'left');
+        $builder->join('formato f', 'f.id_formato = a.id_formato', 'left');
         $builder->join('usuario u', 'u.dni_usuario = publicacion.dni_usuario', 'left');
+        $builder->join('tipo_recurso tr', 'tr.id_tipo_recurso = publicacion.id_tipo_recurso', 'left');
 
         // ═══ ¡LLAMADAS a las funciones filtrar y ordenar ═══
         $this->filtrarResultados($builder, $filtros);
@@ -100,7 +105,7 @@ class BuscadorService
         }
 
         if (!empty($filtros['tipo'])) {
-            $builder->where('publicacion.tipo_recurso', $filtros['tipo']);
+            $builder->where('tr.slug', $filtros['tipo']);
         }
 
         if (!empty($filtros['acuerdo'])) {
@@ -108,13 +113,13 @@ class BuscadorService
         }
 
         if (!empty($filtros['formato'])) {
-            $builder->where('a.formato', $filtros['formato']);
+            $builder->where('f.slug', $filtros['formato']);
         }
     }
 
     /**
      * Establece el criterio de ordenamiento de la consulta (Más recientes primero).
-     */
+     */ 
     private function ordenarResultados($builder): void
     {
         $builder->orderBy('publicacion.fecha_publicacion', 'DESC');
