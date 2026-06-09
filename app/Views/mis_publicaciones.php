@@ -40,21 +40,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <div class="theme-row" id="theme-row">
-                                <div class="theme-row-left">
-                                    <i class="bi bi-moon-stars-fill t-icon" id="t-icon"></i>
-                                    <span id="t-label">Modo nocturno</span>
-                                </div>
-                                <label class="t-switch" title="Cambiar tema" onclick="event.stopPropagation()">
-                                    <input type="checkbox" id="t-checkbox">
-                                    <span class="t-track"></span>
-                                </label>
-                            </div>
-                        </li>
-
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li>
                             <a class="dropdown-item">
                                 <i class="bi bi-person-circle"></i> Mi Perfil
                             </a>

@@ -110,42 +110,4 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         });
     }
-
-    /* LÓGICA DEL TEMA (copiada para consistencia) */
-    (function () {
-        const ROOT = document.documentElement;
-        const KEY = 'univia_theme';
-        const cb = document.getElementById('t-checkbox');
-        const icon = document.getElementById('t-icon');
-        const lbl = document.getElementById('t-label');
-        if (!cb || !icon || !lbl) return; // Salir si no se encuentran los elementos
-        const CFG = {
-            dark: { icon: 'bi-moon-stars-fill', label: 'Modo nocturno', checked: true },
-            light: { icon: 'bi-sun-fill', label: 'Modo diurno', checked: false },
-        };
-        function apply(theme, anim) {
-            ROOT.dataset.theme = theme;
-            const c = CFG[theme];
-            cb.checked = c.checked; lbl.textContent = c.label;
-            if (anim) {
-                icon.style.transition = 'transform .28s ease, opacity .2s';
-                icon.style.opacity = '0'; icon.style.transform = 'rotate(90deg) scale(.7)';
-                setTimeout(() => {
-                    icon.className = 'bi ' + c.icon + ' t-icon';
-                    icon.style.transform = 'rotate(0deg) scale(1)'; icon.style.opacity = '1';
-                }, 200);
-            } else { icon.className = 'bi ' + c.icon + ' t-icon'; }
-            localStorage.setItem(KEY, theme);
-        }
-        apply(localStorage.getItem(KEY) || 'dark', false);
-        cb.addEventListener('change', function () { apply(this.checked ? 'dark' : 'light', true); });
-        const themeRow = document.getElementById('theme-row');
-        if (themeRow) {
-            themeRow.addEventListener('click', function (e) {
-                if (e.target !== cb && e.target.tagName !== 'LABEL') {
-                    cb.checked = !cb.checked; apply(cb.checked ? 'dark' : 'light', true);
-                }
-            });
-        }
-    })();
 });

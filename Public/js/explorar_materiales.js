@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 btnDescargar.dataset.requiresPayment = 'false';
             }
         } else {
-            descargaWrap.style.display = 'none';
+            descargaWrap.style.display = 'none'; 
         }
 
         // 4. Preparar el modal de pago

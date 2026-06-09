@@ -59,22 +59,6 @@ function fsel($pub, $key, $value, $default = '') {
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu dropdown-menu-end shadow">
                     
-                         <!-- Separador -->
-                        <li><hr class="dropdown-divider"></li>
-                        <!-- Toggle de tema (dark/light) -->
-                        <li>
-                            <div class="theme-row" id="theme-row">
-                                <div class="theme-row-left">
-                                    <i class="bi bi-moon-stars-fill t-icon" id="t-icon"></i>
-                                    <span id="t-label">Modo nocturno</span>
-                                </div>
-                                <!-- Switch -->
-                                <label class="t-switch" title="Cambiar tema" onclick="event.stopPropagation()">
-                                    <input type="checkbox" id="t-checkbox">
-                                    <span class="t-track"></span>
-                                </label>
-                            </div>
-                        </li>
                         <li><hr class="dropdown-divider"></li>
                          <!-- Links del usuario -->
                         <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> Mi Perfil</a></li>

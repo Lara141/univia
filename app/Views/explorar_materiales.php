@@ -42,7 +42,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         }
     </style>
      
-</head>
+</head> 
 <body>
 
 <nav class="univia-navbar">
@@ -67,21 +67,6 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
         </span>
     </li>
                    
-
-                        <li><hr class="dropdown-divider"></li>
-
-                        <li>
-                            <div class="theme-row" id="theme-row">
-                                <div class="theme-row-left">
-                                    <i class="bi bi-moon-stars-fill t-icon" id="t-icon"></i>
-                                    <span id="t-label">Modo nocturno</span>
-                                </div>
-                                <label class="t-switch" title="Cambiar tema" onclick="event.stopPropagation()">
-                                    <input type="checkbox" id="t-checkbox">
-                                    <span class="t-track"></span>
-                                </label>
-                            </div>
-                        </li>
 
                         <li><hr class="dropdown-divider"></li>
 

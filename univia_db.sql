@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2026 a las 15:00:35
+-- Tiempo de generación: 09-06-2026 a las 09:46:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 
 --
 -- Base de datos: `univia_db`
--- 
+--
 
 DELIMITER $$
 --
@@ -38,7 +38,6 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_publicacion` (IN `in_id_publicacion` INT, IN `in_titulo` VARCHAR(80), IN `in_descripcion` VARCHAR(500), IN `in_id_materia` INT, IN `in_id_tipo_recurso` INT, IN `in_tipo_acuerdo` VARCHAR(13), IN `in_precio` DECIMAL(10,2), IN `in_estado` TINYINT, IN `in_id_archivo` INT)   BEGIN
     -- Actualiza los campos de una publicación.
     -- Utiliza COALESCE para actualizar solo los campos que no son NULL.
-    -- Si un parámetro de entrada es NULL, el valor actual del campo se mantiene.
     UPDATE
         publicacion
     SET
@@ -56,13 +55,12 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_publicaciones_usuario` (IN `in_dni_usuario` INT, IN `in_solo_activas` BOOLEAN)   BEGIN
     -- Selecciona las publicaciones de un usuario específico.
-    -- Realiza un JOIN con las tablas 'materia', 'archivo' y 'formato' para obtener datos completos.
     SELECT
         p.*,
         m.nombre_materia,
         a.nombre_archivo AS file_name,
         a.ruta,
-        f.nombre_formato AS formato, -- Traemos el nombre del formato desde la tabla formato
+        f.nombre_formato AS formato,
         f.icono AS icono_formato
     FROM
         publicacion p
@@ -71,7 +69,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_publicaciones_usuario` (IN 
     LEFT JOIN
         archivo a ON a.id_archivo = p.id_archivo
     LEFT JOIN 
-        formato f ON a.id_formato = f.id_formato -- Nuevo JOIN para solucionar el error
+        formato f ON a.id_formato = f.id_formato
     WHERE
         p.dni_usuario = in_dni_usuario
         AND (in_solo_activas = 0 OR p.estado = 1)
@@ -118,7 +116,18 @@ INSERT INTO `archivo` (`id_archivo`, `nombre_archivo`, `ruta`, `id_formato`) VAL
 (27, 'Actividades 1 y 2 del MÓDULO 2 (22-04-26).docx', './uploads/archivos/1780275106_f8604f041bfdd8dbfec0.docx', 2),
 (28, 'Univia_Recuperatorio_TDC_AcostaLara-BenitezValentina.pdf', './uploads/archivos/1780276498_113c91813e9e9ad90b65.pdf', 1),
 (29, 'Mi_Investigación_VB (1).pdf', './uploads/archivos/1780544452_1336d56ac02ce8d58003.pdf', 1),
-(30, 'DS_FINAL.drawio (1).png', './uploads/archivos/1780547077_dd6f9cb566bf9c57dbaf.png', 5);
+(30, 'DS_FINAL.drawio (1).png', './uploads/archivos/1780547077_dd6f9cb566bf9c57dbaf.png', 5),
+(31, 'PATRONES 2019.pdf', './uploads/archivos/1780929250_0c55a4b38edb563dd74d.pdf', 1),
+(32, 'PATRONES 2019.pdf', './uploads/archivos/1780957066_b7e157747223d927d390.pdf', 1),
+(34, 'ISII_ColaboraciónEnTrabajoDeCampo.pdf', './uploads/archivos/1780960357_2cd5b9a91b2533b40592.pdf', 1),
+(35, 'ISII_Proyecto_Grupal.pdf', './uploads/archivos/1780960622_da202ea4097debe81413.pdf', 1),
+(36, 'ISII_ColaboraciónEnTrabajoDeCampo.pdf', './uploads/archivos/1780960944_6f56c42b644d3805a84e.pdf', 1),
+(37, 'diccionario_datos.pdf', './uploads/archivos/1780964855_242e5a311e039e5e2b49.pdf', 1),
+(38, 'PATRONES 2019.pdf', 'uploads/archivos/1780971616_01c85f060ca0b338e9a0.pdf', 1),
+(39, 'PATRONES 2019.pdf', 'uploads/archivos/1780972799_aa4a3fd6caa261f329db.pdf', 1),
+(40, '1er Practico.docx', 'uploads/archivos/1780980652_20478699fe4261d02fbb.docx', 2),
+(41, 'modelo parciales 2025.jpg', 'uploads/archivos/1780981962_ac1188b75e31f52fe9c7.jpg', 5),
+(42, 'Parciales Teoria de la computacion 2024.pdf', 'uploads/archivos/1780984668_b90b2a1db9b725675b9e.pdf', 1);
 
 -- --------------------------------------------------------
 
@@ -170,7 +179,6 @@ INSERT INTO `carrera_materia` (`id_carrera_materia`, `anio_cursado`, `id_carrera
 (1, NULL, 1, 1),
 (2, NULL, 1, 2),
 (3, NULL, 1, 3),
-(4, NULL, 1, 4),
 (5, NULL, 1, 5);
 
 -- --------------------------------------------------------
@@ -243,12 +251,11 @@ INSERT INTO `materia` (`id_materia`, `nombre_materia`) VALUES
 (1, 'Ingenieria de software 2'),
 (2, 'Probabilidad y estadistica'),
 (3, 'Base de datos 1'),
-(4, 'Ingeniería de software 2'),
 (5, 'Economia aplicada'),
 (6, 'Comunicación Global y Estratégica'),
 (7, 'Negocios y Marketing Internacional'),
 (8, 'Neurociencias'),
-(9, 'Psicologia general');
+(9, 'Teoría de la Computación');
 
 -- --------------------------------------------------------
 
@@ -269,12 +276,8 @@ CREATE TABLE `pago` (
 --
 
 INSERT INTO `pago` (`id_pago`, `dni_usuario`, `id_publicacion`, `fecha_pago`, `monto`) VALUES
-(1, 10200300, 11, '2026-06-04', 50.01),
-(2, 10200300, 16, '2026-06-04', 2000),
-(3, 10200300, 15, '2026-06-04', 6000),
-(4, 10200300, 26, '2026-06-04', 3999.99),
-(5, 90800700, 27, '2026-06-04', 500),
-(6, 90800700, 15, '2026-06-04', 6000);
+(9, 22333444, 32, '2026-06-09', 5000),
+(10, 22333444, 31, '2026-06-09', 4500);
 
 -- --------------------------------------------------------
 
@@ -301,20 +304,10 @@ CREATE TABLE `publicacion` (
 --
 
 INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `descripcion`, `id_tipo_recurso`, `tipo_acuerdo`, `precio`, `fecha_publicacion`, `estado`, `dni_usuario`, `id_materia`, `id_archivo`) VALUES
-(10, 'Practico N°0', 'Es el practico N°o de la materia de ingenieria 2, solo contiene un ejercicio practico sin resolver', 4, 'gratis', 0.00, '2026-05-07', 1, 22333444, 4, 11),
-(11, 'Modulo 1 de teoria', 'Contiene el módulo 1 completo de teoría con ejemplos prácticos', 5, 'pago', 50.01, '2026-05-07', 1, 22333444, 5, 13),
-(12, 'Modelo de examen final', 'Es un modelo de mesa de examen regular del año 2025', 3, 'gratis', 0.00, '2026-05-07', 0, 22333444, 3, 15),
-(13, 'Resumen de Economia Aplicada 2026', 'Este resumen lo hice cuando curse la materia, contiene un resumen de cada uno de los temas dados.', 1, 'gratis', 0.00, '2026-05-29', 0, 10200300, 5, 16),
-(14, 'Algebra y geometría analitica 2020', 'Estos examenes son del año 2020, te serviran para modelos y prácticar.', 3, 'gratis', 0.00, '2026-05-29', 1, 10200300, 3, 17),
-(15, 'Analsisi matematico II', 'Este libro contiene toda la información de la materia, de donde sacan los pdf para los temas abordados.', 2, 'pago', 6000.00, '2026-05-29', 1, 10200300, 2, 18),
-(16, 'Examenes de ingenieria 2', 'estos modelos de examenes de ingenieria 2 corresponden al primer parcial del año 2021', 3, 'pago', 2000.00, '2026-05-31', 1, 10200300, 4, 19),
-(20, 'Guia de ejercicios de Probabilidad 2022', 'contiene la guia de tp resueltos', 4, 'gratis', 0.00, '2026-06-01', 1, 10200300, 2, 23),
-(21, 'Presentación de optimización de Ingenieria 2', 'incluye la presentacion de la clase', 5, 'gratis', 0.00, '2026-06-01', 1, 10200300, 4, 24),
-(22, 'Resumen mio de Programacion 1', 'En este resumen se encuentran todas las unidades del primer cuatrimestre', 1, 'gratis', 0.00, '2026-06-01', 1, 90800700, 1, 25),
-(23, 'Base de datos 1 - Tema 4 al 9', 'En este material vas a encontrar los temas de bdd 1, correspondientes al segundo parcial. Del año 2018', 5, 'gratis', 0.00, '2026-06-01', 1, 90800700, 1, 26),
-(25, 'Apunte de la materia neurociencias cursada en el año 2020', 'Este apunte contiene los temas abordados en neurociencias, del tema 1 al 10. En el año 2020', 5, 'gratis', 0.00, '2026-06-01', 1, 90800700, 8, 28),
-(26, 'Proyecto integardor de economia', 'En este documento vana  encontrar nuestro proyecto integrador con la caul aprobamos la materia econpomia aplicada el año 2026. Tambien ganamos el 2do puesto del hackaton', 5, 'pago', 3999.99, '2026-06-04', 1, 10200300, 5, 29),
-(27, 'Diagrama de secuencia de ejemplo', 'Este diagrama de secuencia les ayudara a saber que quieren lso profes que hagan', 5, 'pago', 500.00, '2026-06-04', 1, 90800700, 4, 30);
+(29, 'Patrones de diseño', 'Es una presentación o apunte teórico sobre Patrones de Diseño de Software orientado a la materia de Ingeniería del Software II. Explica qué son los patrones, por qué son útiles y cómo se clasifican (creacionales, estructurales y de comportamiento). Además, detalla la estructura, aplicación y diagramas de patrones específicos como Singleton, Factory Method, Abstract Factory, Builder, Observer, Strategy, entre otros.', 5, 'gratis', 0.00, '2026-06-09', 1, 22333444, 1, 39),
+(30, 'Practico N°1', 'Es un trabajo práctico grupal universitario titulado \"Hablamos de Emprender\". El documento desarrolla el análisis de una problemática real y propone una idea de negocio: crear una plataforma web que, ingresando la patente de un vehículo usado, centralice todo su historial y situación legal. El objetivo del proyecto es ofrecer una alternativa más rápida y económica al servicio tradicional de los gestores, e incluye un análisis FODA de la propuesta.', 4, 'gratis', 0.00, '2026-06-09', 0, 22333444, 5, 40),
+(31, 'Modelo de 1er Parcial Teorico', 'Es una fotografía tomada a la pantalla de un proyector que muestra un modelo de examen (el primer parcial de 2025) dividido en \"Fila 1\" y \"Fila 2\". Las preguntas corresponden a la rama de teoría de lenguajes formales y autómatas, abarcando temas como concatenación de lenguajes, gramáticas, máquinas de Mealy y Moore, y las diferencias entre autómatas finitos determinísticos y no determinísticos (AEF).', 3, 'pago', 4500.00, '2026-06-09', 1, 22333444, 3, 41),
+(32, 'Parciales Teóricos y Prácticos', 'En este documento podrás encontrar múltiples modelos de parcial del año 2024', 3, 'pago', 5000.00, '2026-06-09', 1, 22333444, 9, 42);
 
 -- --------------------------------------------------------
 
@@ -482,7 +475,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `carrera`
@@ -518,13 +511,13 @@ ALTER TABLE `materia`
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
-  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_recurso`

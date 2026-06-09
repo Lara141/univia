@@ -8,7 +8,7 @@
         --bg-surface:    #111422; /*secciones*/
         --bg-card:       #181c30; /*tarjetas*/
         --bg-card-alt:   #1c2035; /*Alternativa*/
-        --bg-input:      rgba(255,255,255,.04);
+        --bg-input:      rgba(255,255,255,.04); 
         --border:        rgba(255,255,255,.07);
         --border-hover:  rgba(91,127,255,.38);
         --accent:        #5b7fff; /*Color principal*/
