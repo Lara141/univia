@@ -9,6 +9,7 @@ use App\Services\PagoService;
 use App\Services\PublicacionService;
 use App\Strategies\DescargaGratisStrategia;
 use App\Strategies\DescargaPagoStrategia;
+use DI\ContainerBuilder; // 1. ¡Importamos la herramienta principal de la librería!
 
 
 /**  
@@ -55,21 +56,31 @@ class DescargarController extends BaseController
             return redirect()->back()->with('error', 'El archivo solicitado no está disponible.');
         }
 
-        // 1. Diccionario de estrategias
-        $estrategias = [
-            'gratis' => new DescargaGratisStrategia(),
-            'pago'   => new DescargaPagoStrategia($this->pagoService)
-        ];
-
-        // 2. Seleccionar la estrategia en tiempo de ejecución
         $tipoAcuerdo = $publicacion['tipo_acuerdo'];
-        if (!isset($estrategias[$tipoAcuerdo])) {
+
+        // ==========================================
+        // 🚀 INICIO DE LA MAGIA CON PHP-DI
+        // ==========================================
+        
+        $builder = new ContainerBuilder();
+
+        // Le enseñamos al contenedor nuestras estrategias.
+        // Al usar \DI\autowire(), la librería lee tus clases y automáticamente
+        // se da cuenta de que DescargaPagoStrategia necesita a PagoService, y se lo inyecta sola.
+        $builder->addDefinitions([
+            'estrategia.gratis' => \DI\autowire(DescargaGratisStrategia::class),
+            'estrategia.pago'   => \DI\autowire(DescargaPagoStrategia::class),
+        ]);
+
+        $container = $builder->build();
+
+        if (!$container->has('estrategia.' . $tipoAcuerdo)) {
             return redirect()->back()->with('error', 'Tipo de acuerdo desconocido.');
         }
-
-        // 3. Ejecutar la estrategia
         try {
-            $estrategias[$tipoAcuerdo]->validarAcceso($publicacion, $dni);
+            // Ya no usamos 'new'. El contenedor nos entrega la clase lista para usar.
+            $estrategia = $container->get('estrategia.' . $tipoAcuerdo);
+            $estrategia->validarAcceso($publicacion, $dni);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
