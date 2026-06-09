@@ -7,6 +7,8 @@ use App\Models\ArchivoModel;
 use App\Services\ArchivoService;
 use App\Services\PagoService;
 use App\Services\PublicacionService;
+use App\Strategies\DescargaGratisStrategia;
+use App\Strategies\DescargaPagoStrategia;
 
 
 /**  
@@ -53,15 +55,26 @@ class DescargarController extends BaseController
             return redirect()->back()->with('error', 'El archivo solicitado no está disponible.');
         }
 
-        // Regla de Negocio Crítica: Si es pago, verificar que exista el registro en la tabla pago
-        if ($publicacion['tipo_acuerdo'] === 'pago') {
-            $yaPagado = $this->pagoService->verificarPagoExistente($dni, (int)$id);
-            if (!$yaPagado) {
-                return redirect()->back()->with('error', 'Acceso denegado. Requiere completar el formulario de pago.');
-            }
+        // 1. Diccionario de estrategias
+        $estrategias = [
+            'gratis' => new DescargaGratisStrategia(),
+            'pago'   => new DescargaPagoStrategia($this->pagoService)
+        ];
+
+        // 2. Seleccionar la estrategia en tiempo de ejecución
+        $tipoAcuerdo = $publicacion['tipo_acuerdo'];
+        if (!isset($estrategias[$tipoAcuerdo])) {
+            return redirect()->back()->with('error', 'Tipo de acuerdo desconocido.');
         }
 
-       // Limpiamos la ruta por si viene con './' desde la base de datos
+        // 3. Ejecutar la estrategia
+        try {
+            $estrategias[$tipoAcuerdo]->validarAcceso($publicacion, $dni);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
+        // Limpiamos la ruta por si viene con './' desde la base de datos
         $rutaRelativa = $publicacion['ruta'];
         if (str_starts_with($rutaRelativa, './')) {
             $rutaRelativa = substr($rutaRelativa, 2);
