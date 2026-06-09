@@ -9,7 +9,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 ?> 
 
 <!DOCTYPE html>
- 
+  
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -20,7 +20,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link href="<?= base_url('Public/css/resultados_busqueda.css') ?>" rel="stylesheet">
-
+ 
 </head>
 
 <body>

@@ -1,237 +1,169 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const modalDetalle = document.getElementById('modalDetalle');
+    const modalPagoRequeridoEl = document.getElementById('modalPagoRequerido');
+    const modalPagoSimuladoEl = document.getElementById('modalPagoSimulado');
 
-/*
-|--------------------------------------------------------------------------
-| GESTIÓN DE TEMA (MODO CLARO / OSCURO)
-|--------------------------------------------------------------------------
-| Permite cambiar entre modo nocturno y diurno.
-| La preferencia seleccionada se almacena en localStorage para que
-| permanezca activa al recargar la página.
-*/ 
-(function () {
-    const ROOT     = document.documentElement;
-    const KEY      = 'univia_theme';
-    const checkbox = document.getElementById('t-checkbox');
-    const iconEl   = document.getElementById('t-icon');
-    const labelEl  = document.getElementById('t-label');
+    if (!modalDetalle || !modalPagoRequeridoEl || !modalPagoSimuladoEl) {
+        console.error('Uno o más modales no se encontraron en el DOM.');
+        return;
+    }
 
-    // dark = checkbox checked | light = unchecked
-    const CFG = {
-        dark:  { icon: 'bi-moon-stars-fill', label: 'Modo nocturno', checked: true  },
-        light: { icon: 'bi-sun-fill',         label: 'Modo diurno',   checked: false },
+    const modalPagoRequerido = new bootstrap.Modal(modalPagoRequeridoEl);
+    const modalPagoSimulado = new bootstrap.Modal(modalPagoSimuladoEl);
+
+    let currentPubData = {};
+    let isProceedingToPayment = false; // Flag para controlar el flujo de modales
+
+    const ARCHIVO_ICON = {
+        pdf:'bi-file-earmark-pdf',   doc:'bi-file-earmark-word', docx:'bi-file-earmark-word',
+        ppt:'bi-file-earmark-slides',pptx:'bi-file-earmark-slides',
+        xls:'bi-file-earmark-excel', xlsx:'bi-file-earmark-excel',
+        zip:'bi-file-earmark-zip',   rar:'bi-file-earmark-zip',
+        jpg:'bi-image', jpeg:'bi-image', png:'bi-image', webp:'bi-image',
     };
-/*
-|--------------------------------------------------------------------------
-| Aplicar tema seleccionado
-|--------------------------------------------------------------------------
-| Actualiza:
-| - Tema visual de la página
-| - Estado del checkbox
-| - Ícono correspondiente
-| - Texto descriptivo
-| - Preferencia almacenada en localStorage
-*/
-    function apply(theme, animate) {
-        ROOT.dataset.theme  = theme;
-        const c             = CFG[theme];
-        checkbox.checked    = c.checked;
-        labelEl.textContent = c.label;
 
-        if (animate) {
-            iconEl.style.transition = 'transform .28s ease, opacity .2s ease';
-            iconEl.style.opacity    = '0';
-            iconEl.style.transform  = 'rotate(90deg) scale(.7)';
-            setTimeout(() => {
-                iconEl.className        = 'bi ' + c.icon + ' t-icon';
-                iconEl.style.transform  = 'rotate(0deg) scale(1)';
-                iconEl.style.opacity    = '1';
-            }, 200);
+    modalDetalle.addEventListener('show.bs.modal', function (event) {
+        const card = event.relatedTarget;
+        currentPubData = card.dataset;
+
+        // 1. Poblar los campos del modal de detalles
+        document.getElementById('modal-titulo').textContent = currentPubData.titulo;
+        document.getElementById('modal-materia').textContent = currentPubData.materia;
+        document.getElementById('modal-autor').textContent = currentPubData.autor;
+        document.getElementById('modal-descripcion').innerHTML = currentPubData.descripcion.replace(/\n/g, '<br>');
+        document.getElementById('modal-tipo-recurso').textContent = currentPubData.tipoRecurso;
+        document.getElementById('modal-tipo-acuerdo').textContent = currentPubData.tipoAcuerdo;
+        document.getElementById('modal-precio').textContent = currentPubData.tipoAcuerdo === 'pago' ? `$${parseFloat(currentPubData.precio).toFixed(2)}` : 'Gratis';
+        document.getElementById('modal-estado').textContent = currentPubData.estado;
+        document.getElementById('modal-fecha').textContent = currentPubData.fecha;
+        document.getElementById('modal-nombre-archivo').textContent = currentPubData.nombreArchivo || '—';
+        document.getElementById('modal-nombre-imagen').textContent = currentPubData.nombreImagen || '—';
+
+        // 2. Poblar los badges
+        const badgesContainer = document.getElementById('modal-badges');
+        badgesContainer.innerHTML = `
+            <span class="badge-tipo badge-${currentPubData.tipoRecurso}">${currentPubData.tipoRecurso}</span>
+            <span class="badge-acuerdo badge-${currentPubData.tipoAcuerdo}">
+                <i class="bi ${currentPubData.tipoAcuerdo === 'gratis' ? 'bi-gift' : 'bi-currency-dollar'}"></i>
+                ${currentPubData.tipoAcuerdo}
+            </span>
+        `;
+
+        // 2.5 Lógica para la vista previa del archivo
+        const previewWrap = document.getElementById('modal-preview-wrap');
+        previewWrap.style.display = 'none';
+        previewWrap.innerHTML = '';
+
+        const esLibroFisico = currentPubData.esLibroFisico === '1';
+        const urlImagen = currentPubData.urlImagen || '';
+        const urlArchivo = currentPubData.urlArchivo || '';
+        const ext = (currentPubData.nombreArchivo || '').split('.').pop().toLowerCase();
+
+        if (urlImagen) {
+            previewWrap.style.display = 'block';
+            const label = esLibroFisico ? 'Libro físico' : 'Vista previa';
+            const labelIcon = esLibroFisico ? 'bi-book-half' : 'bi-image';
+            previewWrap.innerHTML =
+                `<img src="${urlImagen}" alt="Vista previa" class="modal-cover-img">
+                 <span class="preview-tag"><i class="bi ${labelIcon} me-1"></i>${label}</span>`;
+
+        } else if (ext === 'pdf' && urlArchivo) {
+            previewWrap.style.display = 'block';
+            previewWrap.innerHTML =
+                `<iframe src="${urlArchivo}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=FitH"
+                         class="modal-pdf-frame" title="Primeras páginas" loading="lazy"></iframe>
+                 <span class="preview-tag"><i class="bi bi-file-earmark-pdf me-1"></i>Primeras páginas</span>`;
+
+        } else if (urlArchivo) {
+            const ic = ARCHIVO_ICON[ext] || 'bi-file-earmark';
+            previewWrap.style.display = 'block';
+            previewWrap.innerHTML =
+                `<div class="modal-preview-ph">
+                    <i class="bi ${ic}"></i>
+                    <span>Vista previa no disponible para <strong>.${ext}</strong></span>
+                    <span style="font-size:.75rem; color:var(--text-muted);">${currentPubData.nombreArchivo}</span>
+                 </div>`;
+        }
+
+        // 3. Lógica para el botón de descarga
+        const descargaWrap = document.getElementById('modal-descarga-wrap');
+        const btnDescargar = document.getElementById('modal-btn-descargar');
+        
+        const tieneArchivo = currentPubData.urlArchivo && currentPubData.urlArchivo !== '';
+        const esPago = currentPubData.tipoAcuerdo === 'pago';
+        const yaPagado = currentPubData.pagado === '1';
+
+        if (tieneArchivo) {
+            descargaWrap.style.display = 'block';
+            
+            if (esPago && !yaPagado) {
+                // De pago, pero no comprado. El botón activará la notificación.
+                btnDescargar.href = '#';
+                btnDescargar.removeAttribute('target');
+                btnDescargar.dataset.requiresPayment = 'true';
+            } else {
+                // Gratis o ya pagado. Descarga directa.
+                btnDescargar.href = `${site_url}/publicaciones/descargar/${currentPubData.id}`;
+                btnDescargar.setAttribute('target', '_blank');
+                btnDescargar.dataset.requiresPayment = 'false';
+            }
         } else {
-            iconEl.className = 'bi ' + c.icon + ' t-icon';
+            descargaWrap.style.display = 'none';
         }
 
-        localStorage.setItem(KEY, theme);
-    }
-
-    // Cargar preferencia guardada
-    apply(localStorage.getItem(KEY) || 'dark', false);
-
-   
-    checkbox.addEventListener('change', function () {
-        apply(this.checked ? 'dark' : 'light', true);
-    });
-
-    document.getElementById('theme-row').addEventListener('click', function (e) {
-        if (e.target !== checkbox && e.target.tagName !== 'LABEL') {
-            checkbox.checked = !checkbox.checked;
-            apply(checkbox.checked ? 'dark' : 'light', true);
+        // 4. Preparar el modal de pago
+        if (esPago) {
+            document.getElementById('pago-titulo-material').textContent = currentPubData.titulo;
+            document.getElementById('pago-autor-material').textContent = currentPubData.autor;
+            document.getElementById('pago-precio-material').textContent = `$${parseFloat(currentPubData.precio).toFixed(2)}`;
+            const formPago = document.getElementById('form-pago-simulado');
+            const queryString = window.location.search;
+            formPago.action = `${site_url}/pago/procesarPago/${currentPubData.id}${queryString}`;
         }
     });
-})();
 
+    // Listener para el botón de descarga
+    document.getElementById('modal-btn-descargar').addEventListener('click', function(e) {
+        if (this.dataset.requiresPayment === 'true') {
+            e.preventDefault();
+            const detailModalInstance = bootstrap.Modal.getInstance(modalDetalle);
+            if (detailModalInstance) {
+                detailModalInstance.hide();
+            }
+            modalPagoRequerido.show();
+        }
+    });
 
-const TIPO_RECURSO_LABEL = {
-    resumen: 'Resumen',           apunte:  'Apunte de clase',
-    libro:   'Libro',             examen:  'Examen / Parcial',
-    guia:    'Guía de ejercicios',otro:    'Otro',
-};
-const TIPO_ACUERDO_LABEL = {
-    gratis:      'Gratuito',
-    pago:        'Pago',
-};
-const TIPO_RECURSO_BADGE_CLASS = {
-    resumen:'badge-resumen', apunte:'badge-apunte', libro:'badge-libro',
-    examen:'badge-examen',   guia:'badge-guia',     otro:'badge-otro',
-};
-const TIPO_ACUERDO_BADGE_CLASS = {
-    gratis:'badge-gratis', pago:'badge-pago', 
-};
-const TIPO_ACUERDO_ICON = {
-    gratis:'bi-gift', pago:'bi-currency-dollar',
-};
-const ARCHIVO_ICON = {
-    pdf:'bi-file-earmark-pdf',   doc:'bi-file-earmark-word', docx:'bi-file-earmark-word',
-    ppt:'bi-file-earmark-slides',pptx:'bi-file-earmark-slides',
-    xls:'bi-file-earmark-excel', xlsx:'bi-file-earmark-excel',
-    zip:'bi-file-earmark-zip',   rar:'bi-file-earmark-zip',
-    jpg:'bi-image', jpeg:'bi-image', png:'bi-image', webp:'bi-image',
-};
-
-
-const modalEl = document.getElementById('modalDetalle');
-
-modalEl.addEventListener('show.bs.modal', function (e) {
-    const card = e.relatedTarget;
-    if (!card) return;
-    const d = card.dataset;
-
-    /* —— Título y materia —— */
-    document.getElementById('modal-titulo').textContent  = d.titulo   || '—';
-    document.getElementById('modal-materia').textContent = d.materia  || '—';
-    //Agregamos autor al modal
-    document.getElementById('modal-autor').textContent = d.autor || '—';
-
-    const trBC = TIPO_RECURSO_BADGE_CLASS[d.tipoRecurso] || 'badge-otro';
-    const taBC = TIPO_ACUERDO_BADGE_CLASS[d.tipoAcuerdo] || '';
-    const taIC = TIPO_ACUERDO_ICON[d.tipoAcuerdo] || 'bi-tag';
-    document.getElementById('modal-badges').innerHTML =
-        `<span class="badge-tipo ${trBC}">${TIPO_RECURSO_LABEL[d.tipoRecurso] || d.tipoRecurso}</span>` +
-        `<span class="badge-acuerdo ${taBC}"><i class="bi ${taIC}"></i>${TIPO_ACUERDO_LABEL[d.tipoAcuerdo] || d.tipoAcuerdo}</span>`;
-
-    /* —— Campos de detalle —— */
-    document.getElementById('modal-tipo-recurso').textContent = TIPO_RECURSO_LABEL[d.tipoRecurso] || d.tipoRecurso || '—';
-    document.getElementById('modal-tipo-acuerdo').textContent = TIPO_ACUERDO_LABEL[d.tipoAcuerdo] || d.tipoAcuerdo || '—';
-    document.getElementById('modal-fecha').textContent        = d.fecha       || '—';
-    document.getElementById('modal-descripcion').textContent  = d.descripcion || '—';
-
-    // Precio
-    const precioVal = parseFloat(d.precio) || 0;
-    if (d.tipoAcuerdo === 'pago') {
-        document.getElementById('modal-precio').textContent = '$' + precioVal;
-    } else {
-        document.getElementById('modal-precio').textContent = 'Gratis';
+    // Listener para el botón "Pagar" en la notificación
+    const btnProcederPago = document.getElementById('btn-proceder-pago');
+    if (btnProcederPago) {
+        btnProcederPago.addEventListener('click', function() {
+            isProceedingToPayment = true; // 1. Marcamos que vamos a pagar
+            modalPagoRequerido.hide();
+            // El evento 'hidden.bs.modal' se encargará de mostrar el siguiente modal
+        });
     }
 
-    // Estado
-    const activo = d.estado === 'activo';
-    document.getElementById('modal-estado').innerHTML =
-        `<span class="status-dot ${activo ? 'status-active' : 'status-inactive'}" style="display:inline-block;margin-right:5px;"></span>` +
-        (activo ? 'Activo' : 'Inactivo');
+    // Al cerrar el modal de pago, volver al de detalles
+    modalPagoSimuladoEl.addEventListener('hidden.bs.modal', function (event) {
+        const detailModalInstance = bootstrap.Modal.getInstance(modalDetalle);
+        if (detailModalInstance && !modalDetalle.classList.contains('show')) {
+             detailModalInstance.show();
+        }
+    });
 
-    // Nombre del archivo
-    const archEl = document.getElementById('modal-nombre-archivo');
-    archEl.innerHTML = d.nombreArchivo
-        ? `<span class="file-name-chip"><i class="bi bi-paperclip"></i>${d.nombreArchivo}</span>`
-        : '<span style="color:var(--text-muted);">Sin archivo adjunto</span>';
-
-    // Nombre de laimagen
-    const imgEl = document.getElementById('modal-nombre-imagen');
-    imgEl.innerHTML = d.nombreImagen
-        ? `<span class="file-name-chip"><i class="bi bi-image"></i>${d.nombreImagen}</span>`
-        : '<span style="color:var(--text-muted);">Sin imagen de portada</span>';
-
-   
-    const previewWrap   = document.getElementById('modal-preview-wrap');
-    previewWrap.style.display = 'none';
-    previewWrap.innerHTML     = '';
-
-    const esLibroFisico = d.esLibroFisico === '1';
-    const urlImagen     = d.urlImagen  || '';
-    const urlArchivo    = d.urlArchivo || '';
-    const ext           = (d.nombreArchivo || '').split('.').pop().toLowerCase();
-
-    if (urlImagen) {
-        // Imagen de portada 
-        previewWrap.style.display = 'block';
-        const label = esLibroFisico ? 'Libro físico' : 'Vista previa';
-        const labelIcon = esLibroFisico ? 'bi-book-half' : 'bi-image';
-        previewWrap.innerHTML =
-            `<img src="${urlImagen}" alt="Vista previa" class="modal-cover-img">
-             <span class="preview-tag"><i class="bi ${labelIcon} me-1"></i>${label}</span>`;
-
-    } else if (ext === 'pdf' && urlArchivo) {
-        
-        previewWrap.style.display = 'block';
-        previewWrap.innerHTML =
-            `<iframe src="${urlArchivo}#toolbar=0&navpanes=0&scrollbar=0&page=1&view=FitH"
-                     class="modal-pdf-frame" title="Primeras páginas" loading="lazy"></iframe>
-             <span class="preview-tag"><i class="bi bi-file-earmark-pdf me-1"></i>Primeras páginas</span>`;
-
-    } else if (urlArchivo) {
-        
-        const ic = ARCHIVO_ICON[ext] || 'bi-file-earmark';
-        previewWrap.style.display = 'block';
-        previewWrap.innerHTML =
-            `<div class="modal-preview-ph">
-                <i class="bi ${ic}"></i>
-                <span>Vista previa no disponible para <strong>.${ext}</strong></span>
-                <span style="font-size:.75rem; color:var(--text-muted);">${d.nombreArchivo}</span>
-             </div>`;
-    }
-/* —— Lógica Transaccional de Descarga y Pago (Estructura en Modales) —— */
-const descWrap = document.getElementById('modal-descarga-wrap');
-const btnPagar = document.getElementById('modal-btn-pagar');
-const formPago = document.getElementById('form-pago-simulado');
-let btnDesc   = document.getElementById('modal-btn-descargar');
-
-// Completar datos del resumen de compra
-
-document.getElementById('pago-titulo-material').textContent =
-    d.titulo;
-
-document.getElementById('pago-precio-material').textContent =
-    '$' + d.precio;
-    document.getElementById('pago-autor-material').textContent =
-    d.autor;
-
-const esPago   = d.tipoAcuerdo === 'pago';
-const yaPagado = d.pagado === '1';
-
-
-// ═══ ¡ESTA LÍNEA CAMBIÓ! ═══
-// Agregamos window.location.search para arrastrar los filtros GET (?q=...&materia=...) al enviar el formulario
-formPago.action = `${site_url}/publicaciones/pagar/${d.id}${window.location.search}`;
-
-if (urlArchivo && !esLibroFisico) {
-    // Variante 1: Es gratuito o ya fue pagado previamente (Diagrama 1 o Éxito del Diagrama 2)
-    if (!esPago || yaPagado) {
-        descWrap.style.display = 'block'; // Mostramos el botón de descarga
-        btnPagar.style.display = 'none';   // Ocultamos el botón de pago
-        
-        // Reconfiguramos de forma limpia el enlace binario seguro
-        const newBtnDesc = btnDesc.cloneNode(true);
-        btnDesc.parentNode.replaceChild(newBtnDesc, btnDesc);
-        newBtnDesc.href = `${site_url}/publicaciones/descargar/${d.id}`;
-        newBtnDesc.setAttribute('target', '_blank');
-    }  
-    // Variante 2: Requiere pago (Diagrama 2 - Inicio)
-    else {
-        descWrap.style.display = 'none';  // Bloqueamos el acceso físico al archivo
-        btnPagar.style.display = 'block'; // Mostramos el botón para disparar el modal de pago
-    }
-} else {
-    descWrap.style.display = 'none';
-    btnPagar.style.display = 'none';
-}
-
-// Las acciones de editar/eliminar no están en esta vista.
+    // Al cerrar la notificación, decidir a dónde ir
+    modalPagoRequeridoEl.addEventListener('hidden.bs.modal', function (event) {
+        if (isProceedingToPayment) {
+            // 2. Si marcamos que íbamos a pagar, ahora mostramos el modal de pago
+            modalPagoSimulado.show();
+            isProceedingToPayment = false; // 3. Reseteamos el flag para el próximo uso
+        } else {
+            // Si no, es que el usuario canceló (con la 'X' o el botón Cancelar), así que volvemos a los detalles
+            const detailModalInstance = bootstrap.Modal.getInstance(modalDetalle);
+            if (detailModalInstance && !modalDetalle.classList.contains('show')) {
+                 detailModalInstance.show();
+            }
+        }
+    });
 });

@@ -9,7 +9,7 @@ use App\Services\PublicacionService;
 
 /**
  * Controlador de publicaciones
- * 
+ *  
  * Responsable de:
  *   - CRUD completo de publicaciones (crear, leer, actualizar, eliminar)
  *   - Gestión de publicaciones del usuario autenticado
@@ -142,8 +142,10 @@ class PublicacionController extends BaseController
             ];
 
             $archivo = $this->request->getFile('archivo');
+            $imagenPortada = $this->request->getFile('imagen_portada');
 
-            $this->publicacionService->procesarPublicacion($datos, $archivo, $usuario['dni_usuario']);
+            // Pasamos ambos archivos al servicio. El servicio decidirá cuál usar.
+            $this->publicacionService->procesarPublicacion($datos, $archivo, $imagenPortada, $usuario['dni_usuario']);
 
             return redirect()->to('publicaciones/propias/' . $usuario['dni_usuario'])
                 ->with('mensaje', 'Publicación subida con éxito');
@@ -201,7 +203,8 @@ class PublicacionController extends BaseController
 
             $archivo = $this->request->getFile('archivo');
             if ($archivo && $archivo->isValid()) {
-                $idArchivo = $this->publicacionService->procesarArchivo($archivo);
+                $formatoSlug = $this->request->getPost('formato_archivo');
+                $idArchivo = $this->publicacionService->procesarArchivo($archivo, $formatoSlug);
                 $datos['id_archivo'] = $idArchivo;
             }
 

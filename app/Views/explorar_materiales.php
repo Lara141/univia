@@ -17,7 +17,7 @@
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
 $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,20 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="<?= base_url('Public/css/explorar_materiales.css') ?>">
-    
+    <style>
+        .badge-comprado {
+            background-color: var(--success-light);
+            color: var(--success);
+            padding: 0.25em 0.6em;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+    </style>
+     
 </head>
 <body>
 
@@ -130,6 +143,19 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             <div>
                 <span class="fw-bold" style="font-family: 'Syne', sans-serif;">¡Excelente!</span><br>
                 <?= session()->getFlashdata('mensaje') ?>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: var(--close-filter);"></button>
+    </div>
+<?php endif; ?>
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert"
+         style="background-color: rgba(248, 113, 113, 0.1); color: var(--danger); border-radius: 12px; border-left: 5px solid var(--danger) !important;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.2rem;"></i>
+            <div>
+                <span class="fw-bold" style="font-family: 'Syne', sans-serif;">¡Atención!</span><br>
+                <?= session()->getFlashdata('error') ?>
             </div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: var(--close-filter);"></button>
@@ -282,16 +308,16 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                         class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'pdf' ? 'active' : '' ?>">
                             PDF
                         </a>
-                        <a href="<?= filtroUrl('formato', 'docx', $currentFilters) ?>"
-                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'docx' ? 'active' : '' ?>">
+                        <a href="<?= filtroUrl('formato', 'word', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'word' ? 'active' : '' ?>">
                             Word
                         </a>
-                    <a href="<?= filtroUrl('formato', 'jpeg', $currentFilters) ?>"
-                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'jpeg' ? 'active' : '' ?>">
+                    <a href="<?= filtroUrl('formato', 'imagen', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'imagen' ? 'active' : '' ?>">
                             PNG / JPG
                         </a>
-                        <a href="<?= filtroUrl('formato', 'pptx', $currentFilters) ?>"
-                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'pptx' ? 'active' : '' ?>">
+                        <a href="<?= filtroUrl('formato', 'powerpoint', $currentFilters) ?>"
+                        class="filter-pill w-48 <?= ($filtros['formato'] ?? '') == 'powerpoint' ? 'active' : '' ?>">
                             pptx
                         </a>
 
@@ -328,8 +354,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             
             // 2. Lógica del archivo y su vista previa
             $nombre_archivo = (string) esc($pub['file_name'] ?? '');
-            $ruta_archivo = !empty($pub['ruta']) ? base_url($pub['ruta']) : '';
+            $ruta_preview = !empty($pub['ruta']) ? site_url('publicaciones/preview/' . $pub['id_publicacion']) : '';
             $formato = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+            $is_image = in_array($formato, ['jpg', 'jpeg', 'png', 'webp']);
             
             // 3. Variables para datos de la publicación
             $id_publicacion = (string) esc($pub['id_publicacion'] ?? '');
@@ -378,9 +405,9 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                  data-nombre-archivo="<?= $nombre_archivo ?>"
                  data-nombre-imagen=""
                  data-es-libro-fisico="0"
-                 data-descargas="0"
-                 data-url-imagen=""
-                 data-url-archivo="<?= $ruta_archivo ?>">
+                 data-descargas="0" 
+                 data-url-imagen="<?= $is_image ? $ruta_preview : '' ?>"
+                 data-url-archivo="<?= $ruta_preview ?>">
 
                 <div class="card-preview">
                     <i class="bi <?= $preview_icon ?> card-preview-icon" style="color:<?= $preview_color ?>;"></i>
@@ -398,6 +425,11 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                         <span class="badge-acuerdo badge-<?= $tipo_acuerdo ?>">
                             <i class="bi <?= $tipo_acuerdo == 'gratis' ? 'bi-gift' : 'bi-currency-dollar' ?>"></i><?= ucfirst($tipo_acuerdo) ?>
                         </span>
+                        <?php if ($pub['ya_pagado']): ?>
+                            <span class="badge-comprado">
+                                <i class="bi bi-bag-check-fill"></i> Comprado
+                            </span>
+                        <?php endif; ?>
                     </div>
      
 
@@ -507,13 +539,30 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
                             <i class="bi bi-download"></i> Descargar archivo
                         </a>
                     </div>
-                    
-                    <button type="button" id="modal-btn-pagar" class="btn btn-warning btn-sm fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalPagoSimulado" style="display:none; border-radius:9px; padding: 8px 16px;">
-                        <i class="bi bi-credit-card-2-front-fill me-1"></i> Realizar Pago
-                    </button>
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Notificación de Pago Requerido -->
+<div class="modal fade" id="modalPagoRequerido" tabindex="-1" aria-labelledby="modalPagoRequeridoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPagoRequeridoLabel"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Pago Requerido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Para descargar este material, primero debés realizar el pago.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-proceder-pago" class="btn btn-warning fw-bold text-dark">
+                    <i class="bi bi-credit-card-fill me-1"></i> Pagar
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -662,7 +711,7 @@ $autor_completo = $autor_nombre . ' ' . $autor_apellido;
 
                 <div class="modal-footer border-top border-secondary">
 
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalDetail">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Volver
                     </button>
 

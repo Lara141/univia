@@ -119,6 +119,13 @@ function previewImagen(input) {
         document.getElementById('preview-img-el').src = e.target.result;
         document.getElementById('preview-img-el').style.display = 'block';
         document.getElementById('preview-no-img').style.display = 'none';
+
+        // UX Improvement: si no hay un archivo principal, auto-seleccionar formato 'imagen'
+        if (document.getElementById('archivo').files.length === 0) {
+            const formatoSelect = document.getElementById('formato_archivo');
+            formatoSelect.value = 'imagen';
+            formatoSelect.dispatchEvent(new Event('change')); // Para actualizar la vista previa
+        }
     };
     reader.readAsDataURL(input.files[0]);
 }
@@ -136,6 +143,15 @@ let TIPO_BADGE_CLASS = {
 const ACUERDO_LABEL = { gratis:'Gratis', pago:'Pago' };
 const ACUERDO_BADGE_CLASS = {
     gratis:'mbadge-gratis', pago:'mbadge-pago'
+};
+const FORMATO_ICONO = {
+    'pdf': 'bi-file-earmark-pdf',
+    'word': 'bi-file-earmark-word',
+    'excel': 'bi-file-earmark-excel',
+    'powerpoint': 'bi-file-earmark-slides',
+    'imagen': 'bi-image',
+    'comprimido': 'bi-file-earmark-zip',
+    'fisico': 'bi-book'
 };
 
 function updatePreview() {
@@ -166,13 +182,28 @@ function updatePreview() {
         bAcu.textContent = ACUERDO_LABEL[tipoA.value] || '';
         bAcu.style.display = '';
     } else { bAcu.style.display = 'none'; }
+
+    // Icono de archivo
+    const formato = document.getElementById('formato_archivo').value;
+    const previewIcon = document.getElementById('preview-no-img');
+    const previewImg = document.getElementById('preview-img-el');
+
+    // Si hay una imagen de portada, esa tiene prioridad.
+    if (previewImg.style.display === 'block') {
+        previewIcon.style.display = 'none';
+    } else {
+        // Si no, mostramos el icono del formato.
+        previewIcon.style.display = 'block';
+        const iconClass = FORMATO_ICONO[formato] || 'bi-file-earmark';
+        previewIcon.className = `bi ${iconClass} no-img`;
+    }
 }
 
 document.getElementById('titulo').addEventListener('input', updatePreview);
 document.getElementById('materia').addEventListener('input', updatePreview);
 document.getElementById('tipo_recurso').addEventListener('change', updatePreview);
 document.querySelectorAll('[name="tipo_acuerdo"]').forEach(r => r.addEventListener('change', updatePreview));
-
+document.getElementById('formato_archivo').addEventListener('change', updatePreview);
 
 /* LÓGICA DE VALIDACIÓN DE FORMATO */
 
@@ -236,7 +267,7 @@ const errorModal = errorModalElement ? new bootstrap.Modal(errorModalElement, {
     keyboard: false // Opcional: previene que se cierre con ESC
 }) : null;
 
-/**
+/** 
  * Populates a <select> element from an API endpoint.
  * @param {string} selectId - The ID of the select element.
  * @param {string} apiUrl - The URL of the API endpoint.
@@ -329,18 +360,22 @@ form.addEventListener('submit', function(e) {
     }
     // Archivo (Validación combinada)
     const archivoInp = document.getElementById('archivo');
-    const existingFile = document.getElementById('existing-file');
+    const imagenPortadaInp = document.getElementById('imagen_portada');
+    const tieneArchivoExistente = !!document.getElementById('existing-file');
     const esLibroFisico = document.getElementById('formato_archivo').value === 'fisico';
-    const tieneArchivoExistente = !!existingFile;
     const errArchivo = document.getElementById('err-archivo');
 
-    // 1. Validar si es requerido
-    if (!esLibroFisico && !tieneArchivoExistente && archivoInp.files.length === 0) {
-        errArchivo.textContent = 'Por favor seleccioná un archivo.';
+    // 1. Validar si es requerido un archivo (principal o de portada)
+    if (!esLibroFisico && !tieneArchivoExistente && archivoInp.files.length === 0 && imagenPortadaInp.files.length === 0) {
+        errArchivo.textContent = 'Por favor, seleccioná un archivo o una imagen de portada.';
         errArchivo.style.display = 'block';
         valid = false;
-    } else if (!validarCoherenciaArchivoFormato()) {
-        // 2. Validar coherencia de formato (solo si el paso anterior es OK)
+    } else {
+        errArchivo.style.display = 'none';
+    }
+
+    // 2. Validar coherencia de formato si se subió un archivo principal
+    if (archivoInp.files.length > 0 && !validarCoherenciaArchivoFormato()) {
         valid = false;
     }
 

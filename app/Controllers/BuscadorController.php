@@ -11,7 +11,7 @@ use App\Services\PagoService;
  *
  * Responsable de recibir filtros desde la interfaz, buscar publicaciones
  * activas y determinar si el usuario ya pagó por recursos de pago.
- *
+ * 
  * @package App\Controllers
  */
 class BuscadorController extends BaseController

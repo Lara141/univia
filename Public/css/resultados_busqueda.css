@@ -19,7 +19,7 @@
 }
 
 /* Configuración base */
-body {
+body { 
     background-color: var(--bg-base);
     color: var(--text);
     font-family: 'DM Sans', sans-serif;

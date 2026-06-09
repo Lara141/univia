@@ -13,7 +13,7 @@ use App\Models\PublicacionModel;
  * @package App\Services
  */
 class BuscadorService
-{
+{ 
     private PublicacionModel $publicacionModel;
 
     /**

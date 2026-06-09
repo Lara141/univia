@@ -58,25 +58,46 @@ class PublicacionService
      * @throws \Exception Si hay error en validación o guardado
      * @return void
      */
-    public function procesarPublicacion(array $datos, $archivo, string $dniUsuario)
+    public function procesarPublicacion(array $datos, $archivo, $imagenPortada, string $dniUsuario)
     {
         // Agregamos el DNI del usuario a los datos para una validación centralizada
         $datos['dni_usuario'] = $dniUsuario;
         $this->validarDatos($datos, true); // true indica que es una creación
 
+        // El archivo a usar como principal. Por defecto, el 'archivo'.
+        $archivoPrincipal = $archivo;
+
+        // Si no se subió un 'archivo' pero sí una 'imagen_portada', usamos la imagen como principal.
+        if ((!$archivo || !$archivo->isValid()) && ($imagenPortada && $imagenPortada->isValid())) {
+            $archivoPrincipal = $imagenPortada;
+            // Forzamos el formato a 'imagen' para que la validación y el guardado sean coherentes.
+            $datos['formato_archivo'] = 'imagen';
+        }
+
         // NUEVA VALIDACIÓN: Coherencia entre formato y archivo
-        $this->validarCoherenciaFormatoArchivo($datos, $archivo);
+        $this->validarCoherenciaFormatoArchivo($datos, $archivoPrincipal);
 
         $idArchivo = null;
 
         // Un archivo solo es requerido si no es un libro físico
         $esLibroFisico = isset($datos['formato_archivo']) && $datos['formato_archivo'] === 'fisico';
 
-        if ($archivo && $archivo->isValid()) {
-            $idArchivo = $this->archivoService->guardar($archivo);
+        if ($archivoPrincipal && $archivoPrincipal->isValid()) {
+            $formatoSlug = $datos['formato_archivo'] ?? null;
+            if (empty($formatoSlug)) {
+                throw new \Exception("Debe seleccionar un formato para el material.");
+            }
+
+            $formatoRow = $this->db->table('formato')->where('slug', $formatoSlug)->get()->getRow();
+            if (!$formatoRow) {
+                throw new \Exception("El formato de material '{$formatoSlug}' no es válido.");
+            }
+            $idFormato = (int)$formatoRow->id_formato;
+
+            $idArchivo = $this->archivoService->guardar($archivoPrincipal, $idFormato);
         } elseif (!$esLibroFisico) {
-            // Si no es un libro físico y no se subió un archivo válido, es un error.
-            throw new \Exception("El archivo es obligatorio para publicaciones digitales.");
+            // Si no es un libro físico y no se subió un archivo válido (ni principal ni de portada), es un error.
+            throw new \Exception("Es obligatorio subir un archivo o una imagen de portada para publicaciones digitales.");
         }
 
         $publicacion = $this->construirPublicacion($datos, $idArchivo);
@@ -93,9 +114,21 @@ class PublicacionService
      * @return int ID del archivo guardado
      * @throws \Exception Si el archivo no es válido
      */
-    public function procesarArchivo($archivo)
+    public function procesarArchivo($archivo, ?string $formatoSlug)
     {
-        return $this->archivoService->guardar($archivo);
+        if (empty($formatoSlug)) {
+            throw new \Exception("Debe seleccionar un formato para el archivo que está subiendo.");
+        }
+
+        $this->validarCoherenciaFormatoArchivo(['formato_archivo' => $formatoSlug], $archivo);
+
+        $formatoRow = $this->db->table('formato')->where('slug', $formatoSlug)->get()->getRow();
+        if (!$formatoRow) {
+            throw new \Exception("El formato de material '{$formatoSlug}' no es válido.");
+        }
+        $idFormato = (int)$formatoRow->id_formato;
+
+        return $this->archivoService->guardar($archivo, $idFormato);
     }
 
         /**
@@ -133,13 +166,29 @@ class PublicacionService
      */
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
     {
-        // Llamamos al procedimiento almacenado en lugar de usar el Query Builder.
-        // Pasamos los parámetros en el orden correcto: DNI y el booleano convertido a 1 o 0.
+        // Se vuelve a utilizar el Stored Procedure como solicitaste.
         $sql = "CALL obtener_publicaciones_usuario(?, ?)";
-        
         $query = $this->db->query($sql, [$dni, (int)$soloActivas]);
+        $publicaciones = $query->getResultArray();
 
-        return $query->getResultArray();
+        // Para que los filtros de la vista funcionen, necesitamos el 'slug' del tipo de recurso.
+        // Como el Stored Procedure no lo devuelve, lo "enriquecemos" aquí en PHP.
+        // NOTA: Esto es un poco menos eficiente que si el Stored Procedure hiciera el JOIN,
+        // pero cumple con el requisito de usar el procedimiento.
+        if (!empty($publicaciones)) {
+            // 1. Obtenemos todos los tipos de recurso de una vez para evitar consultas en bucle.
+            $tiposRecurso = $this->db->table('tipo_recurso')->get()->getResultArray();
+            // 2. Creamos un mapa de ID => slug para búsqueda rápida.
+            $mapaTipos = array_column($tiposRecurso, 'slug', 'id_tipo_recurso');
+
+            // 3. Añadimos el slug a cada publicación.
+            foreach ($publicaciones as &$pub) {
+                $idTipo = $pub['id_tipo_recurso'] ?? null;
+                $pub['tipo_recurso'] = ($idTipo && isset($mapaTipos[$idTipo])) ? $mapaTipos[$idTipo] : 'otro';
+            }
+        }
+
+        return $publicaciones;
     }
 
     /**
@@ -251,10 +300,14 @@ class PublicacionService
      */
     private function guardarPublicacion(array $data)
     {
-        $resultado = $this->publicacionModel->insert($data);
+        // Se usa el Query Builder directamente para evitar problemas con la propiedad $allowedFields del modelo,
+        // que puede causar fallos silenciosos si no está correctamente configurada.
+        $resultado = $this->db->table('publicacion')->insert($data);
 
         if (!$resultado) {
-            throw new \Exception("Error al guardar la publicación en la base de datos");
+            $error = $this->db->error();
+            log_message('error', 'Error de BD al guardar publicación: ' . ($error['message'] ?? 'Error desconocido'));
+            throw new \Exception("Ocurrió un error al guardar la publicación en la base de datos.");
         }
     }
 
@@ -332,3 +385,4 @@ class PublicacionService
     }
   
 }
+ 

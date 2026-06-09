@@ -18,7 +18,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
     <link href="<?= base_url('Public/css/mis_publicaciones.css') ?>" rel="stylesheet">
 </head>
 <body> 
- 
+  
 <nav class="univia-navbar">
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
@@ -184,8 +184,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             
             // 2. Lógica del archivo y su vista previa
             $nombre_archivo = (string) esc($pub['file_name'] ?? '');
-            $ruta_archivo = !empty($pub['ruta']) ? base_url($pub['ruta']) : '';
+            $ruta_preview = !empty($pub['ruta']) ? site_url('publicaciones/preview/' . $pub['id_publicacion']) : '';
             $formato = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+            $is_image = in_array($formato, ['jpg', 'jpeg', 'png', 'webp']);
             
             // 3. Variables para datos de la publicación
             $id_publicacion = (string) esc($pub['id_publicacion'] ?? '');
@@ -223,9 +224,9 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
                  data-nombre-archivo="<?= $nombre_archivo ?>"
                  data-nombre-imagen=""
                  data-es-libro-fisico="0"
-                 data-descargas="0"
-                 data-url-imagen=""
-                 data-url-archivo="<?= $ruta_archivo ?>">
+                 data-descargas="0" 
+                 data-url-imagen="<?= $is_image ? $ruta_preview : '' ?>"
+                 data-url-archivo="<?= $ruta_preview ?>">
 
                 <div class="card-preview">
                     <i class="bi <?= $preview_icon ?> card-preview-icon" style="color:<?= $preview_color ?>;"></i>

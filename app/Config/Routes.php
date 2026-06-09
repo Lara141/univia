@@ -15,7 +15,9 @@ $routes->post('auth/login/(:segment)', 'AuthController::login/$1');
 $routes->get('auth/logout', 'AuthController::logout');
 $routes->get('auth/logout/(:segment)', 'AuthController::logout/$1');
 
-// Registro
+// Registro 
+$routes->post('pago/procesarPago/(:num)', 'PagoController::procesarPago/$1');
+
 $routes->get('auth/registro', 'AuthController::registro_vista');
 $routes->get('auth/registro/(:segment)', 'AuthController::registro_vista/$1');
 $routes->post('auth/procesar_registro', 'AuthController::procesar_registro');
@@ -79,5 +81,8 @@ $routes->get('publicaciones/explorar/(:segment)', 'BuscadorController::explorar/
 // Ruta para abrir/descargar el PDF en otra pestaña
 $routes->get('publicaciones/descargar/(:num)', 'DescargarController::descargar/$1');
 
+// Ruta para la vista previa de archivos (inline)
+$routes->get('publicaciones/preview/(:num)', 'DescargarController::preview/$1');
+
 // Ruta para procesar el formulario de pago simulado 
-$routes->post('publicaciones/pagar/(:num)', 'PagoController::procesarPago/$1'); 
+// $routes->post('publicaciones/pagar/(:num)', 'PagoController::procesarPago/$1'); // Ruta obsoleta. La correcta está definida arriba.

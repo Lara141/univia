@@ -121,7 +121,24 @@ function fsel($pub, $key, $value, $default = '') {
             </div>
         </div>
     </div>
-</section>
+</section> 
+
+<!-- Bloque para mostrar mensajes de error -->
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="container-lg mt-4">
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert"
+             style="background-color: rgba(248, 113, 113, 0.1); color: var(--danger); border-radius: 12px; border-left: 5px solid var(--danger) !important;">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.2rem;"></i>
+                <div>
+                    <span class="fw-bold" style="font-family: 'Syne', sans-serif;">¡Error!</span><br>
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: var(--close-filter);"></button>
+        </div>
+    </div>
+<?php endif; ?>
 
 
 <!--Formulario principal-->
@@ -514,5 +531,5 @@ function fsel($pub, $key, $value, $default = '') {
 </script>
 <script src="<?= base_url('Public/js/formulario_publicacion.js') ?>"></script>
 
-</body>
+</body> 
 </html> 

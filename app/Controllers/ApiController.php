@@ -9,7 +9,7 @@ use App\Services\ArchivoService;
 use App\Services\PublicacionService;
 use App\Services\BuscadorService;
  
-/**
+/**  
  * Controlador de APIs REST
  * Retorna datos en formato JSON
  */

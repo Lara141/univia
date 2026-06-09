@@ -15,7 +15,7 @@ use Config\Database;
  * 
  * @author Sistema Univia
  * @package App\Services
- */  
+ */   
 class MateriaService
 {
     /**

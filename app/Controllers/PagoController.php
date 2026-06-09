@@ -10,7 +10,7 @@ use App\Services\PagoService;
 
 /**  
  * Controlador de pago simulado para publicaciones de tipo pago.
- *
+ * 
  * Valida los datos ingresados por el usuario y registra la transacción
  * en la tabla de pagos para habilitar descargas posteriores.
  *
@@ -77,7 +77,7 @@ class PagoController extends BaseController
         $query_string = $_SERVER['QUERY_STRING'] ?? '';
         $ruta_retorno = 'publicaciones/explorar' . (!empty($query_string) ? '?' . $query_string : '');
      
-        return redirect()->to($ruta_retorno)
+        return redirect()->to(site_url($ruta_retorno))
                         ->with('mensaje', '¡Pago registrado con éxito! El archivo ya se encuentra desbloqueado para su descarga.');
     }
 

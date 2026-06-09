@@ -14,7 +14,7 @@ use Config\Database;
  */
 class PagoService
 {
-    /**
+    /** 
      * Verifica si un estudiante ya pagó por una publicación específica.
      *
      * @param string $dni DNI del usuario

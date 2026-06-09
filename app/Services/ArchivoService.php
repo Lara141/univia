@@ -8,7 +8,7 @@ use App\Models\ArchivoModel;
  * ═══════════════════════════════════════════════════════════════
  * SERVICIO: GESTIÓN DE ARCHIVOS
  * ═══════════════════════════════════════════════════════════════
- * 
+ *  
  * Responsable de:
  *   - Validar archivos subidos (tamaño, extensión)
  *   - Guardar archivos en el servidor
@@ -24,7 +24,8 @@ use App\Models\ArchivoModel;
  */
 class ArchivoService
 {  
-    private const RUTA_UPLOADS = './uploads/archivos';
+    // Ruta relativa a WRITEPATH donde se guardarán los archivos.
+    private const RUTA_UPLOADS_REL = 'uploads/archivos';
     private const MAX_TAMANIO = 20480000; // 20MB en bytes
     private const EXTENSIONES_PERMITIDAS = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'jpg', 'png', 'jpeg'];
 
@@ -52,7 +53,7 @@ class ArchivoService
      * @return int ID del archivo guardado
      * @throws \Exception Si el archivo no cumple las reglas
      */
-    public function guardar($file)
+    public function guardar($file, int $idFormato)
     {
         if (!$file || !$file->isValid()) {
             throw new \Exception('Archivo inválido o no proporcionado');
@@ -60,7 +61,7 @@ class ArchivoService
 
         $this->validarArchivo($file);
 
-        return $this->guardarArchivo($file);
+        return $this->guardarArchivo($file, $idFormato);
     }
 
     /**
@@ -98,21 +99,22 @@ class ArchivoService
      * @return int ID del archivo en la BD
      * @throws \Exception Si ocurre error durante el guardado
      */
-    private function guardarArchivo($file): int
+    private function guardarArchivo($file, int $idFormato): int
     {
         $extension = strtolower($file->getClientExtension());
         $nombre = $file->getRandomName();
 
-        if (!$file->move(self::RUTA_UPLOADS, $nombre)) {
+        // Construimos la ruta de destino absoluta para evitar la "magia" del método move().
+        $destinationPath = WRITEPATH . self::RUTA_UPLOADS_REL;
+
+        if (!$file->move($destinationPath, $nombre)) {
             throw new \Exception('Error al guardar el archivo en el servidor');
-        } 
-        $db = \Config\Database::connect();
-        $formatoRow = $db->table('formato')->where('slug', $extension)->get()->getRow();
-        $idFormato = $formatoRow ? (int)$formatoRow->id_formato : null;
+        }
 
         $idArchivo = $this->archivoModel->insert([
             'nombre_archivo' => $file->getClientName(),
-            'ruta'           => self::RUTA_UPLOADS . '/' . $nombre,
+            // Guardamos la ruta relativa a WRITEPATH en la base de datos.
+            'ruta'           => self::RUTA_UPLOADS_REL . '/' . $nombre,
             'id_formato'     => $idFormato,
         ]);
 
