@@ -5,10 +5,6 @@ namespace App\Services;
 use App\Models\ArchivoModel;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * SERVICIO: GESTIÓN DE ARCHIVOS
- * ═══════════════════════════════════════════════════════════════
- *  
  * Responsable de:
  *   - Validar archivos subidos (tamaño, extensión)
  *   - Guardar archivos en el servidor
@@ -48,7 +44,7 @@ class ArchivoService
      *   1. Valida que el archivo sea válido
      *   2. Valida tamaño y extensión
      *   3. Guarda en servidor y registra en BD
-     * 
+     *  
      * @param object $file Archivo subido (de $_FILES)
      * @return int ID del archivo guardado
      * @throws \Exception Si el archivo no cumple las reglas

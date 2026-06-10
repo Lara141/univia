@@ -5,10 +5,6 @@ namespace App\Services;
 use Config\Database;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * SERVICIO: GESTIÓN DE MATERIAS
- * ═══════════════════════════════════════════════════════════════
- * 
  * Responsable de:
  *   - Obtener listado de materias
  *   - Ordenamiento de materias
@@ -16,7 +12,7 @@ use Config\Database;
  * @author Sistema Univia
  * @package App\Services
  */   
-class MateriaService
+class MateriaService 
 {
     /**
      * Obtiene todas las materias disponibles ordenadas alfabéticamente

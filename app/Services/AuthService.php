@@ -3,13 +3,9 @@
 namespace App\Services;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * SERVICIO: GESTIÓN DE AUTENTICACIÓN
- * ═══════════════════════════════════════════════════════════════
- * 
  * Centraliza la lógica de seguridad y gestión de la sesión del usuario.
  * Es la única fuente de verdad sobre el estado de autenticación.
- *  
+ *   
  * @author Sistema Univia
  * @package App\Services
  */ 

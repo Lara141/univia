@@ -5,10 +5,6 @@ namespace App\Services;
 use App\Models\PublicacionModel;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * SERVICIO: GESTIÓN DE PUBLICACIONES
- * ═══════════════════════════════════════════════════════════════
- * 
  * Responsable de:
  *   - CRUD de publicaciones
  *   - Procesamiento y validación de datos
@@ -27,13 +23,21 @@ use App\Models\PublicacionModel;
  */
 class PublicacionService
 {
+    /** @var ArchivoService Servicio para gestionar la carga y guardado de archivos. */
     private ArchivoService $archivoService;
+
+    /** @var PublicacionModel Modelo para interactuar con la tabla 'publicacion'. */
     private PublicacionModel $publicacionModel;
+
+    /** @var \CodeIgniter\Database\BaseConnection Conexión a la base de datos. */
     private \CodeIgniter\Database\BaseConnection $db;
 
     /**
-     * Constructor del servicio
+     * Constructor del servicio.
      * 
+     * Inyecta las dependencias necesarias para la gestión de publicaciones,
+     * archivos y la conexión a la base de datos.
+     *
      * @param ArchivoService $archivoService Servicio de gestión de archivos
      * @param PublicacionModel|null $publicacionModel Modelo (opcional)
      */
@@ -106,13 +110,14 @@ class PublicacionService
     }
 
     /**
-     * Procesa un archivo de forma aislada (usado en edición)
+     * Procesa y guarda un archivo de forma aislada, devolviendo su ID.
      * 
-     * Utilizado en la edición de publicaciones
+     * Utilizado principalmente durante la edición de una publicación para subir o cambiar un archivo.
      * 
-     * @param object $archivo Archivo subido
-     * @return int ID del archivo guardado
-     * @throws \Exception Si el archivo no es válido
+     * @param \CodeIgniter\HTTP\Files\UploadedFile $archivo Archivo subido.
+     * @param string|null $formatoSlug Slug del formato seleccionado.
+     * @return int ID del archivo guardado en la base de datos.
+     * @throws \Exception Si el archivo o el formato no son válidos.
      */
     public function procesarArchivo($archivo, ?string $formatoSlug)
     {
@@ -132,12 +137,12 @@ class PublicacionService
     }
 
         /**
-     * Obtiene una publicación específica por su ID
+     * Obtiene los datos completos de una publicación específica por su ID.
      * 
-     * Incluye información del archivo adjunto
+     * Realiza los JOINS necesarios para incluir nombres de materia, archivo y formato.
      *
-     * @param int $id ID de la publicación
-     * @return array|null Array con datos completos o null si no existe
+     * @param int $id ID de la publicación a obtener.
+     * @return array|null Array con los datos completos de la publicación o null si no se encuentra.
      */
     public function obtenerPublicacionPorId(int $id): ?array
     {
@@ -156,16 +161,17 @@ class PublicacionService
     }
 
     /**
-     * Obtiene todas las publicaciones de un usuario específico
+     * Obtiene todas las publicaciones de un usuario específico.
      * 
-     * Realiza joins para obtener información de materia y archivo
+     * Utiliza el procedimiento almacenado `obtener_publicaciones_usuario` y enriquece
+     * los resultados en PHP para añadir el 'slug' del tipo de recurso.
      * 
-     * @param string $dni DNI del usuario propietario
-     * @param bool $soloActivas true = solo activas (estado=1), false = todas
-     * @return array Array de publicaciones con datos completos
+     * @param string $dni DNI del usuario.
+     * @param bool $soloActivas Si es true, devuelve solo las publicaciones con estado 1.
+     * @return array Un array de publicaciones.
      */
     public function obtenerPublicacionesUsuario(string $dni, bool $soloActivas = true): array
-    {
+    { 
         // Se vuelve a utilizar el Stored Procedure como solicitaste.
         $sql = "CALL obtener_publicaciones_usuario(?, ?)";
         $query = $this->db->query($sql, [$dni, (int)$soloActivas]);
@@ -194,10 +200,12 @@ class PublicacionService
     /**
      * Valida que la extensión del archivo subido sea coherente con el formato seleccionado.
      * Esta es una validación de seguridad en el backend.
+     * Por ejemplo, si el formato es 'pdf', el archivo debe tener extensión '.pdf'.
      *
-     * @param array $datos Los datos del formulario, incluyendo 'formato_archivo'.
-     * @param \CodeIgniter\HTTP\Files\UploadedFile|null $archivo El archivo subido.
+     * @param array $datos Datos del formulario, debe contener 'formato_archivo'.
+     * @param \CodeIgniter\HTTP\Files\UploadedFile|null $archivo El archivo subido para comparar.
      * @throws \Exception Si el formato y el archivo no son coherentes.
+     * @return void
      */
     private function validarCoherenciaFormatoArchivo(array $datos, $archivo)
     {
@@ -227,10 +235,12 @@ class PublicacionService
     }
 
     /**
-     * Valida todos los campos requeridos de una publicación
+     * Valida los campos de una publicación antes de guardarla.
      * 
-     * @param array $datos Datos a validar
-     * @throws \Exception Si falta algún campo obligatorio
+     * @param array $datos Datos a validar.
+     * @param bool $esCreacion Indica si la validación es para una nueva publicación (más estricta).
+     * @throws \Exception Si algún dato obligatorio falta o es inválido.
+     * @return void
      */
     private function validarDatos(array $datos, bool $esCreacion = false)
     {
@@ -262,11 +272,12 @@ class PublicacionService
     }
 
     /**
-     * Construye el array de datos para insertar en la base de datos
+     * Construye un array con los datos de la publicación, listo para ser insertado en la BD.
      * 
-     * @param array $datos Datos de entrada
-     * @param int $idArchivo ID del archivo
-     * @return array Datos listos para guardar
+     * @param array $datos Datos del formulario.
+     * @param int|null $idArchivo ID del archivo guardado, si aplica.
+     * @return array Array de datos listo para ser insertado en la tabla 'publicacion'.
+     * @throws \Exception Si el tipo de recurso no es válido.
      */
     private function construirPublicacion(array $datos, $idArchivo)
     {
@@ -293,10 +304,11 @@ class PublicacionService
     }
 
     /**
-     * Guarda la publicación en la base de datos
+     * Guarda la publicación en la base de datos usando el Query Builder.
      * 
-     * @param array $data Datos de la publicación
-     * @throws \Exception Si hay error en la inserción
+     * @param array $data Datos de la publicación a insertar.
+     * @throws \Exception Si ocurre un error en la base de datos durante la inserción.
+     * @return void
      */
     private function guardarPublicacion(array $data)
     {
@@ -312,13 +324,13 @@ class PublicacionService
     }
 
     /**
-     * Actualiza los datos de una publicación existente
-     * 
-     * Si se actualiza el estado, se normaliza el valor (activo/1 o inactivo/0)
+     * Actualiza los datos de una publicación existente usando el procedimiento almacenado `actualizar_publicacion`.
      *
-     * @param int $id ID de la publicación
-     * @param array $datos Campos a actualizar
-     * @return bool true si se actualizó correctamente
+     * Convierte slugs a IDs y normaliza valores antes de llamar al procedimiento.
+     *
+     * @param int $id ID de la publicación a actualizar.
+     * @param array $datos Campos a actualizar.
+     * @return bool True si la actualización fue exitosa, false en caso contrario.
      */
     public function actualizarPublicacion(int $id, array $datos): bool
     {
@@ -355,10 +367,10 @@ class PublicacionService
     }
 
     /**
-     * Normaliza el valor de estado a 1 (activo) o 0 (inactivo)
+     * Normaliza un valor de estado a un entero (1 o 0).
      *
-     * @param mixed $estado Valor a normalizar (puede ser string, int, bool)
-     * @return int 1 si activo, 0 si inactivo
+     * @param mixed $estado El valor de estado a normalizar (string, int, bool).
+     * @return int Devuelve 1 para 'activo' o 0 para cualquier otro valor.
      */
     private function normalizarEstado($estado): int
     {
@@ -370,10 +382,10 @@ class PublicacionService
     }
 
     /**
-     * Marca una publicación como inactiva (no la elimina)
+     * Marca una publicación como inactiva (estado = 0) usando un procedimiento almacenado.
      *
-     * @param int $id ID de la publicación
-     * @return bool true si se actualizó correctamente
+     * @param int $id ID de la publicación a marcar como inactiva.
+     * @return bool True si la operación fue exitosa.
      */ 
     public function marcarPublicacionInactiva(int $id): bool
     {
