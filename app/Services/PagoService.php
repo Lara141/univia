@@ -13,7 +13,7 @@ use Config\Database;
  * @package App\Services
  */
 class PagoService
-{
+{ 
     /** 
      * Verifica si un estudiante ya pagó por una publicación específica.
      *

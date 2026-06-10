@@ -8,7 +8,7 @@ use CodeIgniter\Model;
  * ═══════════════════════════════════════════════════════════════
  * 
  * Gestión de archivos adjuntos a las publicaciones
- *  
+ *   
  * Tabla: archivo
  * Clave primaria: id_archivo
  *   

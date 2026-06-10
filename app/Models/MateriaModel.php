@@ -9,7 +9,7 @@ use CodeIgniter\Model;
  * ═══════════════════════════════════════════════════════════════
  * 
  * Gestión de materias/asignaturas de la plataforma
- * 
+ *  
  * Tabla: materia
  * Clave primaria: id_materia
  *   

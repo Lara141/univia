@@ -159,7 +159,7 @@ class PublicacionService
      * Obtiene todas las publicaciones de un usuario específico
      * 
      * Realiza joins para obtener información de materia y archivo
-     *
+     * 
      * @param string $dni DNI del usuario propietario
      * @param bool $soloActivas true = solo activas (estado=1), false = todas
      * @return array Array de publicaciones con datos completos

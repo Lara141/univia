@@ -11,7 +11,7 @@ use CodeIgniter\Model;
  * 
  * Tabla: usuario
  * Clave primaria: dni_usuario
- * 
+ *  
  * @author Sistema Univia
  * @package App\Models
  */

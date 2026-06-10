@@ -116,7 +116,7 @@ class BuscadorService
             $builder->where('f.slug', $filtros['formato']);
         }
     }
-
+ 
     /**
      * Establece el criterio de ordenamiento de la consulta (Más recientes primero).
      */ 

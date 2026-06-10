@@ -12,7 +12,7 @@ namespace App\Services;
  *  
  * @author Sistema Univia
  * @package App\Services
- */
+ */ 
 class AuthService
 {
     /**

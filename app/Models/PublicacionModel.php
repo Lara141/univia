@@ -11,7 +11,7 @@ use CodeIgniter\Model;
  * 
  * Tabla: publicacion
  * Clave primaria: id_publicacion
- * 
+ *  
  * Relaciones:
  *   - usuario (dni_usuario)
  *   - materia (id_materia)

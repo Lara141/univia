@@ -52,7 +52,7 @@ class ArchivoService
      * @param object $file Archivo subido (de $_FILES)
      * @return int ID del archivo guardado
      * @throws \Exception Si el archivo no cumple las reglas
-     */
+     */ 
     public function guardar($file, int $idFormato)
     {
         if (!$file || !$file->isValid()) {

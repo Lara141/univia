@@ -12,7 +12,7 @@ use Config\Database;
  * Responsable de:
  *   - Obtener listado de materias
  *   - Ordenamiento de materias
- * 
+ *  
  * @author Sistema Univia
  * @package App\Services
  */   
