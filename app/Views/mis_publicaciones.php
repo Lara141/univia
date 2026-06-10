@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * Vista: Mis Publicaciones (Panel de Usuario)
+ * -------------------------------------------
+ * Es el dashboard principal del usuario autenticado.
+ *
+ * Funcionalidades:
+ * - Muestra un saludo personalizado y estadísticas básicas.
+ * - Lista todas las publicaciones creadas por el usuario.
+ * - Permite filtrar las publicaciones por tipo de recurso.
+ * - Ofrece acceso para crear, editar o eliminar publicaciones.
+ *
+ * @var array $usuario       Datos del usuario autenticado.
+ * @var array $publicaciones Array con las publicaciones del usuario.
+ */
 
 // Extraer datos del usuario para evitar errores de analisis estatico
 $nombre_usuario = (string) ($usuario['nombre_usuario'] ?? '');
@@ -184,7 +198,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
             $preview_icon = 'bi-file-earmark';
             $preview_color = 'var(--text-muted)';
             $preview_text = 'Archivo';
-
+ 
             if ($formato === 'pdf') {
                 $preview_icon = 'bi-file-earmark-pdf'; $preview_color = '#ef4444'; $preview_text = 'PDF';
             } elseif (in_array($formato, ['doc', 'docx'])) {

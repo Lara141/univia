@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * Vista: Formulario de Publicación (Crear/Editar)
+ * -------------------------------------------------
+ * Formulario de doble propósito para crear una nueva publicación o editar una existente.
+ * El comportamiento y los campos mostrados se adaptan según el modo.
+ *
+ * Funcionalidades:
+ * - Carga dinámica de materias, tipos de recurso y formatos vía API.
+ * - Validación de campos en el lado del cliente (JavaScript).
+ * - Vista previa en tiempo real de la tarjeta de publicación.
+ * - Manejo de subida de archivos con drag-and-drop.
+ *
+ * @var bool   $modoEdicion  Indica si el formulario está en modo 'editar' (true) o 'crear' (false).
+ * @var array  $publicacion  Datos de la publicación (solo en modo edición).
+ * @var array  $usuario      Datos del usuario autenticado.
+ *
+ * @package App\Views
+ */
 
 // Determina si el formulario está en modo edición o creación
 $modoEdicion  = isset($modo) && $modo === 'editar';
@@ -122,7 +140,7 @@ function fsel($pub, $key, $value, $default = '') {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: var(--close-filter);"></button>
         </div>
     </div>
-<?php endif; ?>
+<?php endif; ?> 
 
 
 <!--Formulario principal-->

@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<?php
+/**
+ * Vista: Formulario de Registro
+ * -----------------------------
+ * Permite a los nuevos usuarios crear una cuenta en la plataforma.
+ *
+ * Funcionalidades:
+ * - Recopila datos personales y académicos.
+ * - Carga dinámica de carreras según la universidad seleccionada.
+ * - Validación de campos en el lado del cliente (JavaScript).
+ * - Muestra errores de validación del backend.
+ *
+ * @var array|null $errores_registro Errores de validación devueltos por el controlador.
+ * @package App\Views
+ */
+?>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
@@ -182,7 +198,7 @@
 
       
 
-    </form>
+    </form> 
   </div>
  <p class="login-link mt-3">¿Ya tenés cuenta?  <a href="<?= site_url() ?>">Iniciá sesión</a></p>
  </div>

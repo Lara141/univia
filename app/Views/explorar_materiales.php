@@ -2,15 +2,19 @@
 
 /**
  * Vista: Explorar Materiales
+ * ---------------------------
  *
  * Permite a los estudiantes:
  * - Buscar publicaciones mediante palabras clave.
- * - Filtrar por materia.
- * - Filtrar por tipo de recurso.
- * - Filtrar por disponibilidad.
- * - Filtrar por formato.
+ * - Aplicar filtros por tipo de recurso, disponibilidad (gratis/pago) y formato.
  * - Visualizar el detalle de una publicación.
- * - Descargar archivos cuando corresponda.
+ * - Iniciar el proceso de pago para materiales que lo requieran.
+ *
+ * @var array $usuario       Datos del usuario autenticado.
+ * @var array $publicaciones Array de publicaciones a mostrar.
+ * @var array $filtros       Array con los filtros de búsqueda actualmente aplicados.
+ *
+ * @package App\Views
  */
 
 // Extraer datos del usuario para evitar errores de analisis estatico
@@ -45,7 +49,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 </head> 
 <body>
 
-<nav class="univia-navbar">
+<nav class="univia-navbar"> 
     <div class="container-lg">
         <div class="d-flex align-items-center gap-3">
 

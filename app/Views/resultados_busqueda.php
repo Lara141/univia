@@ -1,6 +1,15 @@
 <?php
 /**
- * Muestra los resultados de búsqueda de publicaciones
+ * Vista: Resultados de Búsqueda
+ * ---------------------------------
+ * Muestra una lista de publicaciones que coinciden con los criterios de búsqueda
+ * proporcionados por el usuario.
+ *
+ * @var array $usuario      Datos del usuario autenticado.
+ * @var array $resultados   Array de publicaciones encontradas.
+ * @var array $filtros      Array con los filtros de búsqueda aplicados.
+ *
+ * @package App\Views
  */
 
 // Extraer datos del usuario para evitar errores en el analisis estatico
@@ -16,7 +25,7 @@ $apellido_usuario = (string) ($usuario['apellido_usuario'] ?? '');
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Resultados de búsqueda — Univia</title>
-
+ 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link href="<?= base_url('Public/css/resultados_busqueda.css') ?>" rel="stylesheet">

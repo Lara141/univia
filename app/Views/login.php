@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 
+<?php
+/**
+ * Vista: Inicio de Sesión
+ * -------------------------
+ * Presenta el formulario para que los usuarios ingresen a la plataforma.
+ * Muestra mensajes de error de validación o de estado (ej. registro exitoso).
+ *
+ * @var array|null $errors Errores de validación del formulario.
+ * @var string|null $error Mensaje de error general (ej. credenciales incorrectas).
+ *
+ * @package App\Views
+ */
+?>
 <?php 
 
 helper(['form', 'url', 'session']);
@@ -12,7 +25,7 @@ $password_error = (string) ($errors['password'] ?? '');
 ?>
 
 
-<html lang="es">
+<html lang="es"> 
 <head>
     <meta charset="UTF-8">
 
