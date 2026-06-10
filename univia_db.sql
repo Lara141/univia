@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-06-2026 a las 09:46:46
+-- Tiempo de generación: 10-06-2026 a las 17:18:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -127,7 +127,12 @@ INSERT INTO `archivo` (`id_archivo`, `nombre_archivo`, `ruta`, `id_formato`) VAL
 (39, 'PATRONES 2019.pdf', 'uploads/archivos/1780972799_aa4a3fd6caa261f329db.pdf', 1),
 (40, '1er Practico.docx', 'uploads/archivos/1780980652_20478699fe4261d02fbb.docx', 2),
 (41, 'modelo parciales 2025.jpg', 'uploads/archivos/1780981962_ac1188b75e31f52fe9c7.jpg', 5),
-(42, 'Parciales Teoria de la computacion 2024.pdf', 'uploads/archivos/1780984668_b90b2a1db9b725675b9e.pdf', 1);
+(42, 'Parciales Teoria de la computacion 2024.pdf', 'uploads/archivos/1780984668_b90b2a1db9b725675b9e.pdf', 1),
+(43, 'Economía Aplicada resumen de A.pdf', 'uploads/archivos/1781038265_f979b859d5a36d7eb042.pdf', 1),
+(44, 'Mi_Investigación_VB_Ing2.pdf', 'uploads/archivos/1781050996_1498b3ca04fde914921c.pdf', 1),
+(45, 'Guia de trabjos practicos 1_9.pdf', 'uploads/archivos/1781055200_4b960dc94679787adf94.pdf', 1),
+(46, 'AnalisMatematico.jpeg', 'uploads/archivos/1781055722_5cabe941cae2f37ad630.jpeg', 5),
+(47, 'Manual de usuario del sitema.pdf', 'uploads/archivos/1781056622_581ce3d5071e519eb188.pdf', 1);
 
 -- --------------------------------------------------------
 
@@ -307,7 +312,13 @@ INSERT INTO `publicacion` (`id_publicacion`, `titulo`, `descripcion`, `id_tipo_r
 (29, 'Patrones de diseño', 'Es una presentación o apunte teórico sobre Patrones de Diseño de Software orientado a la materia de Ingeniería del Software II. Explica qué son los patrones, por qué son útiles y cómo se clasifican (creacionales, estructurales y de comportamiento). Además, detalla la estructura, aplicación y diagramas de patrones específicos como Singleton, Factory Method, Abstract Factory, Builder, Observer, Strategy, entre otros.', 5, 'gratis', 0.00, '2026-06-09', 1, 22333444, 1, 39),
 (30, 'Practico N°1', 'Es un trabajo práctico grupal universitario titulado \"Hablamos de Emprender\". El documento desarrolla el análisis de una problemática real y propone una idea de negocio: crear una plataforma web que, ingresando la patente de un vehículo usado, centralice todo su historial y situación legal. El objetivo del proyecto es ofrecer una alternativa más rápida y económica al servicio tradicional de los gestores, e incluye un análisis FODA de la propuesta.', 4, 'gratis', 0.00, '2026-06-09', 0, 22333444, 5, 40),
 (31, 'Modelo de 1er Parcial Teorico', 'Es una fotografía tomada a la pantalla de un proyector que muestra un modelo de examen (el primer parcial de 2025) dividido en \"Fila 1\" y \"Fila 2\". Las preguntas corresponden a la rama de teoría de lenguajes formales y autómatas, abarcando temas como concatenación de lenguajes, gramáticas, máquinas de Mealy y Moore, y las diferencias entre autómatas finitos determinísticos y no determinísticos (AEF).', 3, 'pago', 4500.00, '2026-06-09', 1, 22333444, 3, 41),
-(32, 'Parciales Teóricos y Prácticos', 'En este documento podrás encontrar múltiples modelos de parcial del año 2024', 3, 'pago', 5000.00, '2026-06-09', 1, 22333444, 9, 42);
+(32, 'Parciales Teóricos y Prácticos', 'En este documento podrás encontrar múltiples modelos de parcial del año 2024', 3, 'pago', 5000.00, '2026-06-09', 1, 22333444, 9, 42),
+(33, 'Resumen de Economia Aplicada', 'En este documento pdf se encuentra un resumen detallado de las unidades 1 al 9 de la materia economia aplicada de la carrera lic. en sistemas de información. Cursada el año 2026', 1, 'gratis', 0.00, '2026-06-09', 1, 10200300, 5, 43),
+(34, 'Trabajo de investigación de ing 2', 'Este pdf contiene mi trabajo de investigacion para la materia de ingeniera de software 2. Pueden tomarlo como guía.', 5, 'gratis', 0.00, '2026-06-10', 1, 10200300, 1, 44),
+(35, 'Gui de trabajos practicos de probabilidad y estadistica. 2025', 'En este documento pdf se encuentra la guía de trabajos practicos con ejercicios resueltos del 1 al 9. De la materia probabilidad y estadistica del año 2025', 4, 'pago', 2000.00, '2026-06-10', 1, 10200300, 2, 45),
+(36, 'Libro de analisis matematico 1', 'Tengo el libro fisico de analisis matematico 1. Contiene todo lo dado en la materia mas demostraciones y ejercicios.', 2, 'gratis', 0.00, '2026-06-10', 1, 10200300, 2, 46),
+(37, 'Libro de anatomia humana', 'Poseo el libro físico de anatomía humana.', 3, 'pago', 10000.00, '2026-06-10', 1, 90800700, 8, NULL),
+(38, 'Anatomia de los animales domesticos 2024', 'Anatomia de los animales domesticos aparato locomotor. Pdf con todo lo abordado en el tema', 3, 'pago', 28000.00, '2026-06-10', 1, 90800700, 3, 47);
 
 -- --------------------------------------------------------
 
@@ -475,7 +486,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT de la tabla `carrera`
@@ -517,7 +528,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_publicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_recurso`
