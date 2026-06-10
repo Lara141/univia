@@ -5,26 +5,39 @@ namespace App\Services;
 use Config\Database;
 
 /**
- * Servicio de pago simulado.
- *
- * Administra la persistencia de pagos, la verificación de pagos realizados
- * y la validación básica de los datos de la transacción.
- *
+ * Responsable de:
+ *   - Verificar si un usuario ya ha pagado por una publicación.
+ *   - Registrar un nuevo pago en la base de datos.
+ *   - Validar los datos de un formulario de pago (tarjeta de crédito).
+ * 
+ * @author Sistema Univia
  * @package App\Services
  */
 class PagoService
 { 
-    /** 
-     * Verifica si un estudiante ya pagó por una publicación específica.
+    protected $db;
+
+    /**
+     * Constructor del servicio.
+     * Inicializa la conexión a la base de datos.
+     */
+    public function __construct()
+    {
+        // Centralizamos la conexión acá
+        $this->db = \Config\Database::connect();
+    }
+
+    /**
+     * Verifica si ya existe un pago registrado para un usuario y una publicación específicos.
      *
-     * @param string $dni DNI del usuario
-     * @param int $idPublicacion ID de la publicación
-     * @return bool True si existe el registro de pago, false en caso contrario
+     * @param string $dni DNI del usuario.
+     * @param int $idPublicacion ID de la publicación.
+     * @return bool True si el pago existe, false en caso contrario.
      */
     public function verificarPagoExistente(string $dni, int $idPublicacion): bool
     {
-        $db = \Config\Database::connect();
-        $resultado = $db->table('pago')
+        // Ahora usamos $this->db
+        $resultado = $this->db->table('pago')
                         ->where('dni_usuario', $dni)
                         ->where('id_publicacion', $idPublicacion)
                         ->get()
@@ -34,20 +47,17 @@ class PagoService
     }
 
     /**
-     * Inserta de forma física la transacción del pago simulado.
-     */
-    /**
-     * Inserta de forma física la transacción del pago simulado.
-     *  
-     * @param string $dni DNI del usuario
-     * @param int $idPublicacion ID de la publicación pagada
-     * @param float $monto Monto de la transacción
-     * @return bool True si la inserción se realizó con éxito
+     * Registra un nuevo pago en la base de datos.
+     *
+     * @param string $dni DNI del usuario que realiza el pago.
+     * @param int $idPublicacion ID de la publicación que se está comprando.
+     * @param float $monto El monto del pago.
+     * @return bool True si la inserción fue exitosa, false en caso contrario.
      */
     public function registrarNuevoPago(string $dni, int $idPublicacion, float $monto): bool
     {
-        $db = \Config\Database::connect();
-        return $db->table('pago')->insert([
+        // Ahora usamos $this->db
+        return $this->db->table('pago')->insert([
             'dni_usuario'    => $dni,
             'id_publicacion' => $idPublicacion,
             'fecha_pago'     => date('Y-m-d'),
@@ -56,44 +66,25 @@ class PagoService
     }
 
     /**
-     * Valida los datos de pago enviados por el estudiante.
+     * Valida los datos de un formulario de pago (tarjeta de crédito).
+     * Realiza validaciones de formato para el titular, número de tarjeta, fecha de vencimiento y CVV.
      *
-     * @param string $titular Nombre del titular de la tarjeta
-     * @param string $tarjeta Número de tarjeta (sin espacios)
-     * @param string $vencimiento Fecha de vencimiento MM/AA
-     * @param string $cvv Código CVV de 3 dígitos
-     * @param string $metodoPago Método de pago seleccionado
-     * @return bool True si todos los datos tienen formato válido
+     * @param string $titular Nombre del titular de la tarjeta.
+     * @param string $tarjeta Número de la tarjeta de crédito.
+     * @param string $vencimiento Fecha de vencimiento en formato MM/YY.
+     * @param string $cvv Código de seguridad de 3 dígitos.
+     * @param string $metodoPago Método de pago seleccionado.
+     * @return bool True si todos los datos son válidos, false en caso contrario.
      */
     public function validarDatosPago(string $titular, string $tarjeta, string $vencimiento, string $cvv, string $metodoPago): bool
     {
-        // Titular obligatorio
-        if (empty(trim($titular))) {
-            return false;
-        }
+        if (empty(trim($titular))) return false;
+        if (empty(trim($metodoPago))) return false;
 
-        // Método de pago obligatorio
-        if (empty(trim($metodoPago))) {
-            return false;
-        }
-
-        // Quitamos espacios de la tarjeta
         $tarjeta = str_replace(' ', '', $tarjeta);
-
-        // Tarjeta: exactamente 16 dígitos
-        if (!preg_match('/^[0-9]{16}$/', $tarjeta)) {
-            return false;
-        }
-
-        // Vencimiento MM/AA
-        if (!preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $vencimiento)) {
-            return false;
-        }
-
-        // CVV: 3 dígitos
-        if (!preg_match('/^[0-9]{3}$/', $cvv)) {
-            return false;
-        } 
+        if (!preg_match('/^[0-9]{16}$/', $tarjeta)) return false;
+        if (!preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $vencimiento)) return false;
+        if (!preg_match('/^[0-9]{3}$/', $cvv)) return false;
 
         return true;
     }
