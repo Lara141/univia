@@ -3,10 +3,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * MODELO: ARCHIVO
- * ═══════════════════════════════════════════════════════════════
- * 
+ 
  * Gestión de archivos adjuntos a las publicaciones
  *   
  * Tabla: archivo

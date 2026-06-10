@@ -3,10 +3,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * MODELO: PUBLICACIÓN
- * ═══════════════════════════════════════════════════════════════
- * 
+
  * Gestión de publicaciones de materiales de la plataforma
  * 
  * Tabla: publicacion

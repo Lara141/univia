@@ -4,10 +4,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * MODELO: MATERIA
- * ═══════════════════════════════════════════════════════════════
- * 
+
  * Gestión de materias/asignaturas de la plataforma
  *  
  * Tabla: materia

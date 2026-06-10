@@ -3,10 +3,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 
 /**
- * ═══════════════════════════════════════════════════════════════
- * MODELO: USUARIO
- * ═══════════════════════════════════════════════════════════════
- * 
+ 
  * Gestión de datos de usuarios de la plataforma
  * 
  * Tabla: usuario
