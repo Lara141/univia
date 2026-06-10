@@ -9,7 +9,7 @@ use App\Services\PagoService;
 use App\Services\PublicacionService;
 use App\Strategies\DescargaGratisStrategia;
 use App\Strategies\DescargaPagoStrategia;
-use DI\ContainerBuilder; // 1. ¡Importamos la herramienta principal de la librería!
+use DI\ContainerBuilder; // Importamos la herramienta principal de la librería
 
 
 /**  
@@ -22,13 +22,19 @@ use DI\ContainerBuilder; // 1. ¡Importamos la herramienta principal de la libre
  */
 class DescargarController extends BaseController
 { 
+    /** @var PagoService Servicio para la lógica de negocio de pagos. */
     protected PagoService $pagoService;
+
+    /** @var PublicacionService Servicio para la lógica de negocio de publicaciones. */
     protected PublicacionService $publicacionService;
+
+    /** @var AuthService Servicio para la autenticación y gestión de sesiones. */
     protected AuthService $authService;
 
     /**
-     * Inicializa los servicios necesarios para validar pagos y obtener
-     * información de publicaciones y archivos.
+     * Constructor que inicializa los servicios necesarios para el controlador.
+     * Se encarga de la inyección de dependencias para los servicios de pago,
+     * publicación y autenticación.
      */
     public function __construct()
     {
@@ -40,7 +46,10 @@ class DescargarController extends BaseController
 
     /**
      * Endpoint de descarga segura (Diagrama 1 y 2).
-     * Abre el PDF directamente en el navegador.
+     * Valida los permisos del usuario (autenticación y pago si es necesario)
+     * y luego fuerza la descarga del archivo como un adjunto.
+     * @param int $id ID de la publicación cuyo archivo se desea descargar.
+     * @return \CodeIgniter\HTTP\RedirectResponse|\CodeIgniter\HTTP\ResponseInterface
      */
     public function descargar($id)
     {
@@ -57,11 +66,6 @@ class DescargarController extends BaseController
         }
 
         $tipoAcuerdo = $publicacion['tipo_acuerdo'];
-
-        // ==========================================
-        // 🚀 INICIO DE LA MAGIA CON PHP-DI
-        // ==========================================
-        
         $builder = new ContainerBuilder();
 
         // Le enseñamos al contenedor nuestras estrategias.
@@ -113,6 +117,8 @@ class DescargarController extends BaseController
      * Endpoint para la vista previa de archivos.
      * Sirve el archivo con 'Content-Disposition: inline' para que el navegador
      * intente mostrarlo en lugar de descargarlo. No requiere pago.
+     * @param int $id ID de la publicación cuyo archivo se desea previsualizar.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function preview($id)
     {

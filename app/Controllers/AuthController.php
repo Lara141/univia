@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UsuarioModel;
 
-/**
+/** 
  * Controlador de autenticacion
  * 
  * Responsable de:
@@ -20,6 +20,7 @@ class AuthController extends BaseController
      * Muestra la vista del formulario de inicio de sesión.
      * Puede recibir un mensaje informativo para mostrar al usuario.
      * @param string|null $info Código del mensaje a mostrar (e.g., 'registro_exitoso').
+     * @return string Renderiza la vista de login.
      */
     public function index($info = null)
     {
@@ -50,6 +51,9 @@ class AuthController extends BaseController
      * 
      * Si son incorrectas:
      *   - Retorna al formulario con mensaje de error
+     *
+     * @param string $source Origen del intento de login (e.g., 'web', 'api').
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige al panel o de vuelta al login.
      */
     public function login($source = 'web')
     {
@@ -78,6 +82,8 @@ class AuthController extends BaseController
 
     /**
      * Muestra la vista del formulario de registro de nuevos usuarios
+     * @param string|null $invitation_code Código de invitación opcional.
+     * @return string Renderiza la vista de registro.
      */
     public function registro_vista($invitation_code = null)
     {
@@ -104,6 +110,9 @@ class AuthController extends BaseController
      *   - id_carrera 
      *   - fecha_registro (fecha actual)
      *   - estado (activo por defecto)
+     *
+     * @param string $source Origen del intento de registro (e.g., 'web', 'api').
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige al login con éxito o de vuelta al registro con errores.
      */
    public function procesar_registro($source = 'web')
     {
@@ -177,6 +186,8 @@ class AuthController extends BaseController
 
     /**
      * Cierra la sesión del usuario actual y redirige al inicio
+     * @param string|null $dni DNI del usuario que cierra sesión, para logging.
+     * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function logout($dni = null)
     {
@@ -192,6 +203,7 @@ class AuthController extends BaseController
 
     /**
      * API: Devuelve todas las universidades en formato JSON.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function api_universidades()
     {
@@ -203,6 +215,7 @@ class AuthController extends BaseController
     /**
      * API: Devuelve las carreras de una universidad específica.
      * @param int $id_universidad El ID de la universidad.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function api_carreras($id_universidad)
     {

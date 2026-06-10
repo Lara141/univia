@@ -16,12 +16,17 @@ use App\Services\PagoService;
  */
 class BuscadorController extends BaseController
 {
+    /** @var BuscadorService Servicio para la lógica de búsqueda. */
     protected BuscadorService $buscadorService;
+
+    /** @var PagoService Servicio para la lógica de negocio de pagos. */
     protected PagoService $pagoService;
+
+    /** @var AuthService Servicio para la autenticación y gestión de sesiones. */
     protected AuthService $authService;
 
     /**
-     * Inicializa los servicios de búsqueda y pago necesarios.
+     * Constructor que inicializa los servicios de búsqueda, pago y autenticación.
      */
     public function __construct()
     {
@@ -40,7 +45,8 @@ class BuscadorController extends BaseController
      * 
      * Solo retorna publicaciones activas (estado = 1)
      * 
-     * @return \CodeIgniter\HTTP\Response Vista con resultados de búsqueda
+     * @param string|null $palabra_clave_url Palabra clave opcional proveniente de un segmento de URL.
+     * @return string|\CodeIgniter\HTTP\RedirectResponse Renderiza la vista de resultados o redirige si no está logueado.
      */
     public function buscar($palabra_clave_url = null)
     {
@@ -72,9 +78,10 @@ class BuscadorController extends BaseController
      * Muestra la pantalla de exploración de materiales.
      *
      * Obtiene los filtros enviados por el usuario, consulta las publicaciones que cumplen dichos criterios
-     * y envía los resultados a la vista explorar_materiales.
+     * y envía los resultados a la vista `explorar_materiales`.
      *
-     * @return mixed
+     * @param string|null $tipo_recurso_url Tipo de recurso opcional proveniente de un segmento de URL.
+     * @return string|\CodeIgniter\HTTP\RedirectResponse Renderiza la vista de exploración o redirige si no está logueado.
      */
     public function explorar($tipo_recurso_url = null)
     {
@@ -109,4 +116,4 @@ class BuscadorController extends BaseController
             'filtros'       => $filtros
         ]);
     }
-}
+} 

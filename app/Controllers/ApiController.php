@@ -15,11 +15,21 @@ use App\Services\BuscadorService;
  */
 class ApiController extends BaseController
 {
+    /** @var MateriaService Servicio para la lógica de negocio de materias. */
     private MateriaService $materiaService;
-    private PublicacionService $publicacionService;
-    private BuscadorService $buscadorService;
-    private AuthService $authService;
 
+    /** @var PublicacionService Servicio para la lógica de negocio de publicaciones. */
+    private PublicacionService $publicacionService;
+
+    /** @var BuscadorService Servicio para la lógica de búsqueda. */
+    private BuscadorService $buscadorService;
+
+    /** @var AuthService Servicio para la autenticación y gestión de sesiones. */
+    private AuthService $authService;
+ 
+    /**
+     * Constructor que inicializa todos los servicios necesarios para el controlador de API.
+     */
     public function __construct()
     {
         $archivoService = new ArchivoService(new ArchivoModel());
@@ -34,6 +44,7 @@ class ApiController extends BaseController
      * GET /api/materias/(:segment)
      * Retorna todas las materias disponibles, o las filtra por un término de búsqueda.
      * @param string|null $filtro Término para filtrar materias por nombre.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function materias($filtro = null)
     {
@@ -57,6 +68,7 @@ class ApiController extends BaseController
      * GET /api/tipos/(:num)
      * Retorna tipos de recursos disponibles, o uno específico por su ID.
      * @param int|null $id ID del tipo de recurso a obtener.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function tipos($id = null)
     {
@@ -92,6 +104,7 @@ class ApiController extends BaseController
      * GET /api/acuerdos/(:num)
      * Retorna tipos de acuerdos disponibles, o uno específico por su ID.
      * @param int|null $id ID del tipo de acuerdo a obtener.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function acuerdos($id = null)
     {
@@ -123,7 +136,9 @@ class ApiController extends BaseController
 
     /**
      * GET /api/publicaciones/:id
-     * Obtiene una publicacion especifica
+     * Obtiene los datos de una publicación específica por su ID.
+     * @param int $id ID de la publicación.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function publicacion($id)
     {
@@ -146,7 +161,8 @@ class ApiController extends BaseController
      * GET /api/publicaciones
      * GET /api/publicaciones/(:segment)
      * Obtiene publicaciones del usuario autenticado. Se puede filtrar por estado.
-     * @param string $filtro_estado 'activas' (default) o 'todas'.
+     * @param string $filtro_estado Filtro de estado: 'activas' (default) o 'todas'.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function publicacionesUsuario($filtro_estado = 'activas')
     {
@@ -177,6 +193,7 @@ class ApiController extends BaseController
      * Obtiene publicaciones de una materia especifica, con filtro opcional por tipo de recurso.
      * @param int $idMateria ID de la materia.
      * @param string|null $tipo Tipo de recurso para filtrar (e.g., 'resumen', 'examen').
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function porMateria($idMateria, $tipo = null)
     {
@@ -196,6 +213,7 @@ class ApiController extends BaseController
     /**
      * GET /api/tipos_recurso
      * Retorna todos los tipos de recurso disponibles.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function tipos_recurso()
     {
@@ -207,6 +225,7 @@ class ApiController extends BaseController
     /**
      * GET /api/formatos
      * Retorna todos los formatos de archivo disponibles.
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function formatos()
     {

@@ -18,12 +18,17 @@ use App\Services\PagoService;
  */
 class PagoController extends BaseController
 {
+    /** @var PagoService Servicio para la lógica de negocio de pagos. */
     protected PagoService $pagoService;
+
+    /** @var PublicacionService Servicio para la lógica de negocio de publicaciones. */
     protected PublicacionService $publicacionService;
+
+    /** @var AuthService Servicio para la autenticación y gestión de sesiones. */
     protected AuthService $authService;
 
     /**
-     * Inicializa los servicios de pago y de publicación.
+     * Constructor que inicializa los servicios necesarios para el controlador de pagos.
      */ 
     public function __construct()
     {
@@ -80,5 +85,5 @@ class PagoController extends BaseController
         return redirect()->to(site_url($ruta_retorno))
                         ->with('mensaje', '¡Pago registrado con éxito! El archivo ya se encuentra desbloqueado para su descarga.');
     }
-
+ 
 }

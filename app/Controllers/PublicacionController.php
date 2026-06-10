@@ -28,15 +28,16 @@ use App\Services\PublicacionService;
  */
 class PublicacionController extends BaseController
 {
+    /** @var PublicacionService Servicio para la lógica de negocio de publicaciones. */
     protected PublicacionService $publicacionService;
+
+    /** @var AuthService Servicio para la autenticación y gestión de sesiones. */
     protected AuthService $authService;
 
     /**
-     * Constructor del controlador
-     * 
-     * Inicializa las dependencias necesarias:
-     *   - ArchivoService para gestión de archivos
-     *   - PublicacionService para lógica de publicaciones
+     * Constructor que inicializa los servicios necesarios para el controlador.
+     * Se encarga de la inyección de dependencias para los servicios de publicación,
+     * autenticación y archivos.
      */
     public function __construct()
     {
@@ -46,8 +47,12 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Muestra las publicaciones del usuario autenticado
+     * Muestra la página "Mis Publicaciones" del usuario autenticado.
+     * Realiza una verificación de seguridad para asegurar que el DNI de la URL
+     * coincida con el DNI del usuario en la sesión.
+     *
      * @param string $dni El DNI del usuario cuyas publicaciones se quieren ver.
+     * @return string|\CodeIgniter\HTTP\RedirectResponse Renderiza la vista o redirige en caso de error/permiso.
      */
     public function propias($dni)
     {
@@ -81,7 +86,9 @@ class PublicacionController extends BaseController
     /**
      * Muestra el formulario para crear una nueva publicación.
      * Si no se provee un DNI en la URL, redirige a la URL correcta del usuario logueado.
+     *
      * @param string|null $dni El DNI del usuario. Opcional para redirigir.
+     * @return string|\CodeIgniter\HTTP\RedirectResponse Renderiza la vista o redirige si es necesario.
      */
     public function crear($dni = null)
     {
@@ -112,7 +119,11 @@ class PublicacionController extends BaseController
 
     /**
      * Procesa el envío del formulario y crea una nueva publicación.
+     * Recibe los datos del POST, valida los permisos y utiliza el PublicacionService
+     * para orquestar la creación.
+     *
      * @param string $dni El DNI del usuario que está creando la publicación, para verificación.
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige al panel del usuario con un mensaje de éxito o error.
      */
     public function guardar($dni)
     {
@@ -158,7 +169,11 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Muestra el formulario para editar una publicación existente
+     * Muestra el formulario para editar una publicación existente.
+     * Verifica que el usuario logueado sea el propietario de la publicación.
+     *
+     * @param int $id El ID de la publicación a editar.
+     * @return string|\CodeIgniter\HTTP\RedirectResponse Renderiza la vista de edición o redirige si no tiene permisos.
      */
     public function editar($id)
     {
@@ -178,7 +193,11 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Procesa la actualización de una publicación
+     * Procesa la actualización de una publicación existente.
+     * Recibe los datos del POST, valida la propiedad y actualiza los datos.
+     *
+     * @param int $id El ID de la publicación a actualizar.
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige al panel del usuario con un mensaje de éxito o error.
      */
     public function actualizar($id)
     {
@@ -221,7 +240,11 @@ class PublicacionController extends BaseController
     }
 
     /**
-     * Elimina una publicación (marca como inactiva)
+     * Elimina una publicación (lógicamente, marcándola como inactiva).
+     * Verifica la propiedad antes de realizar la acción.
+     *
+     * @param int $id El ID de la publicación a eliminar.
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirige al panel del usuario con un mensaje.
      */   
     public function eliminar($id)
     {
@@ -270,4 +293,4 @@ class PublicacionController extends BaseController
 
         return ['usuario' => $usuario, 'publicacion' => $publicacion];
     }
-}
+} 
